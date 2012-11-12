@@ -4094,6 +4094,8 @@ THEN
 ;
 ' P to Psequence
 
+NULL OP PjoinedSet
+
 : P ( : Pset ) ( s -- s1 type )
 (
     Where s is the input text and must return a set. Examples are "abc" using
@@ -4107,63 +4109,59 @@ THEN
     removed and the contents parsed as a list; if it starts with a letter it
     might be an identifier or a function call; in the latter case it must have
     () as well. A set beginning [ is presumed to be a sequence and parsed by
-    Psequence.
-)
+    Psequence. ( Blank pairs of round brackets in this function to maintain
+    syntax highlighting.
+) )
 nowspace
-DUP head [CHAR] ( =
+DUP .AZ ." in Pset" .S ( test )
+DUP head [CHAR] { =
 IF
-    Patom
-ELSE
-    DUP head [CHAR] { =
+    [CHAR] { [CHAR] } bracket-remover2 ( Remove {} ) ( Can be refactored )
+    nabla-string OVER issubstringof?
+    IF  ( Error having ∇ inside {} )
+        ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
+    THEN
+    diamond-string OVER issubstringof?
     IF
-        [CHAR] { [CHAR] } bracket-remover2 ( Remove {} ) ( Can be refactored )
-        nabla-string OVER issubstringof?
-        IF  ( Error having ∇ inside {} )
-            ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
-        THEN
-        diamond-string OVER issubstringof?
-        IF
-            Pdiamond
-        ELSE
-        PUSH {_ POP         ( Put { { null underneath present text )
-        Plist               ( Parse present text )
-        }_                  ( Terminate with } and type )
-        THEN
+        Pdiamond
     ELSE
-        DUP
-            head [CHAR] [ = ( ??Can be refactored analogously to Pset2?? )
+    PUSH {_ POP         ( Put { { null underneath present text )
+    Plist               ( Parse present text )
+    }_                  ( Terminate with } and type )
+    THEN
+ELSE
+    DUP
+        head [CHAR] [ = ( ??Can be refactored analogously to Pset2?? )
+    IF
+        Psequence
+    ELSE
+        DUP letter stringbegins?
         IF
-            Psequence
-        ELSE
-            DUP letter stringbegins?
+            DUP alphanumeric stringconsists?
             IF
-                DUP alphanumeric stringconsists?
+                Pid
+            ELSE
+                DUP [CHAR] ( ( ) stringcontainschar?
                 IF
-                    Pid
+                    Pfunction
                 ELSE
-                    DUP [CHAR] ( stringcontainschar?
-                    IF
-                        Pfunction
-                    ELSE
-                        ." Text in wrong format for set: " .AZ
-                        ."  received." ABORT
-                        ( Can be changed later )
-                    THEN
+                    ." Text in wrong format for set: " .AZ
+                    ."  received." ABORT
+                    ( Can be changed later )
                 THEN
-            ELSE ( Doesn't start with { or letters with or without () )
-                DUP digits0 stringbegins? OVER head [CHAR] ( = OR
+            THEN
+        ELSE ( Doesn't start with { or letters with or without () )
+            dots-seq rsplit
+            IF
+                PUSH Parith POP Parith .._
+            ELSE
+                DROP DUP head [CHAR] ( ( remove top 0 before trying head! ) =
                 IF
-                    dots-seq rsplit
-                    IF ( In format 123..234 or (1+2*3)..(4*5+6) or similar )
-                        PUSH Parith POP Parith .._
-                    ELSE
-                        DROP ." The string " .AZ
-                        ."  is not in the correct format for a set." ABORT
-                    THEN
+                    [CHAR] ( [CHAR] ) bracket-remover2 PjoinedSet
                 ELSE
-                ( This can be changed later to accommodate lambdas. )
-                    ." The string " .AZ
-                    ."  is not in the correct format for a set." ABORT
+                    ." Text in wrong format for set: " .AZ
+                    ."  received." ABORT
+                    ( Can be changed later )
                 THEN
             THEN
         THEN
@@ -4527,7 +4525,7 @@ ELSE    ( no operator )
 THEN
 ;
 
-: PjoinedSet ( s -- s1 type )
+: P ( : PjoinedSet s -- s1 type )
 (
     Takes a String similar to "x \ y" or "x ∪ y" and creates the union,
     intersection, overriding or difference between the two sets. In the case of
@@ -4545,6 +4543,7 @@ THEN
     expression represents a set at this stage, so the results are passed to the
     "set" version of the parser.  
 )
+DUP .AZ ."  in PjoinedSet" CR ( test )
 unionintersect lsplit
 DUP 0=
 IF
@@ -4561,6 +4560,7 @@ ELSE
     THEN
 THEN
 ;
+' P to PjoinedSet
 
 : PjoinedSetExp2
 (
