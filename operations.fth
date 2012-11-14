@@ -2295,6 +2295,11 @@ IF
 THEN
 ;
 
+(
+ To be used instead of multiple if-elses to call a particular bar-decorated
+ operation, depending on the operator found. The seq-ops set is there so you can
+ call a sequence parser if the operator found is applicable to sequences.
+)
 STRING INT PROD
 {
     " ⁀"  ' ⁀_ |->$,I  , " ^"   ' ^_ |->$,I ,
