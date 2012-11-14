@@ -62,9 +62,6 @@
     NIP
 ;
 
-: az-dump ( az -- az unchanged )
-BASE @ >R HEX DUP DUP myazlength DUMP R> BASE ! ; ( test )
-
 " true" CONSTANT true
 " false" CONSTANT false
 " TRUE" CONSTANT True
@@ -4113,7 +4110,6 @@ NULL OP PjoinedSet
     syntax highlighting.
 ) )
 nowspace
-DUP .AZ ." in Pset" .S ( test )
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracket-remover2 ( Remove {} ) ( Can be refactored )
@@ -4543,7 +4539,6 @@ THEN
     expression represents a set at this stage, so the results are passed to the
     "set" version of the parser.  
 )
-DUP .AZ ."  in PjoinedSet" CR ( test )
 unionintersect lsplit
 DUP 0=
 IF
