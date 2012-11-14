@@ -2302,6 +2302,7 @@ STRING INT PROD
     " ←"  ' ←_ |->$,I   , " ↓"   ' ↓_ |->$,I ,
     " ↑"  ' ↑_ |->$,I ,
 } CONSTANT operation-swaps
+STRING { " ⁀" , " ^" , " ▷-" , " ▷" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops
 
 : P ( to be renamed : rsplit )
 (
@@ -4037,7 +4038,6 @@ THEN
 ' P to Psequence2
 
 : P ( : Psequence ) ( s -- s1 type )
-( Consider changing to SEQ and [] )
 (
     Very similar to Pset: s is the input text, eg [i, j, k] where the [] are
     removed and the contents parsed with Plist and [_ and later ]_ to
@@ -4143,7 +4143,6 @@ ELSE
                 ELSE
                     ." Text in wrong format for set: " .AZ
                     ."  received." ABORT
-                    ( Can be changed later )
                 THEN
             THEN
         ELSE ( Doesn't start with { or letters with or without () )
@@ -4157,7 +4156,6 @@ ELSE
                 ELSE
                     ." Text in wrong format for set: " .AZ
                     ."  received." ABORT
-                    ( Can be changed later )
                 THEN
             THEN
         THEN
@@ -4175,11 +4173,11 @@ THEN
     Takes a string of the format "x ▷ y" or "x ← y" or similar, and converts it
     to its postfix forms, "x y ▷" or "x y ←" or similar, along with a type. The
     types vary:-
-    For range restriction and anti-restriction a relation on the left and a set
-    on the right, eg FOO BAR PROD POW and a set in this case FOO POW on right.
+    For range restriction and subtraction a relation on the left and a set on
+    the right, eg FOO BAR PROD POW and a set in this case FOO POW on right.
     for appending, a set representing a sequence, eg INT FOO PROD POW and an
     element on the right, eg FOO.
-    for catenation, two sets representing sequences, eg both INT FOO PROD POW.
+    For catenation, two sets representing sequences, eg both INT FOO PROD POW.
     For truncation and decapitation, a set representing a sequence on the left,
     eg INT FOO PROD POW and an INT on the right. Note that in this instance the
     left operand ought to represent a sequence, ie dom(x) = 1 .. card(x), but we
@@ -4204,7 +4202,15 @@ IF  ( top and middle elements nonsense, 3rd value is a string or set. )
     THEN
 ELSE
     ( 3rd element recurses, top element=operator, middle element varies=exp )
-    PUSH PUSH RECURSE
+( Consider changing RECURSE only to operate when op not in DOM swap-relation,
+  otherwise using the sequence equivalent. )
+    DUP
+    seq-ops IN
+    IF
+        PUSH PUSH PrangeRestrictedSeq
+    ELSE
+        PUSH PUSH RECURSE
+    THEN
     POP Pexpression
     operation-swaps POP APPLY EXECUTE
 THEN
@@ -4369,10 +4375,14 @@ DUP 0=
 IF
     2DROP PenumeratedExp
 ELSE
-    operation-swaps SWAP APPLY ( Function Pointer )
-    PUSH PUSH RECURSE          ( Left subexpression )
-    POP Pexpression            ( Right subexpression )
-    POP                        ( Operation )            EXECUTE
+    DUP seq-ops IN
+    IF
+        PUSH PUSH PrangeRestrictedSeq   ( Left subexpression=seq )
+    ELSE
+        PUSH PUSH PrangeRestrictedSet   ( Left subexpression=set )
+    THEN
+    POP Pexpression                 ( Right subexpression )
+    operation-swaps POP APPLY       ( F-pointer and Operation )   EXECUTE
 THEN
 ;
 
