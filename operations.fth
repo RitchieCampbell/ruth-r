@@ -533,17 +533,17 @@ NIP NIP ( Two unneeded values off the stack )
 )
 SWAP 1- head SWAP IN ;
 
-: add-quotes1 ( s -- s1
+: addQuotes1 ( s -- s1
 Where s is an input string and s1 has pairs of quotes (and a trailing space)
-added, eg abc becomes " abc" . See also add-quotes2, etc
+added, eg abc becomes " abc" . See also addQuotes2, etc
 )
 quotespace SWAP OVER AZ^ AZ^
 ;
 
-: add-quotes2 ( s s1 -- s2 )
+: addQuotes2 ( s s1 -- s2 )
 (
     Where s and s1 are input strings and s2 has pairs of quotes and a trailing space
-    added. See also add-quotes1, etc.
+    added. See also addQuotes1, etc.
     For example abc and INT becomes " abc" " INT" .
 )
 quotespace ROT ROT ( quotespace now 3rd on stack )
@@ -552,7 +552,7 @@ OVER               ( now 4 sets of quotes in appropriate locations )
 AZ^ AZ^ AZ^ AZ^ AZ^ ( catenate 5 times )
 ;
 
-: add-quotes-if-string1 ( s type -- "s" ) 
+: addQuotesIfString1 ( s type -- "s" ) 
 (
     If the "type" is "STRING" adds quotes to the original string. This is
     required because printing out a string like "FORTH" causes FORTH to appear
@@ -561,7 +561,7 @@ AZ^ AZ^ AZ^ AZ^ AZ^ ( catenate 5 times )
 ) 
 nowspace string string-eq
 IF
-    add-quotes1
+    addQuotes1
 THEN
 ;
 
@@ -1302,21 +1302,21 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 )
     (: l-value l-type r-value r-type operator :)
     operator l-type r-type check-types-for-set-membership
-(   l-value l-type add-quotes-if-string1 to l-value )
+(   l-value l-type addQuotesIfString1 to l-value )
     l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
 ;
 
 : ∈_ ( s1 s2 s3 s4 -- ss1 "BOO" )
     (: l-value l-type r-value r-type :)
     " ∈" l-type r-type check-types-for-set-membership
-(   l-value l-type add-quotes-if-string1 to l-value )
+(   l-value l-type addQuotesIfString1 to l-value )
     l-value sspace AZ^ r-value AZ^ "  ∈" AZ^ boolean
 ;
 
 : ∉_ ( s1 s2 s3 s4 -- ss1 "BOO2 )
     (: l-value l-type r-value r-type :)
     " ∉" l-type r-type check-types-for-set-membership
-(   l-value l-type add-quotes-if-string1 to l-value )
+(   l-value l-type addQuotesIfString1 to l-value )
     l-value sspace AZ^ r-value AZ^ "  ∉" AZ^ boolean
 ;
 
@@ -1386,8 +1386,8 @@ ELSE
         r-value StoF AZ^ to r-value float to r-type
         f-equals to op
     ELSE    ( Lines adding quotes appear to create " " text " " )
-(        l-value l-type add-quotes-if-string1 to l-value )
-(        r-value r-type add-quotes-if-string1 to r-value )
+(        l-value l-type addQuotesIfString1 to l-value )
+(        r-value r-type addQuotesIfString1 to r-value )
         l-type r-type string-eq NOT
         IF
         ELSE
@@ -2459,7 +2459,7 @@ THEN ;
     Above can be refactored something like this:
     STRING STRING PROD { int "  . " ↦ , boolean "  boolean-print " ↦ ,
         float "  F. " ↦ , string "  .AZ " ↦ , } VALUE print-swaps
-    : PRINT_ ( DUP string string-eq IF SWAP add-quotes1 SWAP THEN "" unnecessary )
+    : PRINT_ ( DUP string string-eq IF SWAP addQuotes1 SWAP THEN "" unnecessary )
      DUP print-swaps DOM IN IF print-swaps SWAP APPLY AZ^   
     ELSE "  POW" OVER suffix? IF DROP "  .SET " AZ^ ELSE "  PROD" OVER suffix? IF   
     "  .PAIR " AZ^ THEN THEN THEN ; ( " “Campbell”" Patom PRINT_  ok.
@@ -2737,7 +2737,7 @@ ROT 0 SWAP C! 0 OVER C! 1+
 PargumentList2 AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" ) )
 ( Need to add " foo" with "" to end of text. )
-POP add-quotes1 AZ^
+POP addQuotes1 AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" "foo" ) )
 " )" bar-line AZ^ AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" "foo" )_ )
@@ -2751,7 +2751,7 @@ POP add-quotes1 AZ^
 )
 DUP string-end-finder rquote-length - ( One quote before end of String )
 0 SWAP C!
-lquote-length + ( One quote length after start of String ) add-quotes1
+lquote-length + ( One quote length after start of String ) addQuotes1
 string ( STRING )
 ;
 
@@ -2930,11 +2930,11 @@ THEN
 nowspace
 DUP true string-eq OVER True string-eq OR
 IF
-    DROP True boolean add-quotes2
+    DROP True boolean addQuotes2
 ELSE
     DUP false string-eq OVER False string-eq OR
     IF
-        DROP False boolean add-quotes2
+        DROP False boolean addQuotes2
     ELSE
         DUP letter stringbegins?
         IF
@@ -2942,12 +2942,12 @@ ELSE
             IF
                 Pfunction2
             ELSE
-                Pid add-quotes2 ( Add other possibilities here eg lambda )
+                Pid addQuotes2 ( Add other possibilities here eg lambda )
             THEN
         ELSE
             DUP digits0. stringbegins?
             IF
-                Pnumber add-quotes2
+                Pnumber addQuotes2
             ELSE
                 DUP head [CHAR] ( =
                 IF
@@ -2971,7 +2971,7 @@ ELSE
                     ELSE
                         l-quote OVER prefix?
                         IF
-                            Pstring add-quotes1 AZ^
+                            Pstring addQuotes1 AZ^
                         ELSE
                             ." Un-parseable string: " .AZ ."  passed." ABORT
                         THEN
@@ -3110,7 +3110,7 @@ ELSE
     DUP digits0. stringbegins? ( starts with 0123456789, must be a number )
     IF
         Pnumber ( returns two strings, needs quotes adding )
-        add-quotes2
+        addQuotes2
     ELSE
         DUP letter stringbegins? ( Begins A-Za-z, must be identifier )
         IF
@@ -3119,7 +3119,7 @@ ELSE
                 Pfunction2 ( .AZ ."  passed: function not yet implemented." ABORT )
             ELSE       ( Must be ordinary identifier )
                 Pid    ( returns two strings which need quotes adding )
-                add-quotes2
+                addQuotes2
             THEN
         ELSE
             ." Text in incorrect format for arithmetic atom: " .AZ ."  passed."
@@ -3847,11 +3847,11 @@ THEN
 nowspace
 DUP true string-eq OVER True string-eq OR
 IF
-    DROP True boolean add-quotes2
+    DROP True boolean addQuotes2
 ELSE
     DUP false string-eq OVER False string-eq OR
     IF
-        DROP False boolean add-quotes2
+        DROP False boolean addQuotes2
     ELSE
         DUP head [CHAR] ( =
         IF
@@ -3862,14 +3862,14 @@ ELSE
             IF
                 DUP [CHAR] ( stringcontainschar?
                 IF
-                    Pfunction add-quotes2 ( refactor if Pfunction2 written )
+                    Pfunction addQuotes2 ( refactor if Pfunction2 written )
                 ELSE
                     Pid DUP nowspace boolean string-eq NOT
                     IF
                         ." The identifier " SWAP .AZ ." ought to be " boolean
                         .AZ ."  type and is actually " .AZ ABORT
                     THEN
-                    add-quotes2
+                    addQuotes2
                 THEN
             ELSE
                 ." Undefined type: " .AZ ABORT
@@ -3913,7 +3913,7 @@ IF
         nowspace "  POW" OVER suffix? NOT
         IF
             ." Type received not set: " .AZ ."  received." ABORT
-        THEN add-quotes2
+        THEN addQuotes2
     ELSE    ( Presumed to be identifier )
         DUP alphanumeric stringconsists?
         IF
@@ -3922,7 +3922,7 @@ IF
             IF
                 ." Type received not set: " .AZ ."  received." ABORT
             THEN
-            add-quotes2
+            addQuotes2
         ELSE
             ." Unknown type in Pset2: " .AZ ABORT ( Or add lambda etc later )
         THEN
@@ -4017,9 +4017,9 @@ DUP letter stringbegins?
 IF
     DUP [CHAR] ( stringcontainschar?
     IF  ( Must be function call )
-        Pfunction add-quotes2 ( Change to Pfunction2 when available )
+        Pfunction addQuotes2 ( Change to Pfunction2 when available )
     ELSE ( Must be identifier; other types can be added )
-        Pid add-quotes2 ( Can change to Pid2 )
+        Pid addQuotes2 ( Can change to Pid2 )
     THEN
 ELSE ( Must begin with [ and end with ] or () )
     DUP head [CHAR] ( =
@@ -5780,7 +5780,7 @@ IF
     DROP Pexpression2   ( Only use left argument )
 ELSE  
     PUSH                ( Left argument is identifier )
-    Pid add-quotes2 sspace AZ^
+    Pid addQuotes2 sspace AZ^
     POP Pexpression2 AZ^ " :=" AZ^ bar-line AZ^ ( Right argument is expression )
 THEN
 ;
