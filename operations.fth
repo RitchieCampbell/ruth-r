@@ -2304,10 +2304,10 @@ STRING INT PROD
 {
     " ⁀"  ' ⁀_ |->$,I  , " ^"   ' ^_ |->$,I ,
     " ▷-" '  ▷-_ |->$,I , " ▷"   ' ▷_ |->$,I ,
-    " ←"  ' ←_ |->$,I   , " ↓"   ' ↓_ |->$,I ,
-    " ↑"  ' ↑_ |->$,I ,
+    " ←"  '  ←_ |->$,I  , " ↓"   ' ↓_ |->$,I ,
+    " ↑"  '  ↑_ |->$,I  ,
 } CONSTANT operation-swaps
-STRING { " ⁀" , " ^" , " ▷-" , " ▷" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops
+( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
 : P ( to be renamed : rsplit )
 (
@@ -2790,7 +2790,7 @@ r-type sspace array AZ^ AZ^
     Requires the array[_ be called first leaving 0/1 for empty/full arrays, ""
     and 0 for the type on the stack first.
     Recursively iterates the "1, 2, 3" String, calling Patom and array,_ if
-    there are multiple members, leaving the last element for Parrayliteral to
+    there are multiple members, leaving the last element for ParrayLiteral to
     add with array]_
 )
 comma rsplit
@@ -2801,7 +2801,7 @@ ELSE
 THEN
 ;
 
-: Parrayliteral ( s -- s1 s2 )
+: ParrayLiteral ( s -- s1 s2 )
 (
     Where s is in the form "ARRAY[1, 2, 3]" and returns "HERE 3 , 1 , 2 , 3 ,"
     and the type "INT ARRAY". Strips the beginning and the end with bracket
@@ -2840,7 +2840,7 @@ ELSE
         IF
             " ARRAY[" OVER prefix?
             IF
-                Parrayliteral
+                ParrayLiteral
             ELSE
                 DUP [CHAR] ( stringcontainschar?
                 IF
@@ -4209,8 +4209,7 @@ ELSE
     ( 3rd element recurses, top element=operator, middle element varies=exp )
 ( Consider changing RECURSE only to operate when op not in DOM swap-relation,
   otherwise using the sequence equivalent. )
-    DUP
-    seq-ops IN
+    DUP rangerestriction2 RAN IN
     IF
         PUSH PUSH PrangeRestrictedSeq
     ELSE
@@ -4380,7 +4379,7 @@ DUP 0=
 IF
     2DROP PenumeratedExp
 ELSE
-    DUP seq-ops IN
+    DUP rangerestriction2 RAN IN
     IF
         PUSH PUSH PrangeRestrictedSeq   ( Left subexpression=seq )
     ELSE
