@@ -2621,7 +2621,7 @@ NULL OP Pexpression2
 NULL OP Plist
 NULL OP Plist2
 
-: Pargumentlist ( s -- s1 type ) 
+: PargumentList ( "(" "" 0 s -- s1 type ) 
 (
     Where s is the original string in a format like "x, y, z" and s1 is that
     string in a suitable postfix format eg "x y z" and type is the types
@@ -2635,7 +2635,7 @@ NULL OP Plist2
     onto and off the user stack and catenated later.
     Uses the ,_ operation, which requires "(" "" null on the stack before 1st
     execution: use the (_ operation to achieve that: must be followed by )_
-) )
+) balance brackets ) )
 comma lsplit 0=
 IF ( no , operator found )
     DROP Pexpression 
@@ -2658,7 +2658,7 @@ NULL OP Puminus
     Takes the expression, separates out the argument list inside (), throwing an
     error if the arguments list is empty. For no-arguments functions write "foo"
     rather than "foo()".
-    What follows is done with the Pargumentlist operation.
+    What follows is done with the PargumentList operation.
     The arguments list is parsed and each subexpression, separated by commas, is
     an expression which is sent to the Pexpression parser. This produces a
     postfix argument and its type. The arguments and types are put back and
@@ -2684,7 +2684,7 @@ ROT 0 SWAP C! ( Get rid of final close bracket )
 ( Put name of function onto user stack for use later on. )
 SWAP PUSH
 ( stack = "(" "" null "ii, jj, kk" Ustack = "foo" ) )
-Pargumentlist
+PargumentList
 ( stack = "(" "ii jj" "INT1 INT2 "kk" INT3" Ustack = "foo" ) )
 ( Retrieve function name )
 POP ( stack = "(" "ii jj" "INT1 INT2" "kk" "INT3" "foo" ) )
@@ -2696,7 +2696,7 @@ THEN
 SWAP
 ;
 
-: Pargumentlist2 ( s -- s1 )
+: PargumentList2 ( "(" "" 0 s -- s1 )
 (
     Where s is the input text eg 1, 2, 3 and s1 the output, including the "" and
     newlines (not shown), eg " 1" " INT" ,_ " 2" " INT" ,_ " 3" " INT"
@@ -2705,7 +2705,7 @@ SWAP
     output value.
     The output can be executed, and uses the ,_ operation which requires ( "" 0
     on the stack beforehand, so " (_" must be added to the start of the string.
-) balance brackets ) )
+) balance brackets ) ) )
 comma lsplit 0= ( No operator found: right string is nonsense )
 IF
     DROP Pexpression2 ( On left string )
@@ -2734,7 +2734,7 @@ nowspace DUP endaz DUP ROT ROT ( ( stack = "(_" ")" "foo(x, y, z)" ")" )
 ROT 0 SWAP C! 0 OVER C! 1+
 ( stack = "(_" "foo" "x, y, z" ) )
 ( Put name on user stack ) SWAP PUSH
-Pargumentlist2 AZ^
+PargumentList2 AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" ) )
 ( Need to add " foo" with "" to end of text. )
 POP add-quotes1 AZ^
@@ -6308,7 +6308,7 @@ THEN
 (
     Very similar to Pvariable, but intended for return values and parameters
     when declaring a function. i INT ← foo ( s STRING, f FLOAT ) ... is an
-    example; for foo(i, j, k) you use Pargumentlist.
+    example; for foo(i, j, k) you use PargumentList.
     Rather than adding any unknown types to the user-types relation, it checks
     that any types required have already been declared, otherwise returning an
     error

@@ -132,5 +132,6 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 106 " ARRAY[]" ParrayLiteral " HERE 0 , " " ARRAY" checkOutputAndType
 107 " ARRAY[]" Patom " HERE 0 , " " ARRAY"      checkOutputAndType
 108 " ARRAY[]" Pexpression " HERE 0 , " " ARRAY" checkOutputAndType
+109 " (" " " 0 " 1, 2, 3" PargumentList " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType ( foo is in types )
 " Herendeththetestfile" .AZ CR
 
