@@ -195,7 +195,7 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 168 " (iArr[2])"    Patom SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 169 " (iArr[1 + 2 * 3])"    Patom SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
 170 " (iArr[2])"    Parith SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-171 " (iArr[1 + 2 * 3])"    Parith SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType1
+171 " (iArr[1 + 2 * 3])"    Parith SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
 172 " (iArr[2])"    ParithExp SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 173 " (iArr[1 + 2 * 3])"    ParithExp SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
 174 " (iArr[2])"    Pexpression SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
@@ -211,18 +211,59 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 184 " ( {1, 2, 3})" Pexpression " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
 185 " ([1, 2, 3] )" Patom " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
 DROP 186 " ([1, 2, 3] )" Pset  " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
-DROP 187 " ([1, 2, 3] )" Psequence " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
-DROP 188 " ([1, 2, 3] )" Pexpression " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
-DROP 189 " ( foo(1, 2, 3))" Patom " 1 2 3 foo" " foo"   checkOutputAndType
-190 " ( foo(1, 2, 3))" Pexpression " 1 2 3 foo" " foo" checkOutputAndType
-191 " (ARRAY[])" Patom " HERE 0 , " " ARRAY"      checkOutputAndType
-192 " (ARRAY[])" Pexpression " HERE 0 , " " ARRAY" checkOutputAndType
-193 " (" " " 0 " 1, 2, 3" PargumentList " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType ( foo is in types )
-194 " ( “Campbell”)" Patom " Campbell" addQuotes1 string checkOutputAndType
-195 " (“Campbell(((”)" Patom " Campbell(((" addQuotes1 string checkOutputAndType
-196 " (“Campbell “Campbell “Campbell “Campbell””””)" Patom " Campbell “Campbell “Campbell “Campbell”””" addQuotes1 string checkOutputAndType
-197 " (“Campbell”)" Pexpression " Campbell" addQuotes1 string checkOutputAndType
-198 " (“Campbell(((”)" Pexpression " Campbell(((" addQuotes1 string checkOutputAndType
-199 " (“Campbell “Campbell “Campbell “Campbell””””)" Pexpression " Campbell “Campbell “Campbell “Campbell”””" addQuotes1 string checkOutputAndType
-" Herendeththetestfile" .AZ CR
+DROP 187 " ([1, 2, 3] )" Pexpression " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 188 " ( foo(1, 2, 3))" Patom " 1 2 3 foo" " foo"   checkOutputAndType
+189 " ( foo(1, 2, 3))" Pexpression " 1 2 3 foo" " foo" checkOutputAndType
+190 " (ARRAY[])" Patom " HERE 0 , " " ARRAY"      checkOutputAndType
+191 " (ARRAY[])" Pexpression " HERE 0 , " " ARRAY" checkOutputAndType
+192 " (" " " 0 " 1, 2, 3" PargumentList " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType ( foo is in types )
+193 " ( “Campbell”)" Patom " Campbell" addQuotes1 string checkOutputAndType
+194 " (“Campbell(((”)" Patom " Campbell(((" addQuotes1 string checkOutputAndType
+195 " (“Campbell “Campbell “Campbell “Campbell””””)" Patom " Campbell “Campbell “Campbell “Campbell”””" addQuotes1 string checkOutputAndType
+196 " (“Campbell”)" Pexpression " Campbell" addQuotes1 string checkOutputAndType
+197 " (“Campbell(((”)" Pexpression " Campbell(((" addQuotes1 string checkOutputAndType
+198 " (“Campbell “Campbell “Campbell “Campbell””””)" Pexpression " Campbell “Campbell “Campbell “Campbell”””" addQuotes1 string checkOutputAndType
+199 " -123" ParithExp " 123 -1 *" int               checkOutputAndType
+200 " -123" Puminus " 123 -1 *" int          checkOutputAndType
+201 " -123.45" ParithExp " 123.45 -1.0 F*" float    checkOutputAndType
+202 " -123.45" Puminus " 123.45 -1.0 F*" float checkOutputAndType
+STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |->$,$ , } types ∪ to types
+203 " greater(  1   ,  2)" Pfunction " 1 2 greater" boolean checkOutputAndType
+204 " greater(  1   ,  2)" Patom " 1 2 greater" boolean checkOutputAndType
+205 " greater(  1   ,  2)" PbooleanAtom " 1 2 greater" boolean checkOutputAndType
+206 " greater(  1   ,  2)" Pboolean " 1 2 greater" boolean checkOutputAndType
+207 " greater(  1   ,  2)" Pexpression " 1 2 greater" boolean checkOutputAndType
+208 " TRUE" PbooleanAtom " TRUE" boolean checkOutputAndType
+209 " TRUE" Patom " TRUE" boolean checkOutputAndType
+210 " TRUE" Pboolean " TRUE" boolean checkOutputAndType
+211 " TRUE" Pexpression " TRUE" boolean checkOutputAndType
+212 " true" PbooleanAtom " TRUE" boolean checkOutputAndType
+213 " true" Patom " TRUE" boolean checkOutputAndType
+214 " true" Pboolean " TRUE" boolean checkOutputAndType
+215 " true" Pexpression " TRUE" boolean checkOutputAndType
+216 " FALSE" PbooleanAtom " FALSE" boolean checkOutputAndType
+217 " FALSE" Patom " FALSE" boolean checkOutputAndType
+218 " FALSE" Pboolean " FALSE" boolean checkOutputAndType
+219 " FALSE" Pexpression " FALSE" boolean checkOutputAndType
+220 " false" PbooleanAtom " FALSE" boolean checkOutputAndType
+221 " false" Patom " FALSE" boolean checkOutputAndType
+222 " false" Pboolean " FALSE" boolean checkOutputAndType
+223 " false" Pexpression " FALSE" boolean checkOutputAndType
+224 " {false} ⊂ {false, true}" Psubset boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+225 " {false} ⊂ {false, true}" PsubsetBoolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+226 " {false} ⊂ {false, true}" Pboolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+227 " {false} ⊂ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+228 " {true} ⊂ {false, true}" Psubset boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+229 " {true} ⊂ {false, true}" PsubsetBoolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+230 " {true} ⊂ {false, true}" Pboolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+231 " {true} ⊂ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+232 " {1, 2, 3} ⊂ {4, 5, 6}" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
+233 " {1, 2, 3} ⊂ {4, 5, 6}" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
+234 " {1, 2, 3} ⊂ {4, 5, 6}" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
+235 " {1, 2, 3} ⊂ {4, 5, 6}" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
+236 " {1, 2, 3} ⊂ 1 .. 6" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
+237 " {1, 2, 3} ⊂ 1 .. 6" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
+238 " {1, 2, 3} ⊂ 1 .. 6" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
+239 " {1, 2, 3} ⊂ 1 .. 6" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
+CR " HereEndethTheTestFile" .AZ CR
 
