@@ -256,7 +256,7 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 228 " {true} ⊂ {false, true}" Psubset boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
 229 " {true} ⊂ {false, true}" PsubsetBoolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
 230 " {true} ⊂ {false, true}" Pboolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
-231 " {true} ⊂ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
+231 " {true} ⊂ {false, true}" Pexpression boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂" AZ^ boolean checkOutputAndType
 232 " {1, 2, 3} ⊂ {4, 5, 6}" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
 233 " {1, 2, 3} ⊂ {4, 5, 6}" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
 234 " {1, 2, 3} ⊂ {4, 5, 6}" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂" AZ^ boolean checkOutputAndType
@@ -265,5 +265,86 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 237 " {1, 2, 3} ⊂ 1 .. 6" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
 238 " {1, 2, 3} ⊂ 1 .. 6" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
 239 " {1, 2, 3} ⊂ 1 .. 6" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂" AZ^ boolean checkOutputAndType
+240 " {false} ⊆ {false, true}" Psubset boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+241 " {false} ⊆ {false, true}" PsubsetBoolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+242 " {false} ⊆ {false, true}" Pboolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+243 " {false} ⊆ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+244 " {true} ⊆ {false, true}" Psubset boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+245 " {true} ⊆ {false, true}" PsubsetBoolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+246 " {true} ⊆ {false, true}" Pboolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+247 " {true} ⊆ {false, true}" Pexpression boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆" AZ^ boolean checkOutputAndType
+248 " {1, 2, 3} ⊆ {4, 5, 6}" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆" AZ^ boolean checkOutputAndType
+249 " {1, 2, 3} ⊆ {4, 5, 6}" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆" AZ^ boolean checkOutputAndType
+250 " {1, 2, 3} ⊆ {4, 5, 6}" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆" AZ^ boolean checkOutputAndType
+251 " {1, 2, 3} ⊆ {4, 5, 6}" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆" AZ^ boolean checkOutputAndType
+252 " {1, 2, 3} ⊆ 1 .. 6" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊆" AZ^ boolean checkOutputAndType
+253 " {1, 2, 3} ⊆ 1 .. 6" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊆" AZ^ boolean checkOutputAndType
+254 " {1, 2, 3} ⊆ 1 .. 6" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊆" AZ^ boolean checkOutputAndType
+255 " {1, 2, 3} ⊆ 1 .. 6" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊆" AZ^ boolean checkOutputAndType
+256 " {false} ⊄ {false, true}" Psubset boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+257 " {false} ⊄ {false, true}" PsubsetBoolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+258 " {false} ⊄ {false, true}" Pboolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+259 " {false} ⊄ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+260 " {true} ⊄ {false, true}" Psubset boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+261 " {true} ⊄ {false, true}" PsubsetBoolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+262 " {true} ⊄ {false, true}" Pboolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+263 " {true} ⊄ {false, true}" Pexpression boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊄" AZ^ boolean checkOutputAndType
+264 " {1, 2, 3} ⊄ {4, 5, 6}" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊄" AZ^ boolean checkOutputAndType
+265 " {1, 2, 3} ⊄ {4, 5, 6}" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊄" AZ^ boolean checkOutputAndType
+266 " {1, 2, 3} ⊄ {4, 5, 6}" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊄" AZ^ boolean checkOutputAndType
+267 " {1, 2, 3} ⊄ {4, 5, 6}" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊄" AZ^ boolean checkOutputAndType
+268 " {1, 2, 3} ⊄ 1 .. 6" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊄" AZ^ boolean checkOutputAndType
+269 " {1, 2, 3} ⊄ 1 .. 6" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊄" AZ^ boolean checkOutputAndType
+270 " {1, 2, 3} ⊄ 1 .. 6" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊄" AZ^ boolean checkOutputAndType
+271 " {1, 2, 3} ⊄ 1 .. 6" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊄" AZ^ boolean checkOutputAndType
+272 " {false} ⊈ {false, true}" Psubset boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+273 " {false} ⊈ {false, true}" PsubsetBoolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+274 " {false} ⊈ {false, true}" Pboolean boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+275 " {false} ⊈ {false, true}" Pexpression boolean sspace AZ^ " { FALSE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+276 " {true} ⊈ {false, true}" Psubset boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+277 " {true} ⊈ {false, true}" PsubsetBoolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+278 " {true} ⊈ {false, true}" Pboolean boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+279 " {true} ⊈ {false, true}" Pexpression boolean sspace AZ^ " { TRUE , }" AZ^ sspace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊈" AZ^ boolean checkOutputAndType
+280 " {1, 2, 3} ⊈ {4, 5, 6}" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊈" AZ^ boolean checkOutputAndType
+281 " {1, 2, 3} ⊈ {4, 5, 6}" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊈" AZ^ boolean checkOutputAndType
+282 " {1, 2, 3} ⊈ {4, 5, 6}" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊈" AZ^ boolean checkOutputAndType
+283 " {1, 2, 3} ⊈ {4, 5, 6}" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ sspace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊈" AZ^ boolean checkOutputAndType
+284 " {1, 2, 3} ⊈ 1 .. 6" Psubset int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊈" AZ^ boolean checkOutputAndType
+285 " {1, 2, 3} ⊈ 1 .. 6" PsubsetBoolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊈" AZ^ boolean checkOutputAndType
+286 " {1, 2, 3} ⊈ 1 .. 6" Pboolean int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊈" AZ^ boolean checkOutputAndType
+287 " {1, 2, 3} ⊈ 1 .. 6" Pexpression int sspace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊈" AZ^ boolean checkOutputAndType
+288 " 1 ↦ “Campbell”" Ppair " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+289 " 1 ↦ “Campbell”" Pexpression " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+290 " (1 ↦ “Campbell”)" Ppair " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+291 " (1 ↦ “Campbell”)" Pexpression " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+292 " 1 ↦ 99" Ppair " 1 99 |->I,I" " INT INT PROD" checkOutputAndType
+293 " 1 ↦ 99" Pexpression " 1 99 |->I,I" " INT INT PROD" checkOutputAndType
+294 " (1 ↦ 99)" Ppair " 1 99 |->I,I" " INT INT PROD" checkOutputAndType
+295 " (1 ↦ 99)" Pexpression " 1 99 |->I,I" " INT INT PROD" checkOutputAndType
+296 " “Campbell”↦1" Ppair quotespace " Campbell" quotespace "  1" "  |->$,I" AZ^ AZ^ AZ^ AZ^ " STRING INT PROD" checkOutputAndType
+297 " “Campbell”↦1" Pexpression quotespace " Campbell" quotespace "  1" "  |->$,I" AZ^ AZ^ AZ^ AZ^ " STRING INT PROD" checkOutputAndType
+298 " ( “Campbell”↦1)" Ppair quotespace " Campbell" quotespace "  1" "  |->$,I" AZ^ AZ^ AZ^ AZ^ " STRING INT PROD" checkOutputAndType
+299 " ( “Campbell”↦1)" Pexpression quotespace " Campbell" quotespace "  1" "  |->$,I" AZ^ AZ^ AZ^ AZ^ " STRING INT PROD" checkOutputAndType
+300 " 1↦“Campbell”" Ppair " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+301 " 1↦“Campbell”" Pexpression " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+302 " (1↦“Campbell”)" Ppair " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+303 " (1↦“Campbell”)" Pexpression " 1 " quotespace " Campbell" quotespace "  |->I,$" AZ^ AZ^ AZ^ AZ^ " INT STRING PROD" checkOutputAndType
+304 " {1, 2, 3} ↦ {4, 5, 6}" Ppair " INT { 1 , 2 , 3 , } INT { 4 , 5 , 6 , } |->S,S" " INT POW INT POW PROD" checkOutputAndType
+305 " {1, 2, 3} ↦ {4, 5, 6}" Pexpression " INT { 1 , 2 , 3 , } INT { 4 , 5 , 6 , } |->S,S" " INT POW INT POW PROD" checkOutputAndType
+306 " 123 ↦ 234 ↦ 456" Ppair " 123 234 |->I,I 456 |->P,I" " INT INT PROD INT PROD" checkOutputAndType
+307 " 123 ↦ 234 ↦ 456" Pexpression " 123 234 |->I,I 456 |->P,I" " INT INT PROD INT PROD" checkOutputAndType
+308 " 123 ↦ (234 ↦ 456)" Ppair " 123 234 456 |->I,I |->I,P" " INT INT INT PROD PROD" checkOutputAndType
+309 " 123 ↦ (234 ↦ 456)" Pexpression " 123 234 456 |->I,I |->I,P" " INT INT INT PROD PROD" checkOutputAndType
+310 " {1, 2, 3}" PjoinedSet " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
+311 " ({1, (2), 3})" PjoinedSet " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
+312 " {1, 2, 3}" Pexpression " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
+313 " ({1, (2), 3})" Pexpression " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
+(
+Not working yet.
+314 " {“Campbell”, “Bill”, “Steve”}" PjoinedSet " STRING { " quotespace " Campbell" spacequotespace " , " spacequotespace " Bill" quotespace " , " spacequotespace " Steve" quotespace " , }" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ " STRING POW" checkOutputAndType
+315 " ({“Campbell”, (“Bill”), “Steve”})" PjoinedSet " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
+316 " {“Campbell”, “Bill”, “Steve”}" Pexpression " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
+317 " ({“Campbell”, (“Bill”), “Steve”})" Pexpression " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
+)
 CR " HereEndethTheTestFile" .AZ CR
 

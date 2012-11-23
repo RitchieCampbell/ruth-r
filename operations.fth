@@ -204,7 +204,7 @@ STRING [ " &" , " |" , " ∧" , " ∨" , ] CONSTANT andor
 STRING [ " ," , ] CONSTANT comma
 STRING [ " ⊂" ,  " ⊄" , " ⊆" , " ⊈" , ] CONSTANT subset
 STRING [ " ↦" , ] CONSTANT maplet
-STRING [ " \" , " ∪" , " ∩" , " ⊕" , ] CONSTANT unionintersect
+STRING [ " \" , " ∪" , " ∩" , " ⊕" , ] CONSTANT unionIntersect
 STRING [ " ◁-" , " ◁" , ] CONSTANT domrestriction
 STRING [ " ^" , " ⁀" , " ▷-" , " ▷" , " ←" , " ↑" , " ↓" , ]
         CONSTANT rangerestriction
@@ -4524,7 +4524,7 @@ THEN
     Note types for union intersection and difference are different from types
     for overriding.
 )
-unionintersect lsplit
+unionIntersect lsplit
 DUP
 IF      ( operator found )
     PUSH PUSH RECURSE   ( on left subexpression )
@@ -4553,7 +4553,7 @@ THEN
     expression represents a set at this stage, so the results are passed to the
     "set" version of the parser.  
 )
-unionintersect lsplit
+unionIntersect lsplit
 DUP 0=
 IF
     2DROP PdomainRestrictedSet
@@ -4587,7 +4587,7 @@ THEN
     This cannot use any synomyms for its operators because \ will mistakenly be
     found for /\.
 )
-unionintersect lsplit
+unionIntersect lsplit
 DUP 0=
 IF
     2DROP PdomainRestrictedExp2
@@ -4615,7 +4615,7 @@ THEN
     This cannot use any synomyms for its operators because \ will mistakenly be
     found for /\.    
 )
-unionintersect lsplit
+unionIntersect lsplit
 DUP 0=
 IF
     2DROP PdomainRestrictedExp
