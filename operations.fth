@@ -418,7 +418,7 @@ IF ." true" ELSE ." false" THEN ;
 )
 ROT ROT myazlength + head SWAP IN ;
 
-: double-space-remover ( s -- s )
+: doubleSpaceRemover ( s -- s )
 (
     Same string with all multiple spaces converted to single spaces.
     Works by copying all the characters into itself from source to destination;
@@ -443,7 +443,7 @@ REPEAT
 DROP 0 SWAP C! 
 ;
 
-: double-line-remover
+: doubleLineRemover
 ( s -- s1 being s minus double newlines. Similar to above operation )
 DUP DUP
 BEGIN
@@ -460,7 +460,7 @@ REPEAT
 DROP 0 SWAP C!
 ;
 
-: double-whitespace-remover ( s -- s )
+: doubleWhitespaceRemover ( s -- s )
 (
     Same string with all multiple whitespace converted to single spaces.
     Works by copying all the characters into itself from source to destination;
@@ -6475,3 +6475,4 @@ THEN
 ;
 
 : P Pmultipleinstruction ; ' P to Poperations
+

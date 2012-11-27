@@ -339,12 +339,9 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 311 " ({1, (2), 3})" PjoinedSet " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
 312 " {1, 2, 3}" Pexpression " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
 313 " ({1, (2), 3})" Pexpression " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
-(
-Not working yet.
-314 " {“Campbell”, “Bill”, “Steve”}" PjoinedSet " STRING { " quotespace " Campbell" spacequotespace " , " spacequotespace " Bill" quotespace " , " spacequotespace " Steve" quotespace " , }" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ " STRING POW" checkOutputAndType
+314 " {“Campbell”, “Bill”, “Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
 315 " ({“Campbell”, (“Bill”), “Steve”})" PjoinedSet " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
 316 " {“Campbell”, “Bill”, “Steve”}" Pexpression " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
 317 " ({“Campbell”, (“Bill”), “Steve”})" Pexpression " STRING { 1 , 2 , 3 , }" " STRING POW" checkOutputAndType
-)
-CR " HereEndethTheTestFile" .AZ CR
 
+CR " HereEndethTheTestFile" .AZ CR
