@@ -204,7 +204,8 @@ STRING [ " &" , " |" , " ∧" , " ∨" , ] CONSTANT andor
 STRING [ " ," , ] CONSTANT comma
 STRING [ " ⊂" ,  " ⊄" , " ⊆" , " ⊈" , ] CONSTANT subset
 STRING [ " ↦" , ] CONSTANT maplet
-STRING [ " \" , " ∪" , " ∩" , " ⊕" , ] CONSTANT unionIntersect
+STRING [ " \" , "    " 226 OVER C! 136 OVER 1+ C! 150 OVER 2 + C! , " ∪" ,
+        " ∩" , " ⊕" , ] CONSTANT unionIntersect : ∖ \ ;
 STRING [ " ◁-" , " ◁" , ] CONSTANT domrestriction
 STRING [ " ^" , " ⁀" , " ▷-" , " ▷" , " ←" , " ↑" , " ↓" , ]
         CONSTANT rangerestriction
@@ -2537,7 +2538,8 @@ WHILE
         size count > op 0= AND ( Not reached start of string, nor found op )
     WHILE 
         count 1+ to count      ( Go through potential operators )
-        seq count APPLY end prefix? 
+        seq count APPLY end
+        prefix? 
         IF 
             seq count APPLY to op
         THEN 
