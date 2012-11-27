@@ -343,25 +343,40 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 315 " ({“Campbell”, (“Bill”), “Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
 316 " {“Campbell”, “Bill”, “Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
 317 " ({“Campbell”, (“Bill”), “Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318 " {“Campbell”, “Bill”} \ {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } \" AZ^ " STRING POW" checkOutputAndType
-319 " ({“Campbell”, (“Bill”)} \ {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {“Campbell”, “Bill”} \ {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({“Campbell”, (“Bill”)} \ {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318 " {“Campbell”, “Bill”} {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({“Campbell”, (“Bill”)} {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {“Campbell”, “Bill”} {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({“Campbell”, (“Bill”)} {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318  " {“Campbell”, “Bill”} {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({“Campbell”, (“Bill”)} {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {“Campbell”, “Bill”} {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({“Campbell”, (“Bill”)} {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318 " {“Campbell”, “Bill”} {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({“Campbell”, (“Bill”)} {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {“Campbell”, “Bill”} {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({“Campbell”, (“Bill”)} {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318 " {“Campbell”, “Bill”} {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({“Campbell”, (“Bill”)} {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {“Campbell”, “Bill”} {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({“Campbell”, (“Bill”)} {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-
+318 " {“Campbell”, “Bill”} ∪ {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∪" AZ^ " STRING POW" checkOutputAndType
+319 " ({“Campbell”, (“Bill”)} ∪ {“Steve”})" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∪" AZ^  " STRING POW" checkOutputAndType
+320 " {“Campbell”, “Bill”} ∪ {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∪" AZ^  " STRING POW" checkOutputAndType
+321 " ({“Campbell”, (“Bill”)} ∪ {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∪" AZ^  " STRING POW" checkOutputAndType
+322  " {“Campbell”, “Bill”} ∩ {“Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP  " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∩" AZ^ " STRING POW" checkOutputAndType
+323 " ({“Campbell”, (“Bill”)} ∩ {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover SWAP  " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∩" AZ^ " STRING POW" checkOutputAndType
+324 " {“Campbell”, “Bill”} ∩ {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP  " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∩" AZ^ " STRING POW" checkOutputAndType
+325 " ({“Campbell”, (“Bill”)} ∩ {“Steve”})" Pexpression  SWAP doubleSpaceRemover SWAP  " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } ∩" AZ^ " STRING POW" checkOutputAndType
+322  " {“Campbell”, “Bill”} \  {“Steve”}" PjoinedSet SWAP doubleSpaceRemover nowspace SWAP  " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } \ " AZ^ nowspace " STRING POW" checkOutputAndType
+323 " ({“Campbell”, (“Bill”)} \  {“Steve”})" PjoinedSet  SWAP doubleSpaceRemover nowspace SWAP  " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } \ " AZ^ nowspace " STRING POW" checkOutputAndType
+324 " {“Campbell”, “Bill”} \  {“Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP nowspace " STRING { " " Campbell" addQuotes1 AZ^
+" , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } \ " AZ^ nowspace " STRING POW" checkOutputAndType
+325 " ({“Campbell”, (“Bill”)} \  {“Steve”})" Pexpression  SWAP doubleSpaceRemover nowspace SWAP  " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , } STRING { " AZ^ " Steve" addQuotes1 AZ^ " , } \ " AZ^ nowspace " STRING POW" checkOutputAndType
+326 " {1, 2, 3, 4, 5, 6} \ {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
+327 " ({1, (2), 3,(( 4)), 5, 6} \ {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
+328 " {1, 2, 3, 4, 5, 6} \ {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
+329 " ({1, (2), 3,(( 4)), 5, 6} \ {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
+(
+318 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+319 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+320 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+321 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+318 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+319 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+320 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+321 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
+)
 CR " HereEndethTheTestFile" .AZ CR
