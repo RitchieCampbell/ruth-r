@@ -369,14 +369,21 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 327 " ({1, (2), 3,(( 4)), 5, 6} \ {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
 328 " {1, 2, 3, 4, 5, 6} \ {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
 329 " ({1, (2), 3,(( 4)), 5, 6} \ {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } \ " nowspace " INT POW" checkOutputAndType
-(
-318 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-318 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-319 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-320 " {1, 2, 3, 4, 5, 6} {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-321 " ({1, (2), 3,(( 4)), 5, 6} {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , " AZ^ " Bill" addQuotes1 AZ^ " , " AZ^ " Steve" addQuotes1 AZ^ " , }" AZ^ " STRING POW" checkOutputAndType
-)
-CR " HereEndethTheTestFile" .AZ CR
+330 " {1, 2, 3, 4, 5, 6} ∪ {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∪" " INT POW" checkOutputAndType
+331 " ({1, (2), 3,(( 4)), 5, 6} ∪ {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∪" " INT POW" checkOutputAndType
+332 " {1, 2, 3, 4, 5, 6} ∪ {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∪" " INT POW" checkOutputAndType
+333 " ({1, (2), 3,(( 4)), 5, 6} ∪ {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∪" " INT POW" checkOutputAndType
+334 " {1, 2, 3, 4, 5, 6} ∩ {1, 5, 7}" PjoinedSet SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∩" " INT POW" checkOutputAndType
+335 " ({1, (2), 3,(( 4)), 5, 6} ∩ {1, 5, 7})" PjoinedSet  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∩" " INT POW" checkOutputAndType
+336 " {1, 2, 3, 4, 5, 6} ∩ {1, 5, 7}" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∩" " INT POW" checkOutputAndType
+337 " ({1, (2), 3,(( 4)), 5, 6} ∩ {1, 5, 7})" Pexpression  SWAP doubleSpaceRemover SWAP " INT { 1 , 2 , 3 , 4 , 5 , 6 , } INT { 1 , 5 , 7 , } ∩" " INT POW" checkOutputAndType
+338 " {1 ↦ “Campbell”, 97 ↦ “Bill”} ⊕ {97 ↦ “Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " INT STRING PROD  { 1 " " Campbell" addQuotes1 AZ^ " |->I,$ , 97 " AZ^ " Bill" addQuotes1 AZ^ " |->I,$ , } INT STRING PROD  { 97 " AZ^ " Steve" addQuotes1 AZ^ " |->I,$ , } ⊕" AZ^ doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
+339 " {1 ↦ “Campbell”, 97 ↦ “Bill”} ⊕ {97 ↦ “Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " INT STRING PROD  { 1 " " Campbell" addQuotes1 AZ^ " |->I,$ , 97 " AZ^ " Bill" addQuotes1 AZ^ " |->I,$ , } INT STRING PROD  { 97 " AZ^ " Steve" addQuotes1 AZ^ " |->I,$ , } ⊕" AZ^ doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
+340 " {1 ↦ “Campbell”, 97 ↦ “Bill”} ⊕ {97 ↦ “Steve”}" Pexpression  SWAP doubleSpaceRemover SWAP " INT STRING PROD  { 1 " " Campbell" addQuotes1 AZ^ " |->I,$ , 97 " AZ^ " Bill" addQuotes1 AZ^ " |->I,$ , } INT STRING PROD  { 97 " AZ^ " Steve" addQuotes1 AZ^ " |->I,$ , } ⊕" AZ^ doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
+341 " {1 ↦ “Campbell”, 97 ↦ “Bill”} ⊕ {97 ↦ “Steve”}" PjoinedSet SWAP doubleSpaceRemover SWAP " INT STRING PROD  { 1 " " Campbell" addQuotes1 AZ^ " |->I,$ , 97 " AZ^ " Bill" addQuotes1 AZ^ " |->I,$ , } INT STRING PROD  { 97 " AZ^ " Steve" addQuotes1 AZ^ " |->I,$ , } ⊕" AZ^ doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
+342 " {1 ↦ 1, 1 ↦ 2, 2 ↦ 3, 99 ↦ 4, 4 ↦ 5, 5 ↦ 6} ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7}" PjoinedSet " INT INT PROD { 1 1 |->I,I , 1 2 |->I,I , 2 3 |->I,I , 99 4 |->I,I , 4 5 |->I,I , 5 6 |->I,I , } INT INT PROD { 1 1 |->I,I , 1 5 |->I,I , 2 7 |->I,I , } ⊕" " INT INT PROD POW" checkOutputAndType
+343 " {1 ↦ 1, 1 ↦ 2, 2 ↦ 3, 99 ↦ 4, 4 ↦ 5, 5 ↦ 6} ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7}" Pexpression " INT INT PROD { 1 1 |->I,I , 1 2 |->I,I , 2 3 |->I,I , 99 4 |->I,I , 4 5 |->I,I , 5 6 |->I,I , } INT INT PROD { 1 1 |->I,I , 1 5 |->I,I , 2 7 |->I,I , } ⊕" " INT INT PROD POW" checkOutputAndType
+344 " ({1 ↦ 1, 1 ↦ (2), 2 ↦ 3,((99 ↦ 4)), 4 ↦ 5, 5 ↦ 6} ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7})" PjoinedSet " INT INT PROD { 1 1 |->I,I , 1 2 |->I,I , 2 3 |->I,I , 99 4 |->I,I , 4 5 |->I,I , 5 6 |->I,I , } INT INT PROD { 1 1 |->I,I , 1 5 |->I,I , 2 7 |->I,I , } ⊕" " INT INT PROD POW" checkOutputAndType
+345 " ({1 ↦ 1, 1 ↦ (2), 2 ↦ 3,((99 ↦ 4)), 4 ↦ 5, 5 ↦ 6} ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7})" PjoinedSet " INT INT PROD { 1 1 |->I,I , 1 2 |->I,I , 2 3 |->I,I , 99 4 |->I,I , 4 5 |->I,I , 5 6 |->I,I , } INT INT PROD { 1 1 |->I,I , 1 5 |->I,I , 2 7 |->I,I , } ⊕" " INT INT PROD POW" checkOutputAndType
+
+CR ." HereEndethTheTestFile" CR

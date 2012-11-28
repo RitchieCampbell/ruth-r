@@ -1851,6 +1851,9 @@ check-single-tree
 DROP 2DROP
 ; 
 
+: ⊕ ( Relational override from RVM_FORTH manual page 27 set1 set2 --set1⊕set2 )
+    DUP DOM ROT <<| ∪ ;
+
 : ⊕_ ( s1 s2 s3 s4 -- ss1 ss2 )
     (: l-value l-type r-value r-type :)
     " ⊕" l-type r-type check-same-kind-relation
@@ -4550,7 +4553,7 @@ THEN
     to Pdomainrestriction, since we now know both subexpressions must represent
     sets.
     This cannot use any synomyms for its operators, because /\ will always be
-    mistakenly picked up by \.
+    mistakenly picked up by \. \ turns into \u2216 because of a markup.
     Differs only from the PjoinedSetExp operation in that one "knows" the
     expression represents a set at this stage, so the results are passed to the
     "set" version of the parser.  
@@ -4565,8 +4568,8 @@ ELSE
     POP ( operator )
     DUP " ⊕" string-eq
     IF
-        ⊕_
-    ELSE ( Other three possibilities )
+        DROP ( Override takes 4 values ) ⊕_
+    ELSE ( Other three possibilities, taking 5 values each )
         setunion_
     THEN
 THEN
@@ -4627,7 +4630,7 @@ ELSE
     POP ( operator )
     DUP " ⊕" string-eq
     IF
-        ⊕_
+        DROP ⊕_
     ELSE ( Other three possibilities )
         setunion_
     THEN
