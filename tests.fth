@@ -421,5 +421,5 @@ DROP 356 " [1, 2, 3, 4, 5, 6] ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7}" PjoinedSet " INT 
 389 " (({1, 2, 69, 4}) ◁- ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" PdomainRestrictedSet " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁-" " INT INT PROD POW" checkOutputAndType
 390 " (({1, 2, 69, 4}) ◁ ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" Pexpression " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁" " INT INT PROD POW" checkOutputAndType
 391 " (({1, 2, 69, 4}) ◁- ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" Pexpression " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁-" " INT INT PROD POW" checkOutputAndType
-
+  
 CR " HereEndethTheTestFile" .AZ CR
