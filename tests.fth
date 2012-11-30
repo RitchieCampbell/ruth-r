@@ -1,7 +1,7 @@
 : reportParserError ( i s1 s2 s3 -- ) 
 ( Prints an error message s1 is expected result, s2 found, s3 kind, line No i ) 
 CR .AZ 
-."  error: Found: “" SWAP .AZ ." ” when expecting “" .AZ ." ” at test No " . 
+."  error: Found:" SWAP CR .AZ ."  when expecting:" CR .AZ ."  at test No " . 
 ;
 
 : checkOutputAndType ( i s1 s2 s3 s4 -- ) 
@@ -421,5 +421,9 @@ DROP 356 " [1, 2, 3, 4, 5, 6] ⊕ {1 ↦ 1, 1 ↦ 5, 2 ↦ 7}" PjoinedSet " INT 
 389 " (({1, 2, 69, 4}) ◁- ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" PdomainRestrictedSet " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁-" " INT INT PROD POW" checkOutputAndType
 390 " (({1, 2, 69, 4}) ◁ ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" Pexpression " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁" " INT INT PROD POW" checkOutputAndType
 391 " (({1, 2, 69, 4}) ◁- ([1, (87243),( 827), 18, 0, 99, 1, 2, 69, 4]))" Pexpression " INT { 1 , 2 , 69 , 4 , } INT [ 1 , 87243 , 827 , 18 , 0 , 99 , 1 , 2 , 69 , 4 , ] ◁-" " INT INT PROD POW" checkOutputAndType
-  
+392 " ({“Campbell”} ∪ {“Andy”}) ◁ {“Campbell” ↦ “Ruth”, “John” ↦ “Laura”, “Andy” ↦ “Sarah”, “Paul” ↦ “Eleanor”, “Jonathan” ↦ “Eleanor”}" PdomainRestrictedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , } STRING { " AZ^ " Andy" addQuotes1 AZ^ " , } ∪ STRING STRING PROD { " AZ^ " Campbell" addQuotes1 AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ , " AZ^ " John" addQuotes1 AZ^ " Laura" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Andy" addQuotes1 AZ^ " Sarah" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Paul" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Jonathan" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , } ◁" AZ^ doubleSpaceRemover " STRING STRING PROD POW" checkOutputAndType
+393 " ({“Campbell”} ∪ {“Andy”}) ◁ {“Campbell” ↦ “Ruth”, “John” ↦ “Laura”, “Andy” ↦ “Sarah”, “Paul” ↦ “Eleanor”, “Jonathan” ↦ “Eleanor”}" Pexpression SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , } STRING { " AZ^ " Andy" addQuotes1 AZ^ " , } ∪ STRING STRING PROD { " AZ^ " Campbell" addQuotes1 AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ , " AZ^ " John" addQuotes1 AZ^ " Laura" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Andy" addQuotes1 AZ^ " Sarah" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Paul" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Jonathan" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , } ◁" AZ^ doubleSpaceRemover " STRING STRING PROD POW" checkOutputAndType
+394 " ({“Campbell”} ∪ {“Andy”}) ◁ ({(“Campbell” ↦ “Ruth”), ((“John” ↦ “Laura”)), “Andy” ↦ “Sarah”, “Paul” ↦ “Eleanor”, “Jonathan” ↦ “Eleanor”})" PdomainRestrictedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , } STRING { " AZ^ " Andy" addQuotes1 AZ^ " , } ∪ STRING STRING PROD { " AZ^ " Campbell" addQuotes1 AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ , " AZ^ " John" addQuotes1 AZ^ " Laura" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Andy" addQuotes1 AZ^ " Sarah" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Paul" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Jonathan" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , } ◁" AZ^ doubleSpaceRemover " STRING STRING PROD POW" checkOutputAndType
+395 " ({“Campbell”} ∪ {“Andy”}) ◁ ({(“Campbell” ↦ “Ruth”), ((“John” ↦ “Laura”)), “Andy” ↦ “Sarah”, “Paul” ↦ “Eleanor”, “Jonathan” ↦ “Eleanor”})" PdomainRestrictedSet SWAP doubleSpaceRemover SWAP " STRING { " " Campbell" addQuotes1 AZ^ " , } STRING { " AZ^ " Andy" addQuotes1 AZ^ " , } ∪ STRING STRING PROD { " AZ^ " Campbell" addQuotes1 AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ , " AZ^ " John" addQuotes1 AZ^ " Laura" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Andy" addQuotes1 AZ^ " Sarah" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Paul" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , " AZ^ " Jonathan" addQuotes1 AZ^ " Eleanor" addQuotes1 AZ^ "  |->$,$ , } ◁" AZ^ doubleSpaceRemover " STRING STRING PROD POW" checkOutputAndType
+
 CR " HereEndethTheTestFile" .AZ CR
