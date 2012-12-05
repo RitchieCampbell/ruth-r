@@ -83,8 +83,8 @@
 " 0 VALUE " CONSTANT 0value
 " , " CONSTANT comma-space
 "  VALUE-ARRAY " CONSTANT value-array
-" ♢" CONSTANT diamond-string
-" ∇" CONSTANT nabla-string
+" ♢" CONSTANT diamondString
+" ∇" CONSTANT nablaString
 0value VALUE type-value
 10 CONSTANT \n ( the line feed character, 0x0a = 10 in decimal )
 "  " \n OVER C! CONSTANT newline
@@ -206,7 +206,7 @@ STRING [ " ⊂" ,  " ⊄" , " ⊆" , " ⊈" , ] CONSTANT subset
 STRING [ " ↦" , ] CONSTANT maplet
 STRING [ " \" , "    " 226 OVER C! 136 OVER 1+ C! 150 OVER 2 + C! , " ∪" ,
         " ∩" , " ⊕" , ] CONSTANT unionIntersect : ∖ \ ;
-STRING [ " ◁-" , " ◁" , ] CONSTANT domrestriction
+STRING [ " ◁-" , " ◁" , ] CONSTANT domRestriction
 STRING [ " ^" , " ⁀" , " ▷-" , " ▷" , " ←" , " ↑" , " ↓" , ]
         CONSTANT rangerestriction
 STRING [ " ^" , " ⁀" , " ←" , " ↑" , " ↓" , ]
@@ -1884,7 +1884,7 @@ DROP 2DROP
    check-single-tree 2DROP
 ;
 
-: domrestriction_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
+: domRestriction_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
 (
     Where s1 and s3 are the two operand subexpressions, s2 and s4 their types,
     and s5 the operator. Returns the expression in postfix form, using the
@@ -4061,17 +4061,17 @@ nowspace
 DUP head [CHAR] [ =
 IF
     [CHAR] [ [CHAR] ] bracket-remover2 ( Remove []: should be refactored )
-    diamond-string OVER issubstringof?
+    diamondString OVER issubstringof?
     IF ( S♢E nested inside [] = error )
         ." Error: expression " CR .AZ ."  contains ♢ inside [...]" ABORT
     THEN
-    nabla-string OVER issubstringof?
+    nablaString OVER issubstringof?
     IF
         Pdiamond
     ELSE
-        PUSH [_ POP     ( Put [ [ null below present text )
-        Plist           ( Parse remaining text as list )
-        ]_
+   .S      PUSH [_ POP  .S    ( Put [ [ null below present text )
+   .S ABORT     Plist  .S          ( Parse remaining text as list )
+        ]_ 
     THEN
 ELSE
     DUP letter stringbegins?
@@ -4123,11 +4123,11 @@ nowspace
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracket-remover2 ( Remove {} ) ( Can be refactored )
-    nabla-string OVER issubstringof?
+    nablaString OVER issubstringof?
     IF  ( Error having ∇ inside {} )
         ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
     THEN
-    diamond-string OVER issubstringof?
+    diamondString OVER issubstringof?
     IF
         Pdiamond
     ELSE
@@ -4386,9 +4386,9 @@ IF
 ELSE
     DUP rangerestriction2 RAN IN
     IF
-        PUSH PUSH PrangeRestrictedSeq   ( Left subexpression=seq )
+        PUSH PUSH PrangeRestrictedSeq  ( Left subexpression=seq )
     ELSE
-        PUSH PUSH PrangeRestrictedSet   ( Left subexpression=set )
+        PUSH PUSH ABORT PrangeRestrictedSet  ( Left subexpression=set )
     THEN
     POP Pexpression                 ( Right subexpression )
     operation-swaps POP APPLY       ( F-pointer and Operation )   EXECUTE
@@ -4411,7 +4411,7 @@ NULL OP PdomainRestrictedSet
     string is parsed as range restricted sets or expressions and the other two
     must be discarded as null or nonsense.
 )
-domrestriction rsplit
+domRestriction rsplit
 DUP
 IF  ( operator found, so both subexpressions are sets )
     PUSH PUSH PrangeRestrictedSet2 sspace AZ^ ( Parse left only, add space )
@@ -4443,18 +4443,19 @@ THEN
     second value on the stack are "nonsense" values and are discarded.
     It is not straightforward to create a synonym for ◁ or ◁-.
 )
-domrestriction rsplit
+domRestriction rsplit
 DUP 0=
+( " In PdomainRestrictedExp: ◁ " .AZ DUP IF " NOT" .AZ THEN ."  found." .AZ CR  test )
 IF
     2DROP PrangeRestrictedExp
 ELSE
     PUSH PUSH PrangeRestrictedSet
     POP PdomainRestrictedSet
-    POP domrestriction_
+    POP domRestriction_
 THEN
 ;
 
-: P ( to be renamed PdomainRestrictedSet s -- s1 type )
+: P ( : PdomainRestrictedSet s -- s1 type )
 (
     This operation is, unfortunately, separated from the corresponding range
     restriction expression because domain restriction associates to the right
@@ -4477,14 +4478,15 @@ THEN
     This operation differs from the PdomainRestrictedExp operation only in that
     one can be certain the expression passed here represents a set.
 )
-domrestriction rsplit
+domRestriction rsplit
 DUP 0=
+( " In PdomainRestrictedSet: ◁ " .AZ DUP IF " NOT" .AZ THEN ."  found." .AZ CR  test )
 IF
     2DROP PrangeRestrictedSet
 ELSE
     PUSH PUSH PrangeRestrictedSet
     POP RECURSE
-    POP domrestriction_
+    POP domRestriction_
 THEN
 ;
 
@@ -4502,7 +4504,7 @@ THEN
     Differs from PdomainRestrictedExp only in that one can be sure the operands
     here are both sets.
 )
-domrestriction rsplit
+domRestriction rsplit
 DUP
 IF
     PUSH PUSH PrangeRestrictedSet2 sspace
@@ -4618,7 +4620,7 @@ THEN
     to Pdomainrestriction, since we now know both subexpressions must represent
     sets.
     This cannot use any synomyms for its operators because \ will mistakenly be
-    found for /\.    
+    found for /\.   
 )
 unionIntersect lsplit
 DUP 0=
@@ -5684,12 +5686,12 @@ THEN ; ' P to Pdiamond
 ( Where s is an expression string, and this calls the other parsers and )
 ( operator functions to return s1 which is the string in postfix for FORTH and )
 ( s2 which is the type string. )
-( CR ) ( so you can get the printout on a new line: looks better. ) Pquantified
+Pquantified
 ;
 
 ' P to Pexpression
 
-: P ( s -- s1 s2 )
+: P ( : Plist s -- s1 s2 )
 (
   Splits a string "s" representing a list into the string "s1" which is its
   postfix form, and s2 which is its type, eg " Middlesbrough, Sunderland" would
