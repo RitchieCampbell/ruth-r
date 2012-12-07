@@ -4069,8 +4069,8 @@ IF
     IF
         Pdiamond
     ELSE
-   .S      PUSH [_ POP  .S    ( Put [ [ null below present text )
-   .S ABORT     Plist  .S          ( Parse remaining text as list )
+        PUSH [_ POP      ( Put [ [ null below present text )
+        ABORT Plist      ( Parse remaining text as list )
         ]_ 
     THEN
 ELSE
@@ -5692,6 +5692,11 @@ Pquantified
 ' P to Pexpression
 
 : P ( : Plist s -- s1 s2 )
+(
+Investigating error, which appears to be in Plist, with this sort of stack trace
+244757882 244757884 0 244762000 Plist→seg fault. Not tracked down the error yet.
+Error more likely to be on the way back from ◁_.
+)
 (
   Splits a string "s" representing a list into the string "s1" which is its
   postfix form, and s2 which is its type, eg " Middlesbrough, Sunderland" would
