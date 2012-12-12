@@ -618,7 +618,7 @@ WHILE
 REPEAT
 ;
 
-: issubstringof? ( s1 s2 -- f whether s1 completely contained in s2 )
+: isSubstringOf? ( s1 s2 -- f whether s1 completely contained in s2 )
 ( If s1 expected to be found at beginning of s2, suggest prefix? instead )
 FALSE ROT ROT ( s1 s2 0 )
 BEGIN
@@ -837,7 +837,7 @@ THEN
 start end
 ;
 
-: bracket-remover
+: bracketRemover
 ( s c1 c2 -- s2 which is s with the starting and ending brackets removed )
 ( Only removes a matching pair so anything after that is lost )
 ( c1 and c2 are chars representing the opening and closing brackets-ASCII )
@@ -879,11 +879,11 @@ THEN
 old-string
 ;
 
-: bracket-remover2
+: bracketRemover2
 ( s c1 c2 -- s2 which is s with the starting and ending brackets removed )
 ( Only removes a matching pair so anything after that is lost )
 ( c1 and c2 are chars representing the opening and closing brackets-ASCII )
-( only. Example "(1 + 2)" [CHAR] ( [CHAR] ) bracket-remover2 → "1 + 2" )
+( only. Example "(1 + 2)" [CHAR] ( [CHAR] ) bracketRemover2 → "1 + 2" )
 ( If text not starting with the appropriate bracket is passed, no change )
 ( Error if the closing bracket is not the last printing character in the text )
 0 0
@@ -2815,7 +2815,7 @@ THEN
 nowspace
 " ]" OVER suffix? NOT
 IF ." [ without ending ] in array: " .AZ ."  passed" ABORT THEN
-array decapitate [CHAR] [ [CHAR] ] bracket-remover2
+array decapitate [CHAR] [ [CHAR] ] bracketRemover2
 DUP nowspace myazlength
     IF 1 SWAP PUSH array[_ POP ParrayList array]_
 ELSE
@@ -2861,7 +2861,7 @@ ELSE
             ELSE
                 DUP head [CHAR] ( =
                 IF
-                    [CHAR] ( [CHAR] ) bracket-remover
+                    [CHAR] ( [CHAR] ) bracketRemover
                     Pexpression
                 ELSE
                     DUP head [CHAR] - =
@@ -2870,14 +2870,14 @@ ELSE
                     ELSE    ( Ripe for refactoring with [] function: duplicate code should be in Psequence or Pset )
                         DUP head [CHAR] [ =
                         IF
-                            [CHAR] [ [CHAR] ] bracket-remover
-                            " ♢" OVER issubstringof?
+                            [CHAR] [ [CHAR] ] bracketRemover
+                            " ♢" OVER isSubstringOf?
                             IF   ( Can't nest S♢E inside [] or S∇E )
                                 ." Error: Expression " CR .AZ
                                 ."  contains ♢ inside [...]"
                                 ABORT
                             THEN
-                            " ∇" OVER issubstringof?
+                            " ∇" OVER isSubstringOf?
                             IF   ( Preferential choice with ∇ in )
                                 Pdiamond
                             ELSE ( Ordinary sequence )
@@ -2886,14 +2886,14 @@ ELSE
                         ELSE    ( refactor as above with Pset, moving NULL OP Pset earlier )
                             DUP head [CHAR] { =
                             IF
-                                [CHAR] { [CHAR] } bracket-remover
-                                " ∇" OVER issubstringof?
+                                [CHAR] { [CHAR] } bracketRemover
+                                " ∇" OVER isSubstringOf?
                                 IF   ( Can't nest S∇E inside S♢E )
                                     ." Error: Expression " CR .AZ
                                     ."  contains ∇ inside {...}"
                                     ABORT
                                 THEN
-                                " ♢" OVER issubstringof?
+                                " ♢" OVER isSubstringOf?
                                 IF   ( An S ♢ E expression )
                                     Pdiamond
                                 ELSE ( An ordinary set )
@@ -2956,7 +2956,7 @@ ELSE
             ELSE
                 DUP head [CHAR] ( =
                 IF
-                    [CHAR] ( [CHAR] ) bracket-remover2 Pexpression2
+                    [CHAR] ( [CHAR] ) bracketRemover2 Pexpression2
                 ELSE
                 (
                     This bit can be refactored for other brackets eg in UTF-8 by
@@ -3070,7 +3070,7 @@ THEN
 nowspace
 DUP head [CHAR] ( =
 IF
-    [CHAR] ( [CHAR] ) bracket-remover2
+    [CHAR] ( [CHAR] ) bracketRemover2
     Parith
 ELSE
     DUP digits0. stringbegins? ( Begins 0123456789, must be a number )
@@ -3109,7 +3109,7 @@ THEN
 nowspace
 DUP head [CHAR] ( =
 IF
-    [CHAR] ( [CHAR] ) bracket-remover2
+    [CHAR] ( [CHAR] ) bracketRemover2
     Parith2 ( returns one value with quotes already supplied: no need to alter )
 ELSE
     DUP digits0. stringbegins? ( starts with 0123456789, must be a number )
@@ -3820,7 +3820,7 @@ ELSE
     ELSE
         DUP head [CHAR] ( =
         IF
-            [CHAR] ( [CHAR] ) bracket-remover2 Pboolean
+            [CHAR] ( [CHAR] ) bracketRemover2 Pboolean
         ELSE
             DUP letter stringbegins?
             IF
@@ -3860,7 +3860,7 @@ ELSE
     ELSE
         DUP head [CHAR] ( =
         IF
-            [CHAR] ( [CHAR] ) bracket-remover2
+            [CHAR] ( [CHAR] ) bracketRemover2
             Pboolean2
         ELSE
             DUP letter stringbegins?
@@ -4029,7 +4029,7 @@ IF
 ELSE ( Must begin with [ and end with ] or () )
     DUP head [CHAR] ( =
     IF ( Change ([foo, bar, baz]) to [foo, bar, baz] and parse again )
-        [CHAR] ( [CHAR] ) bracket-remover2 Pexpression2
+        [CHAR] ( [CHAR] ) bracketRemover2 Pexpression2
     ELSE
         DUP head [CHAR] [ = OVER endaz head [CHAR] ] = AND NOT
         IF
@@ -4060,17 +4060,17 @@ THEN
 nowspace
 DUP head [CHAR] [ =
 IF
-    [CHAR] [ [CHAR] ] bracket-remover2 ( Remove []: should be refactored )
-    diamondString OVER issubstringof?
+    [CHAR] [ [CHAR] ] bracketRemover2 ( Remove []: should be refactored )
+    diamondString OVER isSubstringOf?
     IF ( S♢E nested inside [] = error )
         ." Error: expression " CR .AZ ."  contains ♢ inside [...]" ABORT
     THEN
-    nablaString OVER issubstringof?
+    nablaString OVER isSubstringOf?
     IF
         Pdiamond
     ELSE
         PUSH [_ POP      ( Put [ [ null below present text )
-        ABORT Plist      ( Parse remaining text as list )
+        Plist      ( Parse remaining text as list )
         ]_ 
     THEN
 ELSE
@@ -4122,12 +4122,12 @@ NULL OP PjoinedSet
 nowspace
 DUP head [CHAR] { =
 IF
-    [CHAR] { [CHAR] } bracket-remover2 ( Remove {} ) ( Can be refactored )
-    nablaString OVER issubstringof?
+    [CHAR] { [CHAR] } bracketRemover2 ( Remove {} ) ( Can be refactored )
+    nablaString OVER isSubstringOf?
     IF  ( Error having ∇ inside {} )
         ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
     THEN
-    diamondString OVER issubstringof?
+    diamondString OVER isSubstringOf?
     IF
         Pdiamond
     ELSE
@@ -4162,7 +4162,7 @@ ELSE
             ELSE
                 DROP DUP head [CHAR] ( ( remove top 0 before trying head! ) =
                 IF
-                    [CHAR] ( [CHAR] ) bracket-remover2 PjoinedSet
+                    [CHAR] ( [CHAR] ) bracketRemover2 PjoinedSet
                 ELSE
                     ." Text in wrong format for set: " .AZ
                     ."  received." ABORT
@@ -4457,6 +4457,9 @@ THEN
 
 : P ( : PdomainRestrictedSet s -- s1 type )
 (
+    
+)
+(
     This operation is, unfortunately, separated from the corresponding range
     restriction expression because domain restriction associates to the right
     and range restriction associates to the left, which would be awkward to
@@ -4479,14 +4482,11 @@ THEN
     one can be certain the expression passed here represents a set.
 )
 domRestriction rsplit
-DUP 0=
-( " In PdomainRestrictedSet: ◁ " .AZ DUP IF " NOT" .AZ THEN ."  found." .AZ CR  test )
+DUP
 IF
-    2DROP PrangeRestrictedSet
-ELSE
     PUSH PUSH PrangeRestrictedSet
     POP RECURSE
-    POP domRestriction_
+	POP domRestriction_
 THEN
 ;
 
@@ -6013,16 +6013,16 @@ blank-string
 : Pbracketedinstruction ( s -- s1 )
 (
     Takes an instruction or multiple instructions in round brackets (), strips
-    the () with bracket-remover2 (throws error if brackets unbalanced) and
+    the () with bracketRemover2 (throws error if brackets unbalanced) and
     passes the resultant text to Pmultipleinstruction on the assumption it is
     multiple instructions grouped with () for precedence's sake.
 )
-[CHAR] ( [CHAR] ) bracket-remover2 Pmultipleinstruction
+[CHAR] ( [CHAR] ) bracketRemover2 Pmultipleinstruction
 ;
 
 : Pbracketedinstruction2 ( As above, but in two stages )
 [CHAR] ( [CHAR] )
-bracket-remover2 Pmultipleinstruction2 ;
+bracketRemover2 Pmultipleinstruction2 ;
 
 : Pinstruction2 ( s -- s1 )
 ( As below, but in two stages ) nowspace
@@ -6179,7 +6179,7 @@ IF
     IF
         ." The ℙ operator must be followed by (. ℙ" .AZ ."  passed." ABORT
     THEN
-    [CHAR] ( [CHAR] ) bracket-remover2
+    [CHAR] ( [CHAR] ) bracketRemover2
     Pprodforarguments ℙ_
 ELSE
     DROP
@@ -6204,7 +6204,7 @@ IF
     IF
         ." The ℙ operator must be followed by (. ℙ" .AZ ."  passed." ABORT
     THEN
-    [CHAR] ( [CHAR] ) bracket-remover2
+    [CHAR] ( [CHAR] ) bracketRemover2
     Pprod ℙ_
 ELSE
     DROP
