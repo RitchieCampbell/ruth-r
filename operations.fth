@@ -200,7 +200,7 @@ STRING [ " >" , " <" , " ≤" , " ≥" , ] CONSTANT ineq
 STRING [ " :/" , " :" , " ∈" , " ∉" , " =!" , " =/" , " =" , " ≠" , ]
         CONSTANT eqmem
 STRING [ " ¬" , ] CONSTANT not
-STRING [ " &" , " |" , " ∧" , " ∨" , ] CONSTANT andor
+STRING [ " &" , " |" , " ∧" , " ∨" , ] CONSTANT andOr
 STRING [ " ," , ] CONSTANT comma
 STRING [ " ⊂" ,  " ⊄" , " ⊆" , " ⊈" , ] CONSTANT subset
 STRING [ " ↦" , ] CONSTANT maplet
@@ -208,9 +208,9 @@ STRING [ " \" , "    " 226 OVER C! 136 OVER 1+ C! 150 OVER 2 + C! , " ∪" ,
         " ∩" , " ⊕" , ] CONSTANT unionIntersect : ∖ \ ;
 STRING [ " ◁-" , " ◁" , ] CONSTANT domRestriction
 STRING [ " ^" , " ⁀" , " ▷-" , " ▷" , " ←" , " ↑" , " ↓" , ]
-        CONSTANT rangerestriction
+        CONSTANT rangeRestriction
 STRING [ " ^" , " ⁀" , " ←" , " ↑" , " ↓" , ]
-        CONSTANT rangerestriction2 ( for taking ▷- ▷ out of sequence use )
+        CONSTANT rangeRestriction2 ( for taking ▷- ▷ out of sequence use )
 : ▷- |>> ;
 ( Have to define & use ▷- rather than -▷, otherwise you always find ▷ first )
 STRING [ dots , ] CONSTANT dots-seq
@@ -245,11 +245,11 @@ STRING [ " [" , ] CONSTANT array-seq
 (
     Mappings from a synonym string to the operator string follow:
 )
-STRING STRING PROD { " &" " ∧" |-> , " |"  " ∨" |-> , } CONSTANT andor-swaps
+STRING STRING PROD { " &" " ∧" |-> , " |"  " ∨" |-> , } CONSTANT andOr-swaps
 STRING STRING PROD { " :/"  " ∉" |-> , " :" " ∈" |-> , " =!" " ≠" |-> , 
     " =/" " ≠" |-> , } CONSTANT eqmem-swaps
 STRING STRING PROD { " ^" " ⁀" |-> , " <-" " ←" |-> , " /|\" " ↑" |-> ,
-    " \|/" " ↓" |-> , } CONSTANT rangerestriction-swaps
+    " \|/" " ↓" |-> , } CONSTANT rangeRestriction-swaps
 " *_*" \n OVER 2 + C! CONSTANT star-bar
 ( Placeholder string with *_\n in; the * will be replaced by another character )
 (
@@ -1256,7 +1256,7 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
     l-value sspace AZ^ r-value AZ^ "  ∨" AZ^ r-type
 ;
 
-: andor_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
+: andOr_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
 (
     s1 and s3 are the two operands, s2 and s4 are the two types which ought to
     be both "BOO" and s5 the operator, eg ∧, ∨. Calls the type checking function
@@ -1959,7 +1959,7 @@ DROP 2DROP
     2DROP 2DROP ( There would still be four unnecessary values on the stack )
 ;
 
-: rangerestriction_ ( s1 s2 s3 s4 s5 -- ss1 type )
+: rangeRestriction_ ( s1 s2 s3 s4 s5 -- ss1 type )
 (
     Where s1 is a set of type FOO BAR PROD POW, s3 a set of type BAR POW, s2 and
     s4 the two types expressed as Strings, and s5 the operator eg "▷" or "▷-".
@@ -3890,9 +3890,9 @@ THEN
     in the range-restriction precedence: it is replaced by the operator it is
     paired with.
 )
-DUP rangerestriction-swaps DOM IN
+DUP rangeRestriction-swaps DOM IN
 IF
-    rangerestriction-swaps SWAP APPLY
+    rangeRestriction-swaps SWAP APPLY
 THEN
 ;
 
@@ -3972,7 +3972,7 @@ NULL OP Psequence2
     " Campbell "  " Ritchie"  AZ^ and "STRING"
     Experimental version using a relation to pick bar-decorated operations.
 )
-rangerestriction2 lsplit DUP 0=
+rangeRestriction2 lsplit DUP 0=
 IF  ( No operator found: must be plain old sequence; String OK, but only for ^ )
     2DROP nowspace l-quote OVER prefix?
     IF
@@ -3997,8 +3997,8 @@ THEN
     FORTH, in five parts catenated to form a single string
     " STRING [ " Campbell"  , " Bill"  , " Steve" , ]" " INT STRING PROD POW"
     " STRING { " Bill" , }" " STRING POW" ▷_
-) ( ." PrangeRestrictedSeq2 not implemented yet" ABORT ; )
-rangerestriction lsplit DUP 0=
+)
+rangeRestriction lsplit DUP 0=
 IF      ( No operator: pass to Psequence2 )
     2DROP Psequence2
 ELSE
@@ -4070,7 +4070,7 @@ IF
         Pdiamond
     ELSE
         PUSH [_ POP      ( Put [ [ null below present text )
-        Plist      ( Parse remaining text as list )
+        Plist            ( Parse remaining text as list )
         ]_ 
     THEN
 ELSE
@@ -4201,7 +4201,7 @@ THEN
     It is possible to use the synonym ^ for ⁀; in fact the fundamental
     catenation operator is ^.
 )
-rangerestriction lsplit
+rangeRestriction lsplit
 DUP 0=
 IF  ( top and middle elements nonsense, 3rd value is a string or set. )
     2DROP nowspace l-quote OVER prefix?
@@ -4214,7 +4214,7 @@ ELSE
     ( 3rd element recurses, top element=operator, middle element varies=exp )
 ( Consider changing RECURSE only to operate when op not in DOM swap-relation,
   otherwise using the sequence equivalent. )
-    DUP rangerestriction2 RAN IN
+    DUP rangeRestriction2 RAN IN
     IF
         PUSH PUSH PrangeRestrictedSeq
     ELSE
@@ -4256,7 +4256,7 @@ THEN
     It is possible to use the synonym ^ for ⁀; in fact the fundamental
     catenation operator is ^.
 )
-rangerestriction lsplit
+rangeRestriction lsplit
 DUP 0=
 IF
     2DROP Pset2 ( top and middle elements nonsense or null, 3rd is a set )
@@ -4319,7 +4319,7 @@ THEN
     It is possible to use the synonym ^ for ⁀; in fact the fundamental
     catenation operator is ^.
 )
-rangerestriction lsplit
+rangeRestriction lsplit
 DUP 0=
 IF
     2DROP ParithExp2
@@ -4379,16 +4379,16 @@ THEN
     It is possible to use the synonym ^ for ⁀; in fact the fundamental
     catenation operator is ^.
 )
-rangerestriction lsplit
+rangeRestriction lsplit
 DUP 0=
 IF
     2DROP PenumeratedExp
 ELSE
-    DUP rangerestriction2 RAN IN
+    DUP rangeRestriction2 RAN IN
     IF
         PUSH PUSH PrangeRestrictedSeq  ( Left subexpression=seq )
     ELSE
-        PUSH PUSH ABORT PrangeRestrictedSet  ( Left subexpression=set )
+        PUSH PUSH PrangeRestrictedSet  ( Left subexpression=set )
     THEN
     POP Pexpression                 ( Right subexpression )
     operation-swaps POP APPLY       ( F-pointer and Operation )   EXECUTE
@@ -4445,7 +4445,6 @@ THEN
 )
 domRestriction rsplit
 DUP 0=
-( " In PdomainRestrictedExp: ◁ " .AZ DUP IF " NOT" .AZ THEN ."  found." .AZ CR  test )
 IF
     2DROP PrangeRestrictedExp
 ELSE
@@ -4456,9 +4455,6 @@ THEN
 ;
 
 : P ( : PdomainRestrictedSet s -- s1 type )
-(
-    
-)
 (
     This operation is, unfortunately, separated from the corresponding range
     restriction expression because domain restriction associates to the right
@@ -5149,9 +5145,9 @@ THEN
 ;
 
 
-: swap-synonyms-for-andor ( s1 -- s2 )
-( Swaps & and | for ∧ and ∨ respectively using the andor-swaps relation )
-    DUP andor-swaps DOM IN IF andor-swaps SWAP APPLY THEN
+: swap-synonyms-for-andOr ( s1 -- s2 )
+( Swaps & and | for ∧ and ∨ respectively using the andOr-swaps relation )
+    DUP andOr-swaps DOM IN IF andOr-swaps SWAP APPLY THEN
 ;
 
 : PandOrBoolean ( s -- s1 "BOO" )
@@ -5159,13 +5155,13 @@ THEN
     Does exactly the same as the PandOr operation. Uses s in the format "a ∧ b"
     or similar. As with PandOr, this can only cope with Boolean values, so it
     always adds the "BOO" type; in fact only Boolean values can be passed hither
-    It returns s1 in the format "a b ∧", using the andor_ function.
+    It returns s1 in the format "a b ∧", using the andOr_ function.
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andor function.
+    for ∨ by using the swap-synonyms-for-andOr function.
 )
-andor lsplit
+andOr lsplit
 DUP 0=
 IF
     2DROP PnotBoolean
@@ -5173,8 +5169,8 @@ ELSE
     PUSH PUSH RECURSE ( Left value recurses )
     POP PnotBoolean   ( Right value sent to PnotBoolean )
     POP               ( Retrieve operator )
-    swap-synonyms-for-andor
-    andor_
+    swap-synonyms-for-andOr
+    andOr_
 THEN
 ;
 
@@ -5186,9 +5182,9 @@ THEN
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andor function.
+    for ∨ by using the swap-synonyms-for-andOr function.
 )
-andor lsplit
+andOr lsplit
 DUP 0=
 IF
     2DROP
@@ -5199,7 +5195,7 @@ ELSE
     POP PnotBoolean2  ( Right value sent to PnotBoolean2 )
     AZ^ sspace AZ^
     POP               ( Retrieve operator )
-    swap-synonyms-for-andor
+    swap-synonyms-for-andOr
     AZ^ bar-line AZ^
 THEN
 ;
@@ -5212,9 +5208,9 @@ THEN
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andor function.
+    for ∨ by using the swap-synonyms-for-andOr function.
 )
-andor lsplit
+andOr lsplit
 DUP 0=
 IF
     2DROP
@@ -5225,7 +5221,7 @@ ELSE
     POP PnotBoolean2  ( Right value sent to PnotBoolean )
     AZ^ sspace AZ^
     POP               ( Retrieve operator )
-    swap-synonyms-for-andor
+    swap-synonyms-for-andOr
     AZ^ bar-line AZ^
 THEN
 ;
@@ -5242,7 +5238,7 @@ THEN
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
     for ∨.
 )
-andor lsplit
+andOr lsplit
 DUP 0=
 IF
     2DROP Pnot
@@ -5250,8 +5246,8 @@ ELSE
     PUSH PUSH PandOrBoolean ( Left value definitely boolean: to parser )
     POP PnotBoolean         ( right value to Pnot )
     POP                     ( Retrieve operator   )
-    swap-synonyms-for-andor
-    andor_
+    swap-synonyms-for-andOr
+    andOr_
 THEN
 ;
 
@@ -5692,11 +5688,6 @@ Pquantified
 ' P to Pexpression
 
 : P ( : Plist s -- s1 s2 )
-(
-Investigating error, which appears to be in Plist, with this sort of stack trace
-244757882 244757884 0 244762000 Plist→seg fault. Not tracked down the error yet.
-Error more likely to be on the way back from ◁_.
-)
 (
   Splits a string "s" representing a list into the string "s1" which is its
   postfix form, and s2 which is its type, eg " Middlesbrough, Sunderland" would
