@@ -4483,6 +4483,8 @@ IF
     PUSH PUSH PrangeRestrictedSet
     POP RECURSE
 	POP domRestriction_
+ELSE
+    2DROP PrangeRestrictedSet
 THEN
 ;
 
