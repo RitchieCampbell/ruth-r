@@ -2507,18 +2507,21 @@ r-quote OVER prefix?
 IF
     string-start-finder
 ELSE
-DUP head [CHAR] ) =
-IF
-    [CHAR] ( [CHAR] ) open-bracket-finder
-ELSE
-DUP head [CHAR] ] =
-IF
-    [CHAR] [ [CHAR] ] open-bracket-finder
-ELSE
-DUP head [CHAR] } = 
-IF
-    [CHAR] { [CHAR] } open-bracket-finder
-THEN THEN THEN THEN
+    DUP head [CHAR] ) =
+    IF
+        [CHAR] ( [CHAR] ) open-bracket-finder
+    ELSE
+        DUP head [CHAR] ] =
+        IF
+            [CHAR] [ [CHAR] ] open-bracket-finder
+        ELSE
+            DUP head [CHAR] } = 
+            IF
+                [CHAR] { [CHAR] } open-bracket-finder
+            THEN
+        THEN
+    THEN
+THEN
 ( Probably amenable to refactoring with a bracket-matching relation. )
 ;
 
@@ -2541,8 +2544,7 @@ WHILE
         size count > op 0= AND ( Not reached start of string, nor found op )
     WHILE 
         count 1+ to count      ( Go through potential operators )
-        seq count APPLY end
-        prefix? 
+        seq count APPLY end prefix? 
         IF 
             seq count APPLY to op
         THEN 
