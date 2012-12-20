@@ -51,7 +51,7 @@
     
 : blanks- ( az -- az2 with trailing spaces removed )
     DUP endaz
-        BEGIN DUP head 32 = WHILE 1 - REPEAT 1 + 0 SWAP C! ;
+   gvedd     BEGIN DUP head 32 = WHILE 1 - REPEAT 1 + 0 SWAP C! ;
 
 : noblanks ( az -- az2 with leading and trailing spaces removed )
     -blanks blanks- ;
