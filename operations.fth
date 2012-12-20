@@ -4075,6 +4075,11 @@ THEN
     not in this format.
 )
 nowspace
+BEGIN
+DUP head [CHAR] ( = 
+WHILE
+    [CHAR] ( [CHAR] ) bracketRemover2
+REPEAT
 DUP head [CHAR] [ =
 IF
     [CHAR] [ [CHAR] ] bracketRemover2 ( Remove []: should be refactored )
