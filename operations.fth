@@ -35,13 +35,19 @@
 
 : tail
 ( az -- az2 starting with 2nd character. Error message if empty String passed. )
-    DUP C@ 0 = IF ." Can't implement tail on empty String." ABORT THEN 1 + ;
+DUP C@ 0 =
+IF
+    ." Can't implement tail on empty String." ABORT
+THEN
+1 + ;
 
 : string-eq ( az1 az2 -- f Whether the two Strings are identical )
-    BEGIN 2DUP DUP head ROT ROT head SWAP head = AND WHILE
-       tail SWAP tail SWAP
-    REPEAT
-    head 0 = OVER head 0 = AND NIP ;
+BEGIN
+    2DUP DUP head ROT ROT head SWAP head = AND
+WHILE
+    tail SWAP tail SWAP
+REPEAT
+head 0 = OVER head 0 = AND NIP ;
 
 : endaz ( az -- az2 last "real" character )
     BEGIN DUP head WHILE tail REPEAT 1 - ;
@@ -50,16 +56,25 @@
     BEGIN DUP head 32 = WHILE tail REPEAT ;
     
 : blanks- ( az -- az2 with trailing spaces removed )
-    DUP endaz
-   gvedd     BEGIN DUP head 32 = WHILE 1 - REPEAT 1 + 0 SWAP C! ;
+DUP endaz
+BEGIN
+    DUP head 32 =
+WHILE
+    1 -
+REPEAT
+1 + 0 SWAP C! ;
 
 : noblanks ( az -- az2 with leading and trailing spaces removed )
     -blanks blanks- ;
 
-: myazlength ( az -- n number of "real" ASCII characters ) 0 BEGIN
-    OVER C@ WHILE
-        1 + SWAP 1 + SWAP REPEAT
-    NIP
+: myazlength ( az -- n number of "real" ASCII characters )
+0
+BEGIN
+    OVER C@
+WHILE
+    1 + SWAP 1 + SWAP
+REPEAT
+NIP
 ;
 
 " true" CONSTANT true
