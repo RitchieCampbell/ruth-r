@@ -4078,7 +4078,7 @@ nowspace
 BEGIN
 DUP head [CHAR] ( = 
 WHILE
-    [CHAR] ( [CHAR] ) bracketRemover2
+    [CHAR] ( [CHAR] ) bracketRemover2 -blanks
 REPEAT
 DUP head [CHAR] [ =
 IF
