@@ -370,5 +370,29 @@ doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
 SWAP " STRING [ " " Ruth,," addQuotes1 AZ^ " , " AZ^ " Laura" addQuotes1 AZ^ " , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^
 " Eleanor" addQuotes1 AZ^ " , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ] " AZ^ " Linda" addQuotes1 AZ^ " ← 3 2 * 1 - ↑" AZ^
 doubleSpaceRemover " INT STRING PROD POW" checkOutputAndType
-
+477 " [1, 2, 3]" Psequence " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 478 " [1, 2, 3]" Pexpression " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 479 " [1, 2, 3]" Pset " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 480 " (( [((1)), 2, 3]))" Psequence " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 481 " (( [((1)), 2, 3]))" Pexpression " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 482 " (( [((1)), 2, 3]))" Pset " INT [ 1 , 2 , 3 , ]" " INT INT PROD POW" checkOutputAndType " ]
+DROP 483 " [“Campbell”, “Ruth”, “Sarah”, “Eleanor”]" Psequence " STRING [ " " Campbell" addQuotes1 AZ^ "  , " AZ^
+" Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
+" INT STRING PROD POW" checkOutputAndType " ]
+DROP 484 " [“Campbell”, “Ruth”, “Sarah”, “Eleanor”]" Pexpression " STRING [ " " Campbell" addQuotes1 AZ^ "  , " AZ^
+" Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
+" INT STRING PROD POW" checkOutputAndType " ]
+DROP 485 " [“Campbell”, “Ruth”, “Sarah”, “Eleanor”]" Pset " STRING [ " " Campbell" addQuotes1 AZ^ "  , " AZ^
+" Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
+" INT STRING PROD POW" checkOutputAndType " ]
+DROP 486 " (([((“Campbell”)), “Ruth”, “Sarah”, “Eleanor”]))" Psequence " STRING [ " " Campbell" addQuotes1 AZ^ "  , "
+AZ^ " Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
+" INT STRING PROD POW" checkOutputAndType " ]
+DROP 487 " (([((“Campbell”)), “Ruth”, “Sarah”, “Eleanor”]))" Pexpression " STRING [ " " Campbell" addQuotes1 AZ^
+"  , " AZ^ " Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]"
+AZ^ " INT STRING PROD POW" checkOutputAndType " ]
+DROP 488 " (([((“Campbell”)), “Ruth”, “Sarah”, “Eleanor”]))" Pset " STRING [ " " Campbell" addQuotes1 AZ^ "  , "
+AZ^ " Ruth" addQuotes1 AZ^ "  , " AZ^ " Sarah" addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
+" INT STRING PROD POW" checkOutputAndType " ]
+DROP
 CR " HereEndethThe3rdTestFile" .AZ CR

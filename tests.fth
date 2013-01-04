@@ -169,14 +169,14 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 142 " (0.23) - 1.0 " Parith " 0.23 1.0 F-" float   checkOutputAndType
 143 " (0.23) * 1.0 " Parith " 0.23 1.0 F*" float   checkOutputAndType
 144 " (0.23) / 1.0 " Parith " 0.23 1.0 F/" float   checkOutputAndType
-145 " (i   )"           ParithAtom " i" int           checkOutputAndType
-146 " (i   )"           Patom " i" int                checkOutputAndType
-147 " (i   )"           Parith " i" int               checkOutputAndType
-148 " (i   )"           Pexpression " i" int          checkOutputAndType
-149 " (    i123)"        ParithAtom " i123" int        checkOutputAndType
-150 " (    i123)"        Patom " i123" int             checkOutputAndType
-151 " (    i123)"        Parith " i123" int            checkOutputAndType
-152 " (    i123)"        Pexpression " i123" int       checkOutputAndType
+145 " (i   )"        ParithAtom " i" int           checkOutputAndType
+146 " (i   )"        Patom " i" int                checkOutputAndType
+147 " (i   )"        Parith " i" int               checkOutputAndType
+148 " (i   )"        Pexpression " i" int          checkOutputAndType
+149 " (    i123)"    ParithAtom " i123" int        checkOutputAndType
+150 " (    i123)"    Patom " i123" int             checkOutputAndType
+151 " (    i123)"    Parith " i123" int            checkOutputAndType
+152 " (    i123)"    Pexpression " i123" int       checkOutputAndType
 153 " (f1)  "        ParithAtom " f1" float        checkOutputAndType
 154 " (f1)  "        Patom " f1" float             checkOutputAndType
 155 " (f1)  "        Pexpression " f1" float       checkOutputAndType
@@ -192,18 +192,18 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 165 " (foo2)"  Patom " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 166 " (foo2)"  Pexpression " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 167 " (i123)"        Patom " i123" int              checkOutputAndType
-168 " (iArr[2])"    Patom SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
+168 " (iArr[2])"     Patom SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 169 " (iArr[1 + 2 * 3])"    Patom SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-170 " (iArr[2])"    Parith SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
+170 " (iArr[2])"     Parith SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 171 " (iArr[1 + 2 * 3])"    Parith SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-172 " (iArr[2])"    ParithExp SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
+172 " (iArr[2])"     ParithExp SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 173 " (iArr[1 + 2 * 3])"    ParithExp SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-174 " (iArr[2])"    Pexpression SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
+174 " (iArr[2])"     Pexpression SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
 175 " iArr[1 + 2 * 3]"    Pexpression SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-176 " (iArr)"    Patom " iArr" " INT ARRAY"        checkOutputAndType
-177 " (iArr)"    Parith " iArr" " INT ARRAY"       checkOutputAndType
-178 " (iArr)"    ParithExp " iArr" " INT ARRAY"    checkOutputAndType
-179 " (iArr)"    Pexpression  " iArr" " INT ARRAY" checkOutputAndType
+176 " (iArr)"       Patom " iArr" " INT ARRAY"        checkOutputAndType
+177 " (iArr)"       Parith " iArr" " INT ARRAY"       checkOutputAndType
+178 " (iArr)"       ParithExp " iArr" " INT ARRAY"    checkOutputAndType
+179 " (iArr)"       Pexpression  " iArr" " INT ARRAY" checkOutputAndType
 180 " (ARRAY[1, 2, 3])" Patom " HERE 3 , 1 , 2 , 3 , " " INT ARRAY" checkOutputAndType
 181 " (ARRAY[1, 2, 3])" Pexpression " HERE 3 , 1 , 2 , 3 , " " INT ARRAY" checkOutputAndType
 182 " ( {1, 2, 3})" Patom " INT { 1 , 2 , 3 , }" " INT POW" checkOutputAndType
