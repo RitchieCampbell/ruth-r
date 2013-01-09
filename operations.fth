@@ -2324,8 +2324,9 @@ STRING INT PROD
     " ⁀"  ' ⁀_ |->$,I  , " ^"   ' ^_ |->$,I ,
     " ▷-" '  ▷-_ |->$,I , " ▷"   ' ▷_ |->$,I ,
     " ←"  '  ←_ |->$,I  , " ↓"   ' ↓_ |->$,I ,
-    " ↑"  '  ↑_ |->$,I  ,
-} CONSTANT operation-swaps
+    " ↑"  '  ↑_ |->$,I  , " ="   ' =_ |->$,I , 
+    " =/" '  ≠_ |->$,I  , " ≠"   ' ≠_ |->$,I , 
+} CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
 : P ( to be renamed : rsplit )
@@ -3999,7 +4000,7 @@ IF  ( No operator found: must be plain old sequence; String OK, but only for ^ )
     THEN
 ELSE
 (    swap-synonyms-for-range-restriction ( \|/ and /|\ become ↓ and ↑ etc ) )
-    operation-swaps SWAP APPLY ( Function pointer )
+    operationSwaps SWAP APPLY ( Function pointer )
     PUSH PUSH
     RECURSE
     POP Pexpression
@@ -4243,7 +4244,7 @@ ELSE
         PUSH PUSH RECURSE
     THEN
     POP Pexpression
-    operation-swaps POP APPLY EXECUTE
+    operationSwaps POP APPLY EXECUTE
 THEN
 ;
 
@@ -4413,7 +4414,7 @@ ELSE
         PUSH PUSH PrangeRestrictedSet  ( Left subexpression=set )
     THEN
     POP Pexpression                 ( Right subexpression )
-    operation-swaps POP APPLY       ( F-pointer and Operation )   EXECUTE
+    operationSwaps POP APPLY       ( F-pointer and Operation )   EXECUTE
 THEN
 ;
 
@@ -4925,7 +4926,7 @@ ELSE
 THEN
 ;
 
-: swap-synonyms-for-eqmem ( s -- s1 )
+: swapSynonymsForEqMem ( s -- s1 )
 (
     Changes the operators ":/", ":" "=!" and "=/" to " ∉" "∈" " ≠" and " ≠"
     respectively.
@@ -4954,7 +4955,7 @@ DUP 0=
 IF
     2DROP Pineq
 ELSE
-    swap-synonyms-for-eqmem
+    swapSynonymsForEqMem
     DUP " ∈" string-eq OVER " ∉" string-eq OR
     IF
         PUSH PUSH Pexpression ( left token any type )
@@ -4994,7 +4995,7 @@ DUP 0=
 IF
     2DROP Pineq2
 ELSE
-    swap-synonyms-for-eqmem
+    swapSynonymsForEqMem
     DUP " ∈" string-eq OVER " ∉" string-eq OR ( test for set membership )
     IF
         PUSH PUSH Pexpression2 ( left token any type )
@@ -5024,22 +5025,21 @@ THEN
     from right to left, "=" would always be matched first, so one cannot use the
     synonyms /= or != for ≠; =/ or =! are used instead.
 ) ( Take colon out if required for type declaration )
-eqmem lsplit 
-.S ROT DUP .AZ CR ROT ROT ( test )
+eqmem lsplit
 DUP 0=
 IF
     2DROP PineqBoolean
 ELSE
-    swap-synonyms-for-eqmem
+    swapSynonymsForEqMem
     DUP " ∈" string-eq OVER " ∉" string-eq OR
     IF
         PUSH PUSH Pexpression ( left token any type )
         POP PjoinedSet  ( right token = set )
         POP membership_
-    ELSE                ( equality/non-equality ) .S
+    ELSE                ( equality/non-equality )
         PUSH PUSH Ppair
         POP Ppair
-        POP equality_
+        POP operationSwaps SWAP APPLY EXECUTE
     THEN
 THEN
 ;
@@ -5068,7 +5068,7 @@ DUP 0=
 IF
     2DROP PineqBoolean2
 ELSE
-    swap-synonyms-for-eqmem
+    swapSynonymsForEqMem
     DUP " ∈" string-eq OVER " ∉" string-eq OR
     IF
         PUSH PUSH Pexpression2 ( left token any type )
@@ -5170,7 +5170,7 @@ THEN
 ;
 
 
-: swap-synonyms-for-andOr ( s1 -- s2 )
+: swapSynonymsForAndOr ( s1 -- s2 )
 ( Swaps & and | for ∧ and ∨ respectively using the andOr-swaps relation )
     DUP andOr-swaps DOM IN IF andOr-swaps SWAP APPLY THEN
 ;
@@ -5184,7 +5184,7 @@ THEN
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andOr function.
+    for ∨ by using the swapSynonymsForAndOr function.
 )
 andOr lsplit
 DUP 0=
@@ -5194,7 +5194,7 @@ ELSE
     PUSH PUSH RECURSE ( Left value recurses )
     POP PnotBoolean   ( Right value sent to PnotBoolean )
     POP               ( Retrieve operator )
-    swap-synonyms-for-andOr
+    swapSynonymsForAndOr
     andOr_
 THEN
 ;
@@ -5207,7 +5207,7 @@ THEN
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andOr function.
+    for ∨ by using the swapSynonymsForAndOr function.
 )
 andOr lsplit
 DUP 0=
@@ -5220,7 +5220,7 @@ ELSE
     POP PnotBoolean2  ( Right value sent to PnotBoolean2 )
     AZ^ sspace AZ^
     POP               ( Retrieve operator )
-    swap-synonyms-for-andOr
+    swapSynonymsForAndOr
     AZ^ bar-line AZ^
 THEN
 ;
@@ -5233,7 +5233,7 @@ THEN
     This function uses the lsplit function; if the operator string is "null" it
     passes on the string unchanged to the next parser.
     The ampersand & can be used as a synonym for ∧ and the pipe (vertical bar) |
-    for ∨ by using the swap-synonyms-for-andOr function.
+    for ∨ by using the swapSynonymsForAndOr function.
 )
 andOr lsplit
 DUP 0=
@@ -5246,7 +5246,7 @@ ELSE
     POP PnotBoolean2  ( Right value sent to PnotBoolean )
     AZ^ sspace AZ^
     POP               ( Retrieve operator )
-    swap-synonyms-for-andOr
+    swapSynonymsForAndOr
     AZ^ bar-line AZ^
 THEN
 ;
@@ -5271,7 +5271,7 @@ ELSE
     PUSH PUSH PandOrBoolean ( Left value definitely boolean: to parser )
     POP PnotBoolean         ( right value to Pnot )
     POP                     ( Retrieve operator   )
-    swap-synonyms-for-andOr
+    swapSynonymsForAndOr
     andOr_
 THEN
 ;
