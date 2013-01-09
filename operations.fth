@@ -5008,7 +5008,7 @@ ELSE
 THEN
 ;
 
-: Peqmemboolean ( s -- s1 "BOO" )
+: PeqMemBoolean ( s -- s1 "BOO" )
 (
     Similar to the Peqmem routine, but here we are sure we are dealing with a
     Boolean value.
@@ -5025,6 +5025,7 @@ THEN
     synonyms /= or != for ≠; =/ or =! are used instead.
 ) ( Take colon out if required for type declaration )
 eqmem lsplit 
+.S ROT DUP .AZ CR ROT ROT ( test )
 DUP 0=
 IF
     2DROP PineqBoolean
@@ -5035,7 +5036,7 @@ ELSE
         PUSH PUSH Pexpression ( left token any type )
         POP PjoinedSet  ( right token = set )
         POP membership_
-    ELSE                ( equality/non-equality )
+    ELSE                ( equality/non-equality ) .S
         PUSH PUSH Ppair
         POP Ppair
         POP equality_
@@ -5043,7 +5044,7 @@ ELSE
 THEN
 ;
 
-: Peqmemboolean2 ( s -- s1 )
+: PeqMemBoolean2 ( s -- s1 )
 (
     Similar to the Peqmem2 routine, but here we are sure we are dealing with a
     Boolean value.
@@ -5096,7 +5097,7 @@ THEN
 not rsplit
 DUP 0=
 IF
-    2DROP Peqmemboolean
+    2DROP PeqMemBoolean
 ELSE
     DROP NIP RECURSE ¬_
 THEN
@@ -5117,7 +5118,7 @@ THEN
 not rsplit
 DUP 0=
 IF
-    2DROP Peqmemboolean2
+    2DROP PeqMemBoolean2
 ELSE
     SWAP 
     RECURSE  
