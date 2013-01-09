@@ -1354,19 +1354,6 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
     DROP 2DROP
 ;
 
-: equality_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
-(
-    s1 and s3 are the two operands, s2 and s4 their types which are tested for
-    equality, and s5 the operator. Returns the expression in postfix and the
-    type, which is always boolean. Does not accept booleans as operands.
-    Example "ff" "foo" "f" "foo" "=" --> "ff f =" "BOO"
-) ( Not used: because of type difficulties =_ and ≠_ used individually. )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type test-two-types-same
-    operator l-type boolean test-two-types-different
-    l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
-;
-
 ( The only built-in float inequality words are F< F0< and F0=, but it is easy to
 create all the other words required from F< and F0=. )
 : F≠ ( fp fp -- f Whether the two floats are not equal ) F- F0= NOT ; : F=/ F≠ ;
