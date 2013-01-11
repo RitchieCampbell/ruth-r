@@ -6,13 +6,13 @@ CR .AZ
 
 : checkOutputAndType ( i s1 s2 s3 s4 -- ) 
 ( i=line number. Error message if s1/s3 and s2/s4 are not identical pairs ) 
-ROT 2DUP string-eq 
+ROT 2DUP stringEq 
 IF 
     2DROP 
 ELSE 
     PUSH PUSH ROT DUP PUSH ROT ROT POP POP POP " Type" reportParserError 
 THEN 
-2DUP string-eq 
+2DUP stringEq 
 IF 
     DROP 2DROP 
 ELSE 
@@ -77,9 +77,14 @@ types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ 
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
 536 " (“Campbell” = “Ruth”)" Pboolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
-537 " (“Campbell” = “Ruth”)" Peqmem SWAP doubleSpaceRemover SWAP
+537 " (“Campbell” = “Ruth”)" PeqMem SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
-538 " (“Campbell” = “Ruth”)" Peqmemboolean SWAP doubleSpaceRemover SWAP
+538 " (“Campbell” = “Ruth”)" PeqMemBoolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
+539 " (“Campbell” = “Ruth”) ∈ {true, false}" Pexpression SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq " boolean AZ^ AZ^ AZ^
+"  { TRUE , FALSE , } ∈" AZ^ boolean checkOutputAndType
+
+( Subsets already in the 1st tests file. )
 
 CR " HereEndethThe4thTestFile" .AZ CR

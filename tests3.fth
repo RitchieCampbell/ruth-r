@@ -6,13 +6,13 @@ CR .AZ
 
 : checkOutputAndType ( i s1 s2 s3 s4 -- ) 
 ( i=line number. Error message if s1/s3 and s2/s4 are not identical pairs ) 
-ROT 2DUP string-eq 
+ROT 2DUP stringEq 
 IF 
     2DROP 
 ELSE 
     PUSH PUSH ROT DUP PUSH ROT ROT POP POP POP " Type" reportParserError 
 THEN 
-2DUP string-eq 
+2DUP stringEq 
 IF 
     DROP 2DROP 
 ELSE 

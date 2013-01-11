@@ -41,7 +41,7 @@ IF
 THEN
 1 + ;
 
-: string-eq ( az1 az2 -- f Whether the two Strings are identical )
+: stringEq ( az1 az2 -- f Whether the two Strings are identical )
 BEGIN
     2DUP DUP head ROT ROT head SWAP head = AND
 WHILE
@@ -82,6 +82,7 @@ NIP
 " TRUE" CONSTANT True
 " FALSE" CONSTANT False
 " BOO" CONSTANT boolean ( Can be changed to " BOOLEAN" or " boolean" if required )
+( Have to redefine BOO. This line must change if boolean changes ) : BOO INT ;
 " INT" CONSTANT int
 " INT " CONSTANT int-space
 " FLOAT" CONSTANT float
@@ -354,7 +355,7 @@ REPEAT
 NIP *
 ;
 
-: boolean-print ( f -- ) ( Prints "true" or "false" as appropriate. )
+: booleanPrint ( f -- ) ( Prints "true" or "false" as appropriate. )
 IF ." true" ELSE ." false" THEN ;
 
 : digits? ( c -- f Whether decimal digit ) digits IN ;
@@ -575,7 +576,7 @@ AZ^ AZ^ AZ^ AZ^ AZ^ ( catenate 5 times )
     on screen; this cannot be copied-and-pasted, but it could if the quotes were
     added. If not string, removes top value and returns 2nd value unchanged.
 ) 
-nowspace string string-eq
+nowspace string stringEq
 IF
     addQuotes1
 THEN
@@ -667,13 +668,13 @@ nowspace
 DUP DUP
 digits stringbegins?
 SWAP
-digits0 stringconsists? AND OVER " 0" string-eq OR
+digits0 stringconsists? AND OVER " 0" stringEq OR
 IF
     int ( Only necessary to put "INT" onto stack )
 ELSE
     .AZ ."  not in correct format for integer." ABORT
 THEN
-OVER " 2147483648" string-eq
+OVER " 2147483648" stringEq
 IF
     ." A minimum value integer, 2147483648 has been used; this will come out "
     ." negative." 10 EMIT
@@ -689,7 +690,7 @@ NULL OP rsplit
     not permitted, not even when succeeded by e123 or e-123.
     String cloned to prevent alteration to original string input.
 )
-DUP " ." string-eq NOT SWAP
+DUP " ." stringEq NOT SWAP
 CLONE-STRING dot rsplit
 IF
     digits0 stringconsists? SWAP digits0 stringconsists? AND
@@ -760,7 +761,7 @@ IF
     10 EMIT ." only letters and numbers: " .AZ ."  passed." ABORT
 THEN
 ( For use with recursive calls of the same function name )
-operation-name OVER string-eq
+operation-name OVER stringEq
 IF
     DROP recurse
 THEN
@@ -1030,7 +1031,7 @@ start-string string
     Where s1 is the operator/array index and s2 the type, which ought to be int.
     If not, error message
 )
-nowspace DUP int string-eq
+nowspace DUP int stringEq
 IF
     2DROP
 ELSE
@@ -1042,7 +1043,7 @@ THEN ;
     Where s1 is the operator and s2 and s3 the two types, which should both be
     "INT"; throws error message otherwise
 )
-nowspace SWAP nowspace SWAP 2DUP string-eq OVER int string-eq AND NOT
+nowspace SWAP nowspace SWAP 2DUP stringEq OVER int stringEq AND NOT
 IF
     ." Incorrect types for " ROT .AZ ."  operator: both should be " int .AZ CR
     SWAP .AZ ."  and " .AZ ."  passed." ABORT
@@ -1074,8 +1075,8 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
 : check-types-for-arithmetic
 ( s1 s2 s3 -- Check types appropriate for arithmetic: "INT" or "FLOAT" both )
     SWAP nowspace SWAP nowspace
-    2DUP DUP float string-eq SWAP int string-eq OR
-    SWAP DUP float string-eq SWAP int string-eq OR
+    2DUP DUP float stringEq SWAP int stringEq OR
+    SWAP DUP float stringEq SWAP int stringEq OR
     AND NOT
     IF
         ." Type error for " ROT .AZ ."  operator: "
@@ -1089,13 +1090,13 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     ( floating-point numbers as well as INTs )
     (: l-value l-type r-value r-type operator :)
     operator l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF
-        r-type int string-eq
+        r-type int stringEq
         IF
             r-value StoF AZ^ to r-value
         ELSE
-            l-type int string-eq
+            l-type int stringEq
             IF
                 l-value StoF AZ^ to l-value
             THEN
@@ -1111,14 +1112,14 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     ( This can incorporate floating-point numbers as well as INTs )
     "  +" VALUE op ( note additional space, also in F+ and S>F )
     op l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     ( Either or both is float )
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF  ( Add S>F as appopriate )
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1133,13 +1134,13 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     (: l-value l-type r-value r-type :)
     "  -" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float string-eq r-type nowspace float string-eq OR
+    l-type nowspace float stringEq r-type nowspace float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1154,13 +1155,13 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     (: l-value l-type r-value r-type :)
     "  *" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float string-eq r-type nowspace float string-eq OR
+    l-type nowspace float stringEq r-type nowspace float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1177,13 +1178,13 @@ l-value sspace r-value sspace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     ( floating-point numbers as well as INTs )
     "  /" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float string-eq r-type nowspace float string-eq OR
+    l-type nowspace float stringEq r-type nowspace float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1207,7 +1208,7 @@ addSubtract
 
 : check-type-for-uminus ( az -- Check type appropriate for uminus op )
 ( This operation stands on its own as the only unary arithmetic operation )
-    nowspace DUP DUP int string-eq NOT SWAP float string-eq NOT AND
+    nowspace DUP DUP int stringEq NOT SWAP float stringEq NOT AND
     IF
         ." Type error for unary - operator: " .AZ ."  offered; INT and FLOAT"
         ."  permitted." ABORT
@@ -1219,7 +1220,7 @@ addSubtract
 ( This operation can be done without local variables )
 ( Using -1 * rather than prepending - allows a whole expression to be negated. )
     DUP check-type-for-uminus
-    DUP float string-eq
+    DUP float stringEq
     IF
         SWAP "  -1.0 F*" AZ^ SWAP
     ELSE
@@ -1231,7 +1232,7 @@ addSubtract
 (
     Pass "⇒" "Boolean" "Boolean" or similar. Throws error if not both Boolean.
 )
-    OVER nowspace boolean string-eq OVER nowspace boolean string-eq AND NOT
+    OVER nowspace boolean stringEq OVER nowspace boolean stringEq AND NOT
     IF
         ." Type error for " ROT .AZ ."  operator. "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1285,7 +1286,7 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 
 : check-type-for-not ( s1 -- Check appropriate type for unary not ¬ )
 ( Operation standing alone because there is only one unary boolean connective )
-    DUP nowspace boolean string-eq NOT
+    DUP nowspace boolean stringEq NOT
     IF
         ." Type error for ¬ not operator: " .AZ ."  offered. " ABORT        
     THEN
@@ -1299,7 +1300,7 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 
 : check-types-for-set-membership ( s1 s2 s3 -- Check appropriate types for ∈ etc )
     ( s2 has "POW" as a suffix and the remainders of the two strings are identical )
-    OVER nowspace OVER nowspace SWAP "  POW" AZ^ string-eq NOT
+    OVER nowspace OVER nowspace SWAP "  POW" AZ^ stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator. "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1337,7 +1338,7 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 ;
 
 : test-two-types-same ( s1 s2 s3 -- Check two types identical )
-    OVER nowspace OVER nowspace string-eq NOT
+    OVER nowspace OVER nowspace stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator. Should both be same: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1346,7 +1347,7 @@ l-value sspace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 ;
 
 : test-two-types-different ( s1 s2 s3 -- check two types different )
-    2DUP nowspace SWAP nowspace string-eq
+    2DUP nowspace SWAP nowspace stringEq
     IF
         ." Type error for " ROT .AZ ."  operator. Cannot accept " .AZ
         ABORT
@@ -1369,7 +1370,7 @@ create all the other words required from F< and F0=. )
     The basic type tests for equality of reference, which means only integers
     return true.
     It should however be possible to test for more types with PAIR= SET= STRING=
-    or string-eq and F=. If type = FLOAT use F=, if it ends in PROD use PAIR=,
+    or stringEq and F=. If type = FLOAT use F=, if it ends in PROD use PAIR=,
     etc. Note that [1, 2, 3] and {1 ↦ 1, 2 ↦ 2, 3 ↦ 3} will return "true"; both
     type to "INT INT PROD POW".
     however; one is a SEQ and the other an INT INT PROD.
@@ -1379,26 +1380,26 @@ create all the other words required from F< and F0=. )
 (: l-value l-type r-value r-type :)
 equals VALUE op
 l-type nowspace to l-type r-type nowspace to r-type
-l-type int string-eq r-type float string-eq AND
+l-type int stringEq r-type float stringEq AND
 IF
     l-value StoF AZ^ to l-value float to l-type
     f-equals to op
 ELSE
-    l-type float string-eq r-type int string-eq AND
+    l-type float stringEq r-type int stringEq AND
     IF
         r-value StoF AZ^ to r-value float to r-type
         f-equals to op
     ELSE    ( Lines adding quotes appear to create " " text " " )
 (        l-value l-type addQuotesIfString1 to l-value )
 (        r-value r-type addQuotesIfString1 to r-value )
-        l-type r-type string-eq NOT
+        l-type r-type stringEq NOT
         IF
         ELSE
-            l-type string string-eq
+            l-type string stringEq
             IF
-                " string-eq" to op
+                " stringEq" to op
             ELSE
-                l-type float string-eq
+                l-type float stringEq
                 IF
                     f-equals to op
                 ELSE
@@ -1430,14 +1431,14 @@ l-value sspace AZ^ r-value AZ^ sspace AZ^ op AZ^ boolean ;
 )
 (: l-value l-type r-value r-type operator :)
 operator l-type r-type check-types-for-arithmetic
-l-type " FLOAT" string-eq r-type " FLOAT" string-eq OR
+l-type " FLOAT" stringEq r-type " FLOAT" stringEq OR
 IF
     " F" operator AZ^ to operator
-    l-type " INT" string-eq
+    l-type " INT" stringEq
     IF
         l-value StoF AZ^ to l-value
     ELSE
-        r-type " INT" string-eq
+        r-type " INT" stringEq
         IF
             r-value StoF AZ^ to r-value
         THEN
@@ -1450,13 +1451,13 @@ l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
     (: l-value l-type r-value r-type :)
     " <" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1470,13 +1471,13 @@ l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
     (: l-value l-type r-value r-type :)
     " ≤" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF ( See <_: this looks like a candidate for refactoring. )
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1490,13 +1491,13 @@ l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
     (: l-value l-type r-value r-type :)
     " >" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1510,13 +1511,13 @@ l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
     (: l-value l-type r-value r-type :)
      " ≥" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF
-        l-type int string-eq
+        l-type int stringEq
         IF
             l-value StoF AZ^ to l-value
         ELSE
-            r-type int string-eq
+            r-type int stringEq
             IF
                 r-value StoF AZ^ to r-value
             THEN
@@ -1581,7 +1582,7 @@ THEN
     otherwise error message and crashes application.
     Assumes s1 is what is required and s2 is what is supplied.
 )
-nowspace SWAP nowspace 2DUP string-eq NOT
+nowspace SWAP nowspace 2DUP stringEq NOT
 ( After 1 SWAP now has s1=required on top of stack and s2=supplied second. )
 IF
     ." Type error for " ROT .AZ ."  operator: types ought to be the same."
@@ -1593,7 +1594,7 @@ DROP 2DROP ( empty three values from stack )
 
 : check-same-kind-set ( s1 s2 s2 -- Check two sets of same type )
     OVER nowspace OVER nowspace
-    DUP " POW" SWAP suffix? ROT ROT string-eq AND NOT
+    DUP " POW" SWAP suffix? ROT ROT stringEq AND NOT
     IF
         ." Type error for " ROT .AZ
         ."  operator, requires two the same ending POW: "
@@ -1686,7 +1687,7 @@ block newline " REPEAT" AZ^ AZ^ AZ^ ;
 (
     Tests that the type is Boolean, otherwise throws an error message and aborts
 )
-OVER boolean string-eq NOT
+OVER boolean stringEq NOT
 IF
     SWAP .AZ ." Incorrect type for " .AZ ."  operator: only boolean types permitted."
     ABORT
@@ -1756,16 +1757,16 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
     "  |->" VALUE op
     l-type nowspace to l-type r-type nowspace to r-type
     " ↦" l-type r-type check-types-not-null
-    l-type float string-eq r-type float string-eq OR
+    l-type float stringEq r-type float stringEq OR
     IF
        ." Cannot accept FLOAT as a type for pairs in the present implementation"
        ABORT
     THEN
-    l-type int string-eq
+    l-type int stringEq
     IF
         op " I," AZ^ to op
     ELSE
-        l-type string string-eq
+        l-type string stringEq
         IF
             op " $," AZ^ to op
         ELSE
@@ -1780,11 +1781,11 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
             THEN
         THEN
     THEN
-    r-type int string-eq
+    r-type int stringEq
     IF
         op " I" AZ^ to op
     ELSE
-        r-type string string-eq
+        r-type string stringEq
         IF
             op " $" AZ^ to op
         ELSE
@@ -1843,7 +1844,7 @@ IF
     ."  operator: both types should end PROD POW: "
     SWAP .AZ ."  and " .AZ ."  offered." ABORT
 THEN
-    2DUP string-eq NOT
+    2DUP stringEq NOT
 IF
     ." Type error for " ROT .AZ
     ."  operator: both types should be identical: "
@@ -1920,7 +1921,7 @@ DROP 2DROP
    same operation, using the AZ^ word in the output
 )
     (: l-value l-type r-value r-type :)
-    l-type string string-eq r-type string string-eq AND
+    l-type string stringEq r-type string stringEq AND
     IF
         l-value sspace AZ^ r-value AZ^ "  AZ^"  AZ^ l-type
     ELSE
@@ -1999,7 +2000,7 @@ IF
     ."  operator: Both types must end with PROD POW: "
     SWAP .AZ ."  and " .AZ ."  offered." ABORT
 THEN
-DUP nowspace OVER nowspace string-eq NOT
+DUP nowspace OVER nowspace stringEq NOT
 IF
     ." Type error for " ROT .AZ ."  operator: Both types must be identical: "
     SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -2011,7 +2012,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     Types and other details as for ^_ Strings acceptable, using AZ^ instead of ^
 )
     (: l-value l-type r-value r-type :)
-    l-type string string-eq r-type string string-eq AND
+    l-type string stringEq r-type string stringEq AND
     IF
         l-value sspace AZ^ r-value AZ^ "  AZ^" AZ^ l-type
     ELSE
@@ -2022,7 +2023,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 
 : check-types-set-append ( s1 s2 s3 -- Check appropriate type )
     2DUP nowspace " INT " SWAP AZ^ "  PROD POW" AZ^ SWAP nowspace
-    string-eq NOT
+    stringEq NOT
     IF
             ." Type error for " ROT .AZ
             ."  operator: 1st type must equal INT (2nd type) PROD POW: "
@@ -2038,7 +2039,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 ;
 
 : check-types-set-truncation ( s1 s2 s3 -- Check appropriate types )
-    DUP nowspace int string-eq NOT
+    DUP nowspace int stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator: right type must be INT: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -2083,7 +2084,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 ;
 
 : test-same-bracket ( s1="[" or similar s2=ditto -- error if different )
-    2DUP string-eq NOT
+    2DUP stringEq NOT
     IF
         ." Unmatched bracket types: " .AZ ."  expected and " .AZ ."  found."
         ABORT
@@ -2131,7 +2132,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
  commas in postfix, and many be heterogeneous.
 )
     (: bracket l-value l-type r-value r-type :)
-    bracket " (" string-eq
+    bracket " (" stringEq
     IF
         l-type
         IF
@@ -2219,7 +2220,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     so the "diamond" sequence mustn't contain anything else.
 ) 
 (: sub exp type op :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
-op " ♢" string-eq
+op " ♢" stringEq
 IF      ( diamond found )
     "  { " to obracket "  } " to cbracket type "  POW" AZ^ to type-out
 ELSE    ( nabla found )
@@ -2240,7 +2241,7 @@ l-value constants IN
 IF
     ." Cannot assign to " l-value .AZ ." : declared as constant." ABORT
 THEN    ( If l-type ends ARRAY and r-type is ARRAY, assume is empty array )
-"  ARRAY" l-type nowspace suffix? array r-type string-eq AND NOT
+"  ARRAY" l-type nowspace suffix? array r-type stringEq AND NOT
 IF
     " := (assignment)" l-type r-type test-two-types-same
 THEN
@@ -2393,7 +2394,7 @@ op  ( 3rd result on stack )
 (: f-name in-types :)
 f-name nowspace to f-name in-types nowspace to in-types
 types f-name APPLY CLONE-STRING hash rsplit VALUE left VALUE right VALUE op
-left nowspace in-types string-eq NOT
+left nowspace in-types stringEq NOT
 IF
     ." Incorrect input types for function " f-name .AZ ." ." CR left nowspace
     .AZ ."  required and " in-types .AZ ."  received." ABORT
@@ -2431,15 +2432,15 @@ THEN
 : PRINT_ ( s type -- s1 being the original formula with the instruction to print
                         appended. Type must be one of the basic types. )
 nowspace
-DUP int string-eq ( . for ints )
+DUP int stringEq ( . for ints )
 IF
     DROP "  . " AZ^
 ELSE
-    DUP boolean string-eq ( true or false )
+    DUP boolean stringEq ( true or false )
     IF
-        DROP "  boolean-print " AZ^
+        DROP "  booleanPrint " AZ^
     ELSE
-        DUP float string-eq ( F. for floats )
+        DUP float stringEq ( F. for floats )
         IF
             DROP "  F." AZ^
         ELSE
@@ -2451,7 +2452,7 @@ ELSE
                 IF
                     DROP "  .PAIR " AZ^
                 ELSE
-                    string string-eq
+                    string stringEq
                     IF
                         "  .AZ " AZ^
                     ELSE
@@ -2464,9 +2465,9 @@ ELSE
 THEN ;
 (
     Above can be refactored something like this:
-    STRING STRING PROD { int "  . " ↦ , boolean "  boolean-print " ↦ ,
+    STRING STRING PROD { int "  . " ↦ , boolean "  booleanPrint " ↦ ,
         float "  F. " ↦ , string "  .AZ " ↦ , } VALUE print-swaps
-    : PRINT_ ( DUP string string-eq IF SWAP addQuotes1 SWAP THEN "" unnecessary )
+    : PRINT_ ( DUP string stringEq IF SWAP addQuotes1 SWAP THEN "" unnecessary )
      DUP print-swaps DOM IN IF print-swaps SWAP APPLY AZ^   
     ELSE "  POW" OVER suffix? IF DROP "  .SET " AZ^ ELSE "  PROD" OVER suffix? IF   
     "  .PAIR " AZ^ THEN THEN THEN ; ( " “Campbell”" Patom PRINT_  ok.
@@ -2597,7 +2598,7 @@ WHILE
         IF
             seq count APPLY to op
             ( Like ordinary lsplit in that it applies the string found to op )
-            op minus string-eq
+            op minus stringEq
             ( If we have the Jekyll-and-Hyde operator, count back to last )
             ( printing character before it. )
             IF
@@ -2699,7 +2700,7 @@ PargumentList
 ( Retrieve function name )
 POP ( stack = "(" "ii jj" "INT1 INT2" "kk" "INT3" "foo" ) )
 )_ 
-SWAP last-wspace-split operation-name string-eq
+SWAP last-wspace-split operation-name stringEq
 IF  ( Change name of operation to "RECURSE" for recursive programming. )
     operation-name truncate recurse AZ^
 THEN
@@ -2838,11 +2839,11 @@ NULL OP Pdiamond ( used in Patom, defined 3000 lines below! )
     Does not accept lists; these are parsed by the Plist operation.
 )
 nowspace
-DUP true string-eq OVER True string-eq OR
+DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean
 ELSE
-    DUP false string-eq OVER False string-eq OR
+    DUP false stringEq OVER False stringEq OR
     IF
         DROP False boolean
     ELSE
@@ -2938,11 +2939,11 @@ THEN
     See also Patom and ParithAtom2.
 )
 nowspace
-DUP true string-eq OVER True string-eq OR
+DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean addQuotes2
 ELSE
-    DUP false string-eq OVER False string-eq OR
+    DUP false stringEq OVER False stringEq OR
     IF
         DROP False boolean addQuotes2
     ELSE
@@ -3011,7 +3012,7 @@ NULL OP Parith2
 nowspace ROT nowspace ROT nowspace CLONE-STRING ( iString arrString arrType )
 ROT DUP ( Clone & retain original iString in case needed for error message )
 CLONE-STRING Parith ( arrString arrType iString iStringPostfix iType )
-DUP int string-eq    
+DUP int stringEq    
 IF         
 DROP NIP     ( arrString arrType iStringPostfix )
 ELSE    
@@ -3615,7 +3616,7 @@ WHILE
         seq count APPLY end prefix?
         IF
             seq count APPLY to op
-            op minus string-eq
+            op minus stringEq
             IF
                 end 1- string > string end 1- MAX head e-char = AND op AND
                 IF
@@ -3815,11 +3816,11 @@ NULL OP Pboolean2
     For identifiers and TRUE/FALSE, the string is returned unchanged.
 )
 nowspace
-DUP true string-eq OVER True string-eq OR
+DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean
 ELSE
-    DUP false string-eq OVER False string-eq OR
+    DUP false stringEq OVER False stringEq OR
     IF
         DROP False boolean
     ELSE
@@ -3833,7 +3834,7 @@ ELSE
                 IF
                     Pfunction
                 ELSE
-                    Pid DUP nowspace boolean string-eq NOT
+                    Pid DUP nowspace boolean stringEq NOT
                     IF
                         ." The identifier " SWAP .AZ ."  ought to be " boolean
                         .AZ ."  type and is actually " .AZ ABORT
@@ -3855,11 +3856,11 @@ THEN
     and true/false TRUE/FALSE and identifiers 
 )
 nowspace
-DUP true string-eq OVER True string-eq OR
+DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean addQuotes2
 ELSE
-    DUP false string-eq OVER False string-eq OR
+    DUP false stringEq OVER False stringEq OR
     IF
         DROP False boolean addQuotes2
     ELSE
@@ -3874,7 +3875,7 @@ ELSE
                 IF
                     Pfunction addQuotes2 ( refactor if Pfunction2 written )
                 ELSE
-                    Pid DUP nowspace boolean string-eq NOT
+                    Pid DUP nowspace boolean stringEq NOT
                     IF
                         ." The identifier " SWAP .AZ ." ought to be " boolean
                         .AZ ."  type and is actually " .AZ ABORT
@@ -4272,25 +4273,25 @@ IF
     2DROP Pset2 ( top and middle elements nonsense or null, 3rd is a set )
 ELSE
     swap-synonyms-for-range-restriction ( Change <- to ← etc. )
-    DUP " ←" string-eq
+    DUP " ←" stringEq
     IF
         ( Top is operator, middle element = expression, 3rd = similar set )
         PUSH PUSH RECURSE POP Pexpression2 POP
     ELSE
-        DUP " ⁀" string-eq
+        DUP " ⁀" stringEq
         IF ( Catenate: 3rd value is a range-restricted sequence, middle a
              sequence, and top the operator
            )
             PUSH PUSH PrangeRestrictedSeq2 POP Psequence2
         ELSE
-            DUP " ▷" string-eq OVER " ▷-" string-eq OR
+            DUP " ▷" stringEq OVER " ▷-" stringEq OR
             ( Restrict: 3rs and 2nd values are set (relation) and set: top value
               is the operator
             )
             IF
                 PUSH PUSH Pset2 POP Pset2 POP
             ELSE
-                DUP " ↑" string-eq OVER " ↓" string-eq OR
+                DUP " ↑" stringEq OVER " ↓" stringEq OR
                 (
                     Left value a set(sequence) right value a number, top is the
                     operator
@@ -4336,22 +4337,22 @@ IF
 ELSE
     ( Stack = left subexpression, right subexpression and operator )
     swap-synonyms-for-range-restriction
-    DUP " ←" string-eq
+    DUP " ←" stringEq
     IF
         PUSH PUSH PrangeRestrictedSet2 POP Pexpression2 POP
         ( Left = set, right = element, using expression, then operator. )
     ELSE
-        DUP " ⁀" string-eq
+        DUP " ⁀" stringEq
         IF
             ( Left and right are both sequences, then operator )
             PUSH PUSH PrangeRestrictedSeq2 POP Psequence2 POP
         ELSE
-            DUP " ▷" string-eq OVER " ▷-" string-eq OR
+            DUP " ▷" stringEq OVER " ▷-" stringEq OR
             IF
                 ( Left = set, right = set of range type, and operator )
                 PUSH PUSH PrangeRestrictedSet2 POP Pset2 POP
             ELSE
-                DUP " ↑" string-eq OVER " ↓" OR
+                DUP " ↑" stringEq OVER " ↓" OR
                 IF
                     ( Left = set as sequence, right = number, and operator )
                     PUSH PUSH PrangeRestrictedSet2 POP Parith2 POP
@@ -4576,7 +4577,7 @@ ELSE
     PUSH PUSH RECURSE POP PdomainRestrictedSet
     ( Both subexpressions now parsed )
     POP ( operator )
-    DUP " ⊕" string-eq
+    DUP " ⊕" stringEq
     IF
         DROP ( Override takes 4 values ) ⊕_
     ELSE ( Other three possibilities, taking 5 values each )
@@ -4638,7 +4639,7 @@ ELSE
     PUSH PUSH PjoinedSet POP PdomainRestrictedSet
     ( Both subexpressions now parsed )
     POP ( operator )
-    DUP " ⊕" string-eq
+    DUP " ⊕" stringEq
     IF
         DROP ⊕_
     ELSE ( Other three possibilities )
@@ -4943,14 +4944,14 @@ IF
     2DROP Pineq
 ELSE
     swapSynonymsForEqMem
-    DUP " ∈" string-eq OVER " ∉" string-eq OR
+    DUP " ∈" stringEq OVER " ∉" stringEq OR
     IF
         PUSH PUSH Pexpression ( left token any type )
         POP PjoinedSet  ( right token here  = set  )
         POP membership_
     ELSE            ( = or ≠ found: must be equality left, inequality right. )
         PUSH PUSH RECURSE POP Pineq
-        POP " =" string-eq
+        POP " =" stringEq
             IF
                 =_
             ELSE    ( Must be ≠ )
@@ -4983,7 +4984,7 @@ IF
     2DROP Pineq2
 ELSE
     swapSynonymsForEqMem
-    DUP " ∈" string-eq OVER " ∉" string-eq OR ( test for set membership )
+    DUP " ∈" stringEq OVER " ∉" stringEq OR ( test for set membership )
     IF
         PUSH PUSH Pexpression2 ( left token any type )
         sspace AZ^
@@ -5018,7 +5019,7 @@ IF
     2DROP PineqBoolean
 ELSE
     swapSynonymsForEqMem
-    DUP " ∈" string-eq OVER " ∉" string-eq OR
+    DUP " ∈" stringEq OVER " ∉" stringEq OR
     IF
         PUSH PUSH Pexpression ( left token any type )
         POP PjoinedSet  ( right token = set )
@@ -5056,7 +5057,7 @@ IF
     2DROP PineqBoolean2
 ELSE
     swapSynonymsForEqMem
-    DUP " ∈" string-eq OVER " ∉" string-eq OR
+    DUP " ∈" stringEq OVER " ∉" stringEq OR
     IF
         PUSH PUSH Pexpression2 ( left token any type )
         sspace AZ^
@@ -5464,12 +5465,12 @@ NULL OP Pmultipleinstruction2
 type quantifier test-one-type-boolean ( Check predicate is boolean type. )
 " INT { <COLLECT" newline AZ^ "     " AZ^
 set AZ^ "  CHOICE to " AZ^ bound-variable AZ^ sspace AZ^ predicate AZ^
-quantifier " ∀" string-eq
+quantifier " ∀" stringEq
 IF 
     "  NOT" AZ^    
 THEN
 "  --> 0" AZ^ newline AZ^ " TILL CARD SATISFIED> } CARD" AZ^
-quantifier " ∀" string-eq
+quantifier " ∀" stringEq
 IF
     "  0=" AZ^
 ELSE
@@ -5503,7 +5504,7 @@ IF
     and-implies rsplit
     DUP
     IF
-        DUP  " ∧" string-eq
+        DUP  " ∧" stringEq
         IF
             PUSH PUSH PUSH " ∃" OVER prefix? NOT
                 IF 
@@ -5511,7 +5512,7 @@ IF
                 THEN
             POP POP POP DROP
         ELSE
-            " ⇒" string-eq PUSH ROT " ∀" OVER prefix?
+            " ⇒" stringEq PUSH ROT " ∀" OVER prefix?
                 PUSH ROT ROT POP NOT POP AND
             IF
                 ." ⇒ and ∀ must accompany each other. Text = " 2DROP DROP .AZ ABORT
@@ -5529,7 +5530,7 @@ IF
         CR ." Text = " 2DROP 2DROP .AZ ABORT
     THEN
     ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x" "iset" "∈" US="x < 0" )
-    " ∈" string-eq NOT
+    " ∈" stringEq NOT
     IF
         ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
         2DROP 2DROP .AZ ABORT
@@ -5592,7 +5593,7 @@ IF
     and-implies rsplit
     DUP
     IF
-        DUP  " ∧" string-eq
+        DUP  " ∧" stringEq
         IF
             PUSH PUSH PUSH " ∃" OVER prefix? NOT
                 IF 
@@ -5600,7 +5601,7 @@ IF
                 THEN
             POP POP POP DROP
         ELSE
-            " ⇒" string-eq PUSH ROT " ∀" OVER prefix?
+            " ⇒" stringEq PUSH ROT " ∀" OVER prefix?
                 PUSH ROT ROT POP NOT POP AND
             IF
                 ." ⇒ and ∀ must accompany each other. Text = " 2DROP DROP .AZ ABORT
@@ -5618,7 +5619,7 @@ IF
         CR ." Text = " 2DROP 2DROP .AZ ABORT
     THEN
     ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x" "iset" "∈" US="x < 0" )
-    " ∈" string-eq NOT
+    " ∈" stringEq NOT
     IF
         ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
         2DROP 2DROP .AZ ABORT
@@ -6004,7 +6005,7 @@ THEN ; )
     If an empty string is passed, or the keyword SKIP, leaves empty string on
     the stack.
 )
-nowspace DUP skip string-eq SWAP myazlength 0= OR NOT
+nowspace DUP skip stringEq SWAP myazlength 0= OR NOT
 IF
     ." Incorrect identification of skip instruction" ABORT
 THEN
@@ -6041,7 +6042,7 @@ ELSE
             DUP C@ [CHAR] ( =
             IF Pbracketedinstruction2
             ELSE
-                DUP DUP myazlength 0= SWAP skip string-eq OR
+                DUP DUP myazlength 0= SWAP skip stringEq OR
                 IF Pskip2
                 ELSE
                     Passignment2
@@ -6076,7 +6077,7 @@ ELSE
             IF
                 Pbracketedinstruction
             ELSE
-                DUP DUP myazlength 0= SWAP skip string-eq OR
+                DUP DUP myazlength 0= SWAP skip stringEq OR
                 IF
                     Pskip
                 ELSE
