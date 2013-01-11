@@ -71,7 +71,7 @@ types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ 
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
 533 " “Campbell” = “Ruth”" Pboolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
-534 " (“Campbell” = “Ruth”) PbooleanAtom SWAP doubleSpaceRemover SWAP
+534 " (“Campbell” = “Ruth”)" PbooleanAtom SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
 535 " (“Campbell” = “Ruth”)" Pexpression SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
@@ -81,5 +81,5 @@ types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ 
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
 538 " (“Campbell” = “Ruth”)" Peqmemboolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " string-eq" AZ^ AZ^ boolean checkOutputAndType
-( Error found: Peqmemboolen and Pboolean are not translating = to string-eq. )
+
 CR " HereEndethThe4thTestFile" .AZ CR

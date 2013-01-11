@@ -4921,7 +4921,7 @@ THEN
     DUP eqmem-swaps DOM IN IF eqmem-swaps SWAP APPLY THEN
 ;
 
-: Peqmem ( s -- s1 "BOO" )
+: PeqMem ( s -- s1 "BOO" )
 (
     Where s is the original String in the form "a = b" or "a ∈ b" or similar.
     Those operators have the same precedence and associate to the left.
@@ -4960,7 +4960,7 @@ ELSE
 THEN
 ;
 
-: Peqmem2 ( s -- s1 )
+: PeqMem2 ( s -- s1 )
 (
     Where s is the original String in the form "a = b" or "a ∈ b" or similar.
     Those operators have the same precedence and associate to the left.
@@ -4998,7 +4998,7 @@ THEN
 
 : PeqMemBoolean ( s -- s1 "BOO" )
 (
-    Similar to the Peqmem routine, but here we are sure we are dealing with a
+    Similar to the PeqMem routine, but here we are sure we are dealing with a
     Boolean value.
     Where s is the original String in the form "a = b" or "a ∈ b" or similar.
     Those operators have the same precedence and associate to the left.
@@ -5033,7 +5033,7 @@ THEN
 
 : PeqMemBoolean2 ( s -- s1 )
 (
-    Similar to the Peqmem2 routine, but here we are sure we are dealing with a
+    Similar to the PeqMem2 routine, but here we are sure we are dealing with a
     Boolean value.
     Where s is the original String in the form "a = b" or "a ∈ b" or similar.
     Those operators have the same precedence and associate to the left.
@@ -5076,7 +5076,7 @@ THEN
     Where s is the original String in the form "¬a" or similar. This is a right-
     -associative operator, which here has a lower precedence than = etc.
     Uses rsplit to split the string and passes on the resultant string to the
-    Peqmem parser. If there is an operator, it is in the format " a ¬" otherwise
+    PeqMem parser. If there is an operator, it is in the format " a ¬" otherwise
     the (null) operator string is deleted and s is passed unchanged.
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
@@ -5096,9 +5096,9 @@ THEN
     -associative operator, which here has a lower precedence than = etc.
     [Note that, if anything, ⇔ is used for equivalence for Booleans.]
     Uses rsplit to split the string and passes on the resultant string to the
-    Peqmem2 parser. If there is an operator, the output is in the format
+    PeqMem2 parser. If there is an operator, the output is in the format
     "a" "BOO" ¬_ including the quotes etc, otherwise the (null) operator string
-    is deleted and s is passed unchanged to Peqmem2.
+    is deleted and s is passed unchanged to PeqMem2.
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
@@ -5118,7 +5118,7 @@ THEN
     -associative operator, which here has a lower precedence than = etc.
     [Note that, if anything, ⇔ is used for equivalence for Booleans.]
     Uses rsplit to split the string and passes on the resultant string to the
-    Peqmem parser. If there is an operator, it is in the format " a ¬" otherwise
+    PeqMem parser. If there is an operator, it is in the format " a ¬" otherwise
     the (null) operator string is deleted and s is passed unchanged.
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
@@ -5126,7 +5126,7 @@ THEN
 not rsplit
 DUP 0=
 IF
-    2DROP Peqmem
+    2DROP PeqMem
 ELSE
     DROP NIP PnotBoolean ¬_
 THEN
@@ -5138,9 +5138,9 @@ THEN
     -associative operator, which here has a lower precedence than = etc.
     [Note that ⇔ is used for equivalence for Booleans.]
     Uses rsplit to split the string and passes on the resultant string to the
-    Peqmem2 parser. If there is an operator, the output is in the format
+    PeqMem2 parser. If there is an operator, the output is in the format
     "a" "BOO" ¬_ including the quotes etc, otherwise the (null) operator string
-    is deleted and s is passed unchanged to Peqmem2.
+    is deleted and s is passed unchanged to PeqMem2.
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
@@ -5148,7 +5148,7 @@ not rsplit
 DUP 0=
 IF
     2DROP
-    Peqmem2
+    PeqMem2
 ELSE
     SWAP
     PnotBoolean2  
