@@ -5043,7 +5043,7 @@ THEN
     Pineq2 on the right.
     Produces an output in a format like "x" "xType" "y" "xType POW" ∈_ including
     the quotes and new line at the end. This output can be executed directly as
-    FORTH code to produce the 
+    FORTH code to produce the output.
     Synonyms can be used: Colon : for ∈, and :/ for ∉. Unfortunately, reading
     from right to left, "=" would always be matched first, so one cannot use the
     synonyms /= or != for ≠; =/ or =! are used instead.
