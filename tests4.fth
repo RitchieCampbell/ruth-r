@@ -381,6 +381,125 @@ types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ 
 696 " i ≤ 1 + 2 * 3" Pboolean " i 1 2 3 * + ≤" boolean checkOutputAndType
 697 " i ≤ 1 + 2 * 3" Pineq " i 1 2 3 * + ≤" boolean checkOutputAndType
 698 " i ≤ 1 + 2 * 3" PineqBoolean " i 1 2 3 * + ≤" boolean checkOutputAndType
+699 " {1, 2, 3} = {3, 2, 1}" Pexpression SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } INT { 3 , 2 , 1 , } SET=" boolean checkOutputAndType
+700 " {1, 2, 3} = {3, 2, 1}" Pboolean SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } INT { 3 , 2 , 1 , } SET=" boolean checkOutputAndType
+701 " {1, 2, 3} = {3, 2, 1}" PeqMem SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } INT { 3 , 2 , 1 , } SET=" boolean checkOutputAndType
+702 " {1, 2, 3} = {3, 2, 1}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } INT { 3 , 2 , 1 , } SET=" boolean checkOutputAndType
+703 " {1, 2, 3} = 3 * 2 + 1" Pexpression SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } 3 2 * 1 + =" boolean checkOutputAndType
+704 " {1, 2, 3} = 3 * 2 + 1" Pboolean SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } 3 2 * 1 + =" boolean checkOutputAndType
+705 " {1, 2, 3} = 3 * 2 + 1" PeqMem SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } 3 2 * 1 + =" boolean checkOutputAndType
+706 " {1, 2, 3} = 3 * 2 + 1" PeqMemBoolean SWAP doubleSpaceRemover SWAP
+" INT { 1 , 2 , 3 , } 3 2 * 1 + =" boolean checkOutputAndType
+707 " “Campbell” = {3, 2, 1}" Pexpression SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " INT { 3 , 2 , 1 , } =" AZ^ boolean checkOutputAndType
+708 " “Campbell” = {3, 2, 1}" Pboolean SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " INT { 3 , 2 , 1 , } =" AZ^ boolean checkOutputAndType
+709 " “Campbell” = {3, 2, 1}" PeqMem SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " INT { 3 , 2 , 1 , } =" AZ^ boolean checkOutputAndType
+710 " “Campbell” = {3, 2, 1}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " INT { 3 , 2 , 1 , } =" AZ^ boolean checkOutputAndType
+711 " “Campbell” = 3 * 2 + 1" Pexpression SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " 3 2 * 1 + =" AZ^ boolean checkOutputAndType
+712 " “Campbell” = 3 * 2 + 1" Pboolean SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " 3 2 * 1 + =" AZ^ boolean checkOutputAndType
+713 " “Campbell” = 3 * 2 + 1" PeqMem SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " 3 2 * 1 + =" AZ^ boolean checkOutputAndType
+714 " “Campbell” = 3 * 2 + 1" PeqMemBoolean SWAP doubleSpaceRemover SWAP
+" Campbell" addQuotes1 " 3 2 * 1 + =" AZ^ boolean checkOutputAndType
+715 " 7.0 = 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F=" boolean checkOutputAndType
+716 " 1.23 = 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
+717 " 7.0 = 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F=" boolean checkOutputAndType
+718 " 1.23 = 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
+719 " 7.0 = 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F=" boolean checkOutputAndType
+720 " 1.23 = 1 + 2 * 3" PeqMem " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
+721 " 7.0 = 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F=" boolean checkOutputAndType
+722 " 1.23 = 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
+723 " 7.0 ≠ 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+724 " 1.23 ≠ 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+725 " 7.0 ≠ 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+726 " 1.23 ≠ 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+727 " 7.0 ≠ 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+728 " 1.23 ≠ 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+729 " 7.0 ≠ 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+730 " 1.23 ≠ 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+731 " 7.0 > 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+732 " 1.23 > 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+733 " 7.0 > 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+734 " 1.23 > 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+735 " 7.0 > 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+736 " 1.23 > 1 + 2 * 3" PeqMem " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+737 " 7.0 > 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+738 " 1.23 > 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+739 " 7.0 < 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+740 " 1.23 < 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+741 " 7.0 < 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+742 " 1.23 < 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+743 " 7.0 < 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+744 " 1.23 < 1 + 2 * 3" PeqMem " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+745 " 7.0 < 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+746 " 1.23 < 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+747 " 7.0 ≥ 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+748 " 1.23 ≥ 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+749 " 7.0 ≥ 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+750 " 1.23 ≥ 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+751 " 7.0 ≥ 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+752 " 1.23 ≥ 1 + 2 * 3" PeqMem " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+753 " 7.0 ≥ 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+754 " 1.23 ≥ 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+755 " 7.0 ≤ 1 + 2 * 3" Pexpression " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+756 " 1.23 ≤ 1 + 2 * 3" Pexpression " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+757 " 7.0 ≤ 1 + 2 * 3" Pboolean " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+758 " 1.23 ≤ 1 + 2 * 3" Pboolean " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+759 " 7.0 ≤ 1 + 2 * 3" PeqMem " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+760 " 1.23 ≤ 1 + 2 * 3" PeqMem " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+761 " 7.0 ≤ 1 + 2 * 3" PeqMemBoolean " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+762 " 1.23 ≤ 1 + 2 * 3" PeqMemBoolean " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+763 " (1.23 ≠ 1 + 2 * 3)" Pexpression " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+764 " (7.0 ≠ 1 + 2 * 3)" Pexpression " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+765 " (7.0 ≠ 1 + 2 * 3)" Pboolean " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+766 " (1.23 ≠ 1 + 2 * 3)" Pboolean " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+767 " (1.23 ≠ 1 + 2 * 3)" PeqMem " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+768 " (7.0 ≠ 1 + 2 * 3)" PeqMem " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+769 " (1.23 ≠ 1 + 2 * 3)" PeqMemBoolean " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+770 " (7.0 ≠ 1 + 2 * 3)" PeqMemBoolean " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+771 " (1.23 ≠ 1 + 2 * 3)" Patom " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+772 " (7.0 ≠ 1 + 2 * 3)" Patom " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+773 " (1.23 ≠ 1 + 2 * 3)" PbooleanAtom " 1.23 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+774 " (7.0 ≠ 1 + 2 * 3)" PbooleanAtom " 7.0 1 2 3 * + S>F F= NOT" boolean checkOutputAndType
+775 " (1.23 > 1 + 2 * 3)" PineqBoolean " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+776 " (7.0 > 1 + 2 * 3)" PineqBoolean " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+777 " (1.23 > 1 + 2 * 3)" Pboolean " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+778 " (7.0 > 1 + 2 * 3)" Pboolean " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+779 " (1.23 > 1 + 2 * 3)" Pineq " 1.23 1 2 3 * + S>F F>" boolean checkOutputAndType
+780 " (7.0 > 1 + 2 * 3)" Pineq " 7.0 1 2 3 * + S>F F>" boolean checkOutputAndType
+781 " (1.23 < 1 + 2 * 3)" PbooleanAtom " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+782 " (7.0 < 1 + 2 * 3)" PbooleanAtom " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+783 " (1.23 < 1 + 2 * 3)" Pboolean " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+784 " (7.0 < 1 + 2 * 3)" Pboolean " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+785 " (1.23 < 1 + 2 * 3)" PineqBoolean " 1.23 1 2 3 * + S>F F<" boolean checkOutputAndType
+786 " (7.0 < 1 + 2 * 3)" PineqBoolean " 7.0 1 2 3 * + S>F F<" boolean checkOutputAndType
+790 " (1.23 ≤ 1 + 2 * 3)" Pboolean " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+791 " (7.0 ≤ 1 + 2 * 3)" Pboolean " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+792 " (1.23 ≤ 1 + 2 * 3)" PineqBoolean " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+793 " (7.0 ≤ 1 + 2 * 3)" PineqBoolean " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+794 " (1.23 ≤ 1 + 2 * 3)" Pineq " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+795 " (7.0 ≤ 1 + 2 * 3)" Pineq " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+796 " (1.23 ≤ 1 + 2 * 3)" PbooleanAtom " 1.23 1 2 3 * + S>F F≤" boolean checkOutputAndType
+797 " (7.0 ≤ 1 + 2 * 3)" PbooleanAtom " 7.0 1 2 3 * + S>F F≤" boolean checkOutputAndType
+798 " (1.23 ≥ 1 + 2 * 3)" PineqBoolean " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+799 " (7.0 ≥ 1 + 2 * 3)" PineqBoolean " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+800 " (1.23 ≥ 1 + 2 * 3)" Pboolean " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+801 " (7.0 ≥ 1 + 2 * 3)" Pboolean " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+802 " (1.23 ≥ 1 + 2 * 3)" Pineq " 1.23 1 2 3 * + S>F F≥" boolean checkOutputAndType
+803 " (7.0 ≥ 1 + 2 * 3)" Pineq " 7.0 1 2 3 * + S>F F≥" boolean checkOutputAndType
+
 
 ( Subsets already in the 1st tests file. )
 
