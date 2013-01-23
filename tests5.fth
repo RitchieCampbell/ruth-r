@@ -209,5 +209,62 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ to types
 951 " ¬flag(1, 2, 3)" Pexpression " 1 2 3 flag ¬" boolean checkOutputAndType
 952 " ¬flag(1, 2, 3)" Pboolean " 1 2 3 flag ¬" boolean checkOutputAndType
+953 " ¬flag(1, 2, 3) ∧ b" Pexpression " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+954 " ¬flag(1, 2, 3) ∧ b" Pboolean " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+955 " ¬flag(1, 2, 3) ∧ b" PandOr " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+956 " ¬flag(1, 2, 3) ∧ b" PandOrBoolean " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+957 " ¬flag(1, 2, 3) & b" Pexpression " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+958 " ¬flag(1, 2, 3) & b" Pboolean " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+959 " ¬flag(1, 2, 3) & b" PandOr " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+960 " ¬flag(1, 2, 3) & b" PandOrBoolean " 1 2 3 flag ¬ b ∧" boolean checkOutputAndType
+961 " ¬flag(1, 2, 3) ∨ b" Pexpression " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+962 " ¬flag(1, 2, 3) ∨ b" Pboolean " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+963 " ¬flag(1, 2, 3) ∨ b" PandOr " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+964 " ¬flag(1, 2, 3) ∨ b" PandOrBoolean " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+965 " ¬flag(1, 2, 3) | b" Pexpression " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+966 " ¬flag(1, 2, 3) | b" Pboolean " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+967 " ¬flag(1, 2, 3) | b" PandOr " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+968 " ¬flag(1, 2, 3) | b" PandOrBoolean " 1 2 3 flag ¬ b ∨" boolean checkOutputAndType
+969 " ¬flag(1, 2, 3) ⇒ b" Pexpression " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+970 " ¬flag(1, 2, 3) ⇒ b" Pboolean " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+971 " ¬flag(1, 2, 3) ⇒ b" Pimplies " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+972 " ¬flag(1, 2, 3) ⇒ b" PimpliesBoolean " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+973 " ¬flag(1, 2, 3) => b" Pexpression " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+974 " ¬flag(1, 2, 3) => b" Pboolean " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+975 " ¬flag(1, 2, 3) => b" Pimplies " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+976 " ¬flag(1, 2, 3) => b" PimpliesBoolean " 1 2 3 flag ¬ b ⇒" boolean checkOutputAndType
+977 " ¬flag(1, 2, 3) ⇔ b" Pexpression " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+978 " ¬flag(1, 2, 3) ⇔ b" Pboolean " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+979 " ¬flag(1, 2, 3) ⇔ b" Pequiv " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+980 " ¬flag(1, 2, 3) ⇔ b" PequivBoolean " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+981 " ¬flag(1, 2, 3) <=> b" Pexpression " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+982 " ¬flag(1, 2, 3) <=> b" Pboolean " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+983 " ¬flag(1, 2, 3) <=> b" Pequiv " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+984 " ¬flag(1, 2, 3) <=> b" PequivBoolean " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
+STRING STRING PROD { } to locals
+985 " ∀i•i∈iset⇒i>0" Pexpression " INT { <COLLECT" newline AZ^
+"     iset CHOICE to i i 0 > NOT --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0="
+newline AZ^ AZ^ boolean checkOutputAndType
+986 " ∀j•j∈iset⇒j>0" Pquantified " INT { <COLLECT" newline AZ^
+"     iset CHOICE to j j 0 > NOT --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0="
+newline AZ^ AZ^ boolean checkOutputAndType
+987 " ∀k•k∈iset⇒k>0" Pboolean " INT { <COLLECT" newline AZ^
+"     iset CHOICE to k k 0 > NOT --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0="
+newline AZ^ AZ^ boolean checkOutputAndType
+988 " ∀l•l∈iset⇒l>0" PquantifiedBoolean " INT { <COLLECT" newline AZ^
+"     iset CHOICE to l l 0 > NOT --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0="
+newline AZ^ AZ^ boolean checkOutputAndType
+989 " ∃i1•i1∈iset∧i1>0" Pexpression " INT { <COLLECT" newline AZ^
+"     iset CHOICE to i1 i1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
+newline AZ^ AZ^ boolean checkOutputAndType
+990 " ∃j1•j1∈iset∧j1>0" Pquantified " INT { <COLLECT" newline AZ^
+"     iset CHOICE to j1 j1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
+newline AZ^ AZ^ boolean checkOutputAndType
+991 " ∃k1•k1∈iset∧k1>0" Pboolean " INT { <COLLECT" newline AZ^
+"     iset CHOICE to k1 k1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
+newline AZ^ AZ^ boolean checkOutputAndType
+992 " ∃l1•l1∈iset∧l1>0" PquantifiedBoolean " INT { <COLLECT" newline AZ^
+"     iset CHOICE to l1 l1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
+newline AZ^ AZ^ boolean checkOutputAndType
 
 CR " HereEndethThe5thTestFile" .AZ CR

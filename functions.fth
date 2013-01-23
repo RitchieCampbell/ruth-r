@@ -147,7 +147,7 @@ DUP [CHAR] ( stringcontainschar?
 IF
     DUP CLONE-STRING DUP [CHAR] ( first-character 0 SWAP C!
     SWAP OVER myazlength +
-    [CHAR] ( [CHAR] ) bracket-remover2 Pparameters
+    [CHAR] ( [CHAR] ) bracketRemover2 Pparameters
 THEN
 nowspace test-form-for-identifier to operation-name
 newline operation-end -blanks AZ^ newline " ;" newline AZ^ AZ^ AZ^ to operation-end
