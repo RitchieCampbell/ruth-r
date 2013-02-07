@@ -6463,10 +6463,10 @@ THEN ;
     followed by a comma-separated list of constant values, then END then the
     remainder of the program. If CONSTANTS is found, splits on END, parsing the
     left part as a constant list and the right part is passed to the variables
-    parser. Example;
-    "CONSTANTS i 123, j 234, s “Campbell” END foo bar" is parsed with
+    parser. If CONSTANTS isn't found, passes unchanged code to Pvariables.
+    Example: "CONSTANTS i 123, j 234, s “Campbell” END foo bar" is parsed with
     "i 123, j 234, s “Campbell”" being a constants list and "foo bar" the rest
-    of the program.
+    of the program. testing note: Must have something even whitespace after END
 )
 -wspace
 constants-string OVER prefix?
@@ -6482,7 +6482,7 @@ IF
             Pconstantlist
             POP Pvariables AZ^
         THEN
-    ELSE ( The following two instructions are for no constants found )
+    ELSE ( The following two instructions are for no "CONSTANTS" found )
         Pvariables
     THEN
 ELSE
