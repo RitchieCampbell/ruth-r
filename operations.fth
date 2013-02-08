@@ -6422,6 +6422,8 @@ THEN
     Returns 123 VALUE i or similar. Also adds i to the constants set and i↦INT
     to the types relation.
 )
+( Best to change from atom to expression, otherwise pairs were not getting
+parsed as constants correctly. Needs change in grammar, too. )
 wspace-split ( "i" "123" )
 nowspace SWAP nowspace SWAP ( Refactor )
 OVER constants IN ( already been declared )
