@@ -20,4 +20,19 @@ ELSE
 THEN
 ;
 
+: checkOutput ( i s1 s2 -- )
+( Prints error message s2 is expected result s1 found, line no i )
+2DUP stringEq
+IF
+    DROP 2DROP
+ELSE
+    ." Error without type: Expected: " .AZ ." ." CR ." Found: " .AZ ." . at test No " .
+THEN ;
+
+STRING STRING PROD { } to constants ( empty relation to avoid collisions )
+1001 " CONSTANTS i 123 END " Pconstants " 123 VALUE i" newline AZ^ checkOutput
+1002 " CONSTANTS s  “Campbell” " Pconstants " Campbell" addQuotes1 "  VALUE i" newline AZ^ AZ^ checkOutput
+1003 " CONSTANTS p  “Campbell” ↦ 123 END " Pconstants " Campbell" addQuotes1 " 123 |->$,I VALUE i" newline AZ^ AZ^ checkOutput
+
+" HereEndethThe6thTestFile." CR .AZ CR
 
