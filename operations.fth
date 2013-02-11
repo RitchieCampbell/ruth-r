@@ -6431,7 +6431,7 @@ IF
     ." Constant " OVER .AZ ."  declared twice" ABORT
 THEN
 STRING { OVER , } constants ∪ to constants 
-Patom ( "i" "123" "INT" ) SWAP PUSH OVER SWAP
+Pexpression ( "i" "123" "INT" ) SWAP PUSH OVER SWAP
 STRING STRING PROD { |->$,$ , } types ∪ to types
 Pid  array SWAP suffix?
 IF  ( "iArr" US = "HERE 3 , 1 , 2 , 3 ," )
