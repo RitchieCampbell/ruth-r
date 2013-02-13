@@ -148,7 +148,7 @@ STRING STRING PROD { " greater" int sspace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 898 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
-899 " “¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
+899 " “(¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
 900 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMemBoolean SWAP doubleSpaceRemover SWAP

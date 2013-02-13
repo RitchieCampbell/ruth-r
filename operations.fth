@@ -88,8 +88,8 @@ NIP
 " FLOAT" CONSTANT float
 "  S>F" CONSTANT StoF    ( Note has additional leading space )
 " STRING" CONSTANT string
-" “" CONSTANT l-quote
-" ”" CONSTANT r-quote
+" “" CONSTANT lQuote
+" ”" CONSTANT rQuote
 "  " CONSTANT sspace ( String containing a single space )
 " "  CONSTANT blank-string ( the empty String )
 " =" CONSTANT equals
@@ -109,8 +109,8 @@ NIP
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
 " ⊓" CONSTANT choice-string
 "  [] " CONSTANT sq-brackets ( Note leading and trailing spaces )
-l-quote myazlength CONSTANT lquote-length
-r-quote myazlength CONSTANT rquote-length
+lQuote myazlength CONSTANT lQuoteLength
+rQuote myazlength CONSTANT rQuoteLength
 " SKIP" CONSTANT skip
 " VARIABLES" CONSTANT variables
 " END" CONSTANT endstring
@@ -803,24 +803,24 @@ ELSE
 THEN
 ;
 
-: string-end-finder 
+: stringEndFinder 
 ( s -- s2 s String beginning with ”, gives pointer 1 beyond matching “ ) 
     DUP
-    l-quote OVER prefix? IF 1 ELSE 0 THEN  
+    lQuote OVER prefix? IF 1 ELSE 0 THEN  
     BEGIN  
         OVER C@ 0 <> OVER AND WHILE  
         SWAP tail SWAP  
-        OVER r-quote SWAP prefix? IF 1 - ELSE  
-        OVER l-quote SWAP prefix? IF 1 + THEN THEN  
+        OVER rQuote SWAP prefix? IF 1 - ELSE  
+        OVER lQuote SWAP prefix? IF 1 + THEN THEN  
     REPEAT
     IF
         ." Unmatched quotes: still inside String as follows:"
         10 EMIT DROP .AZ ABORT
     THEN  
-    r-quote myazlength + NIP
+    rQuote myazlength + NIP
 ;
 
-: string-start-finder 
+: stringStartFinder 
 (
     s1 s2 -- s1 s3 String starting s1 ending with ” at s2 -- s3 is pointer
     to the open quote matching that close quote at s2.
@@ -828,26 +828,25 @@ THEN
     If String doesn't end with ”, both values unchanged.
 ) 
 (: start end :) 
-r-quote end suffix?
+rQuote end suffix?
 IF
     1
     BEGIN
         DUP start end <= AND
     WHILE
         end 1- to end
-        l-quote end prefix?
+        lQuote end prefix?
         IF
             1-
         ELSE
-            r-quote end prefix?
+            rQuote end prefix?
             IF
                 1+
             THEN
         THEN
     REPEAT
     IF
-        ." Unmatched quotes: String doesn't start: original:" 10 EMIT
-        start .AZ ABORT
+        ." Unmatched quotes: String doesn't start: original:" CR start .AZ ABORT
     THEN
 THEN
 start end
@@ -878,9 +877,9 @@ IF
                 brackets 1- to brackets
             THEN
         THEN
-        l-quote string prefix?
+        lQuote string prefix?
         IF
-            string string-end-finder 1- to string
+            string stringEndFinder 1- to string
         THEN
         string 1+ to string ( not required if “”, hence 1- above )
     REPEAT
@@ -921,9 +920,9 @@ IF
                 brackets 1- to brackets
             THEN
         THEN
-        l-quote string prefix?
+        lQuote string prefix?
         IF
-            string string-end-finder 1- to string
+            string stringEndFinder 1- to string
         THEN
         string 1+ to string ( not required if “”, hence 1- above )
     REPEAT
@@ -971,9 +970,9 @@ IF
             IF
                 brackets 1- to brackets
             ELSE
-                l-quote string prefix?
+                lQuote string prefix?
                 IF
-                    string string-end-finder 1- to string
+                    string stringEndFinder 1- to string
                 THEN
             THEN
         THEN
@@ -986,7 +985,7 @@ THEN
 string
 ;
 
-: open-bracket-finder  
+: openBracketFinder  
 ( s s1 cl cr -- s s2 where s is the start of a string ending with a right )  
 ( bracket or similar at the pointer s1. The right bracket is the char cr )  
 ( and its pair (left) is cl. Leaves s2 which is a pointer to the matching )  
@@ -994,18 +993,18 @@ string
 ( If brackets not matched, error message. If no right bracket at end, s1 )  
 ( is returned unchanged  )  
 0  
-(: start-string string cl cr brackets :)  
+(: startString string cl cr brackets :)  
 string head cr =    
 IF  
     1 to brackets  
 THEN  
 BEGIN  
-string start-string < NOT brackets AND  
+string startString < NOT brackets AND  
 WHILE  
     string 1- to string  
-    r-quote string prefix?  
+    rQuote string prefix?  
     IF  
-        string string-start-finder to string  
+        string stringStartFinder to string  
     ELSE  
         string head cr =   
         IF  
@@ -1023,7 +1022,7 @@ IF
     ." Unmatched brackets: too many " cr EMIT ." and too few " cl EMIT ."  in"
     10 EMIT string .AZ ABORT  
 THEN  
-start-string string
+startString string
 ;
 
 : check-type-int ( s1 s2 -- )
@@ -2336,9 +2335,9 @@ seq CARD to size
 BEGIN   
     current head op 0= AND  
 WHILE
-    l-quote current prefix?
+    lQuote current prefix?
     IF
-        current string-end-finder to current
+        current stringEndFinder to current
     ELSE
         current head [CHAR] ( =
         IF
@@ -2478,7 +2477,7 @@ decapitate at the last space and add "PROD"↦".PAIR" and "POW"↦".SET" to that
 relation. )
 )
 
-: bracket-avoider-for-lsplit ( s s1 -- s2 )
+: bracketAvoiderForLSplit ( s s1 -- s2 )
 (
  s is a string, ending in brackets or close quotes at s1, and this function
  looks for the opening half of brackets etc from the following list:
@@ -2495,9 +2494,9 @@ relation. )
     Then use the type of bracket as an argument to get the type of close bracket
     (
     : bracket-avoider 
-    l-quote OVER prefix?
+    lQuote OVER prefix?
     IF
-        string-end-finder
+        stringEndFinder
     ELSE 
         DUP head bracket-pairs DOM IN
         IF
@@ -2507,21 +2506,21 @@ relation. )
     ;
     ) balance brackets: ))
 )
-r-quote OVER prefix?
+rQuote OVER prefix?
 IF
-    string-start-finder
+    stringStartFinder
 ELSE
     DUP head [CHAR] ) =
     IF
-        [CHAR] ( [CHAR] ) open-bracket-finder
+        [CHAR] ( [CHAR] ) openBracketFinder
     ELSE
         DUP head [CHAR] ] =
         IF
-            [CHAR] [ [CHAR] ] open-bracket-finder
+            [CHAR] [ [CHAR] ] openBracketFinder
         ELSE
             DUP head [CHAR] } = 
             IF
-                [CHAR] { [CHAR] } open-bracket-finder
+                [CHAR] { [CHAR] } openBracketFinder
             THEN
         THEN
     THEN
@@ -2530,11 +2529,13 @@ THEN
 ;
 
 : lsplit ( s seq -- s1 s2 op )
-( s is a string in the form "a + b" and seq is a sequence of strings eg )
-( ["+", "-"], s1 is the string as far as the operator, s2 after it, and op )
-( is the operator. If op is null = 0, the value below it must be regarded as a )
-( nonsense value and deleted from the stack. )
-( This function skips over any text in “”, (), [] and {} )
+(
+    s is a string in the form "a + b" and seq is a sequence of strings
+    eg ["+", "-"], s1 is the string as far as the operator, s2 after it, and op
+    is the operator. If op is null = 0, the value below it must be regarded as a
+    nonsense value and deleted from the stack.
+    This function skips over any text in “”, (), [] and {}
+)
 ( string seq already on stack ) 0 0 0 0 ( 6 values now on stack )
 (: string seq end op count size :) 
 string endaz to end ( One of the 0s gone )
@@ -2543,7 +2544,7 @@ BEGIN
     end string >= op 0= AND 
 WHILE
     0 to count
-    end bracket-avoider-for-lsplit to end ( Skip text in brackets etc )
+    end bracketAvoiderForLSplit to end ( Skip text in brackets etc )
     BEGIN
         size count > op 0= AND ( Not reached start of string, nor found op )
     WHILE 
@@ -2589,7 +2590,7 @@ BEGIN
     end string >= op 0= AND
 WHILE
     0 to count
-    end bracket-avoider-for-lsplit to end ( skip text in brackets, etc )
+    end bracketAvoiderForLSplit to end ( skip text in brackets, etc )
     BEGIN
         size count > op 0= AND
     WHILE
@@ -2685,7 +2686,7 @@ NULL OP Puminus
 ( comments for stack contents after passing "  foo(ii, jj, kk)  " )
 PUSH (_ POP nowspace DUP endaz
 ( stack: 5 items = "(" "" null "foo(ii, jj, kk)" ")" )
-DUP ROT ROT [CHAR] ( [CHAR] ) open-bracket-finder
+DUP ROT ROT [CHAR] ( [CHAR] ) openBracketFinder
 ( stack: 6 items = "(" "" null ")" "foo(ii, jj, kk)" "(ii, jj, kk)" )
 ( Now we have "(" "" null end of string, start of string, and open bracket on stack ) )
 ROT 0 SWAP C! ( Get rid of final close bracket )
@@ -2739,7 +2740,7 @@ THEN ;
 " (" bar-line AZ^ SWAP ( stack = "(_" "foo(x, y, z)" ) )
 ( Split by matching brackets )
 nowspace DUP endaz DUP ROT ROT ( ( stack = "(_" ")" "foo(x, y, z)" ")" )
-[CHAR] ( [CHAR] ) open-bracket-finder
+[CHAR] ( [CHAR] ) openBracketFinder
 ( stack = "(_" ")" "foo(x, y, z)" "(x, y, z)" )
 ( Split string by putting \0 instead of the brackets )
 ROT 0 SWAP C! 0 OVER C! 1+
@@ -2756,13 +2757,13 @@ POP addQuotes1 AZ^
 
 : Pstring ( s -- s1 "STRING" )  
 (
-    Take a String delimited by “...” and using string-end-finder, parse it by
+    Take a String delimited by “...” and using stringEndFinder, parse it by
     removing the outermost pair of quote marks.
     Returns that shortened String with added "" and the type STRING without "".
 )
-DUP string-end-finder rquote-length - ( One quote before end of String )
+DUP stringEndFinder rQuoteLength - ( One quote before end of String )
 0 SWAP C!
-lquote-length + ( One quote length after start of String ) addQuotes1
+lQuoteLength + ( One quote length after start of String ) addQuotes1
 string ( STRING )
 ;
 
@@ -2906,7 +2907,7 @@ ELSE
                                     PUSH {_ POP Plist }_
                                 THEN
                             ELSE
-                                l-quote OVER prefix?
+                                lQuote OVER prefix?
                                 IF
                                     Pstring
                                 ELSE
@@ -2980,7 +2981,7 @@ ELSE
                         ( Take 1st and last characters off, parse as list )
                         POP AZ^ AZ^ ( Retrieve former top value and catenate )
                     ELSE
-                        l-quote OVER prefix?
+                        lQuote OVER prefix?
                         IF
                             Pstring addQuotes1 AZ^
                         ELSE
@@ -3036,7 +3037,7 @@ THEN
     Splits on [ assuming there are no other possible characters separating
     array indices
 )
-DUP endaz [CHAR] [ [CHAR] ] open-bracket-finder 0 OVER C! 1+ " ]" truncate
+DUP endaz [CHAR] [ [CHAR] ] openBracketFinder 0 OVER C! 1+ " ]" truncate
 ( SWAP Pid ROT array_ )
 ;
 
@@ -3187,9 +3188,9 @@ OVER        ( "i < 3 THEN i := i + 1" "THEN" "i < 3 THEN i := i + 1" )
 BEGIN 
     DUP head POP DUP PUSH AND ( Non-0 character on string, TRUE on US )
 WHILE 
-    l-quote OVER prefix?
+    lQuote OVER prefix?
     IF      ( Quoted String: go to end of String )
-        string-end-finder
+        stringEndFinder
     THEN 
     2DUP prefix?
     IF      ( Keyword found: check preceded & followed by whitespace )
@@ -3256,9 +3257,9 @@ WHILE
             current token myazlength + to current ( Move beyond "token" )
         THEN
     REPEAT 
-    l-quote current prefix?
+    lQuote current prefix?
     IF  ( Skip text in quotes )
-        current string-end-finder to current
+        current stringEndFinder to current
     THEN
     current head [CHAR] ( =
     IF  ( Skip (). If they have managed to put (...END...) it's an error )
@@ -3351,9 +3352,9 @@ WHILE
             THEN
         THEN
     REPEAT
-    l-quote current prefix?
+    lQuote current prefix?
     IF  ( Skip over all parts in quotes. )
-        current string-end-finder to current
+        current stringEndFinder to current
     THEN
     current C@ [CHAR] ( =
     IF  ( Skip all text in brackets )
@@ -3608,7 +3609,7 @@ BEGIN
     end string >= op 0= AND
 WHILE
     0 to count
-    end bracket-avoider-for-lsplit to end ( skip text in brackets, etc )
+    end bracketAvoiderForLSplit to end ( skip text in brackets, etc )
     BEGIN
         size count > op 0= AND
     WHILE
@@ -3980,7 +3981,7 @@ NULL OP Psequence2
 )
 rangeRestriction2 lsplit DUP 0=
 IF  ( No operator found: must be plain old sequence; String OK, but only for ^ )
-    2DROP nowspace l-quote OVER prefix?
+    2DROP nowspace lQuote OVER prefix?
     IF
         Pstring
     ELSE
@@ -4215,7 +4216,7 @@ THEN
 rangeRestriction lsplit
 DUP 0=
 IF  ( top and middle elements nonsense, 3rd value is a string or set. )
-    2DROP nowspace l-quote OVER prefix?
+    2DROP nowspace lQuote OVER prefix?
     IF
         Pstring
     ELSE
