@@ -827,8 +827,8 @@ THEN
     Note that s2 is the pointer to the 1st of the 3 bytes making up the ”.
     If String doesn't end with ”, both values unchanged.
 ) 
-(: start end :) 
-rQuote end suffix?
+(: start end :)
+rQuote end prefix?
 IF
     1
     BEGIN
@@ -986,41 +986,43 @@ string
 ;
 
 : openBracketFinder  
-( s s1 cl cr -- s s2 where s is the start of a string ending with a right )  
-( bracket or similar at the pointer s1. The right bracket is the char cr )  
-( and its pair (left) is cl. Leaves s2 which is a pointer to the matching )  
-( left bracket in the same String )  
-( If brackets not matched, error message. If no right bracket at end, s1 )  
-( is returned unchanged  )  
-0  
-(: startString string cl cr brackets :)  
-string head cr =    
-IF  
-    1 to brackets  
-THEN  
-BEGIN  
-string startString < NOT brackets AND  
-WHILE  
-    string 1- to string  
-    rQuote string prefix?  
-    IF  
-        string stringStartFinder to string  
-    ELSE  
-        string head cr =   
-        IF  
-            brackets 1+ to brackets  
-        ELSE  
-            string head cl =  
-            IF  
-                brackets 1- to brackets  
+(
+    s s1 cl cr -- s s2 where s is the start of a string ending with a right
+    bracket or similar at the pointer s1. The right bracket is the char cr and
+    its pair (left) is cl.
+    Leaves s2 which is a pointer to the matching left bracket in the same String
+    If brackets not matched, error message. If no right bracket at end, s1 is
+    returned unchanged
+)
+0
+(: startString string cl cr brackets :)
+string head cr =
+IF
+    1 to brackets
+THEN
+BEGIN
+string startString < NOT brackets AND
+WHILE
+    string 1- to string
+    rQuote string prefix?
+    IF
+        string stringStartFinder to string
+    ELSE
+        string head cr =
+        IF
+            brackets 1+ to brackets
+        ELSE
+            string head cl =
+            IF
+                brackets 1- to brackets
             THEN
         THEN
-    THEN 
-REPEAT 
+    THEN
+REPEAT
 brackets
-IF  
-    ." Unmatched brackets: too many " cr EMIT ." and too few " cl EMIT ."  in"
-    10 EMIT string .AZ ABORT  
+IF
+    ." Unmatched brackets: too many " cr EMIT ."  and too few " cl EMIT ."  in"
+    CR startString .AZ ABORT  
 THEN  
 startString string
 ;
@@ -2544,7 +2546,7 @@ BEGIN
     end string >= op 0= AND 
 WHILE
     0 to count
-    end bracketAvoiderForLSplit to end ( Skip text in brackets etc )
+    string end bracketAvoiderForLSplit to end DROP ( Skip text in brackets etc )
     BEGIN
         size count > op 0= AND ( Not reached start of string, nor found op )
     WHILE 
