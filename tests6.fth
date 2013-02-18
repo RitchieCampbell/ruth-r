@@ -53,13 +53,44 @@ addQuotes1 sspace AZ^ "  and Ruth" addQuotes1 "  AZ^ VALUE s3" newline AZ^ AZ^ A
 1009 " CONSTANTS p4  “Campbell” ↦ “Ruth”, b i > 0 END " Pconstants " Campbell" addQuotes1
 sspace AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ VALUE p4" newline AZ^ AZ^
 " i 0 > VALUE b" newline AZ^ AZ^ checkOutput
-1005 " CONSTANTS set3 {1, 3} ◁  [ “Campbell”, “Ruth”, “Sarah”, “Eleanor”], k 999 END " Pconstants
-" INT { 1 , 3 , } STRING { " " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
+1010 " CONSTANTS set3 {1, 3} ◁  [ “Campbell”, “Ruth”, “Sarah”, “Eleanor”], k 999 END " Pconstants
+" INT { 1 , 3 , } STRING [ " " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
 "  , " " Sarah" addQuotes1 "  , " " Eleanor" addQuotes1 "  , ] ◁ VALUE set3"
 newline " 999 VALUE k" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1005 " CONSTANTS p3 {  “Campbell”, “Ruth”} ↦ {1, 2, 3} END " Pconstants " STRING { "
+STRING STRING PROD { } to constants STRING STRING PROD { } to types
+( empty relations to avoid collisions )
+1011 " CONSTANTS i 123 END VARIABLES j INT, s STRING END " Pconstants
+" 123 VALUE i" newline AZ^ " 0 VALUE j" newline AZ^ AZ^ " 0 VALUE s" newline AZ^ AZ^  checkOutput
+1012 " CONSTANTS s  “Campbell” END VARIABLES jj INT, ss STRING END " Pconstants
+" Campbell" addQuotes1 "  VALUE s" newline AZ^ AZ^ " 0 VALUE jj" newline AZ^ AZ^
+" 0 VALUE ss" newline AZ^ AZ^ checkOutput
+1013 " CONSTANTS p  “Campbell” ↦ 123 END VARIABLES iArr INT[] END " Pconstants
+" Campbell" addQuotes1 "  123 |->$,I VALUE p" newline AZ^ AZ^ " 0 VALUE-ARRAY iArr"
+newline AZ^ AZ^ checkOutput
+1014 " CONSTANTS p2  “Campbell” ↦ “Ruth” END VARIABLES iArr2 INT[], ii INT END " Pconstants
+" Campbell" addQuotes1 sspace AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ VALUE p2"
+newline AZ^ AZ^ " 0 VALUE-ARRAY iArr2" newline AZ^ AZ^ " 0 VALUE ii" newline AZ^ AZ^ checkOutput
+1015 " CONSTANTS set {  “Campbell”, “Ruth”} END VARIABLES iSet  " Pconstants " STRING { "
+" Campbell" addQuotes1 "  , " " Ruth" addQuotes1 "  , } VALUE set" newline
+AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1015 " CONSTANTS p3 {  “Campbell”, “Ruth”} ↦ {1, 2, 3} END " Pconstants " STRING { "
 " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
 "  , } INT { 1 , 2 , 3 , } |->S,S VALUE p3" newline AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1016 " CONSTANTS j 123, a 123.45 END " Pconstants " 123 VALUE j" newline AZ^
+" 123.45 VALUE a" newline AZ^ AZ^ checkOutput
+1017 " CONSTANTS s2  “Campbell”, set2 {1, 2, 3} END " Pconstants " Campbell" addQuotes1
+"  VALUE s2" newline AZ^ AZ^ " INT { 1 , 2 , 3 , } VALUE set2" newline AZ^ AZ^ checkOutput
+1018 " CONSTANTS s3  “Campbell” ^ “ and Ruth”  END " Pconstants " Campbell"
+addQuotes1 sspace AZ^ "  and Ruth" addQuotes1 "  AZ^ VALUE s3" newline AZ^ AZ^ AZ^ checkOutput
+1019 " CONSTANTS p4  “Campbell” ↦ “Ruth”, b i > 0 END " Pconstants " Campbell" addQuotes1
+sspace AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ VALUE p4" newline AZ^ AZ^
+" i 0 > VALUE b" newline AZ^ AZ^ checkOutput
+1020 " CONSTANTS set3 {1, 3} ◁  [ “Campbell”, “Ruth”, “Sarah”, “Eleanor”], k 999 END " Pconstants
+" INT { 1 , 3 , } STRING [ " " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
+"  , " " Sarah" addQuotes1 "  , " " Eleanor" addQuotes1 "  , ] ◁ VALUE set3"
+newline " 999 VALUE k" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1021 " CONSTANTS arr ARRAY[ 1 , 2 , 3] END " Pconstants
+" 3 VALUE-ARRAY arr" newline AZ^ " HERE 3 , 1 , 2 , 3 ,  to  arr" newline AZ^ AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
