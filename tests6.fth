@@ -90,11 +90,13 @@ Pconstants " Campbell" addQuotes1 sspace AZ^ "  and Ruth" addQuotes1
 " VARIABLES z FLOAT, s4 STRING END " AZ^ Pconstants " 123 -1 * VALUE i3" newline
 AZ^ " Campbell" addQuotes1 sspace AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ VALUE p4"
 newline AZ^ AZ^ " i3 0 > VALUE b" newline AZ^ AZ^ " 0 VALUE z" newline AZ^ AZ^
-" 0 VALUE s4" newline AZ^ AZ^ checkOutput
-1020 " CONSTANTS set3 {1, 3} ◁  [ “Campbell”, “Ruth”, “Sarah”, “Eleanor”], kk 999 END " Pconstants
+" 0 VALUE s4" newline AZ^ AZ^ AZ^ AZ^ checkOutput
+ABORT 1020 " CONSTANTS set3 {1, 3} ◁  [ “Campbell”, “Ruth”, “Sarah”, “Eleanor”], kk 999 END"
+newline " VARIABLES pairINT×STRING" AZ^ AZ^ Pconstants
 " INT { 1 , 3 , } STRING [ " " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
 "  , " " Sarah" addQuotes1 "  , " " Eleanor" addQuotes1 "  , ] ◁ VALUE set3"
-newline " 999 VALUE kk" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+newline " 999 VALUE kk" newline " 0 VALUE pair" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1021 " CONSTANTS arr ARRAY[ 1 , 2 , 3] END " Pconstants
 " 3 VALUE-ARRAY arr" newline AZ^ " HERE 3 , 1 , 2 , 3 ,  to  arr" newline AZ^ AZ^ checkOutput
 
