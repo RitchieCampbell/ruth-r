@@ -64,27 +64,27 @@ STRING STRING PROD { } to constants STRING STRING PROD { } to types
 1012 " CONSTANTS s  “Campbell” END VARIABLES jj INT, ss STRING END " Pconstants
 " Campbell" addQuotes1 "  VALUE s" newline AZ^ AZ^ " 0 VALUE jj" newline AZ^ AZ^
 " 0 VALUE ss" newline AZ^ AZ^ checkOutput
-1013 " CONSTANTS p  “Campbell” ↦ 123 END VARIABLES iArr INT[] END " Pconstants
-" Campbell" addQuotes1 "  123 |->$,I VALUE p" newline AZ^ AZ^ " 0 VALUE-ARRAY iArr"
+1013 " CONSTANTS p  “Campbell” ↦ 123 END VARIABLES iArr INT[5] END " Pconstants
+" Campbell" addQuotes1 "  123 |->$,I VALUE p" newline AZ^ AZ^ " 5 VALUE-ARRAY iArr"
 newline AZ^ AZ^ checkOutput
-1014 " CONSTANTS p2  “Campbell” ↦ “Ruth” END VARIABLES iArr2 INT[], ii INT END " Pconstants
+1014 " CONSTANTS p2  “Campbell” ↦ “Ruth” END VARIABLES iArr2 INT[5], ii INT END " Pconstants
 " Campbell" addQuotes1 sspace AZ^ " Ruth" addQuotes1 AZ^ "  |->$,$ VALUE p2"
-newline AZ^ AZ^ " 0 VALUE-ARRAY iArr2" newline AZ^ AZ^ " 0 VALUE ii" newline AZ^ AZ^ checkOutput
+newline AZ^ AZ^ " 5 VALUE-ARRAY iArr2" newline AZ^ AZ^ " 0 VALUE ii" newline AZ^ AZ^ checkOutput
 1015 " CONSTANTS set {  “Campbell”, “Ruth”} END VARIABLES iSet ℙ(INT) END "
 Pconstants " STRING { " " Campbell" addQuotes1 "  , " " Ruth" addQuotes1
 "  , } VALUE set" newline " 0 VALUE iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1016 " CONSTANTS j 123, a 123.45 END" newline " VARIABLES iArr3 INT[] END " AZ^
+1016 " CONSTANTS j 123, a 123.45 END" newline " VARIABLES iArr3 INT[5] END " AZ^
 AZ^ Pconstants " 123 VALUE j" newline AZ^ " 123.45 VALUE a" newline AZ^ AZ^
-" 0 VALUE-ARRAY iArr3" newline AZ^ AZ^ checkOutput
+" 5 VALUE-ARRAY iArr3" newline AZ^ AZ^ checkOutput
 1017 " CONSTANTS s2  “Campbell”, set2 {1, 2, 3} END" newline AZ^
-" VARIABLES iArr4 INT[], sSet ℙ(STRING) END " AZ^ Pconstants " Campbell"
+" VARIABLES iArr4 INT[5], sSet ℙ(STRING) END " AZ^ Pconstants " Campbell"
 addQuotes1 "  VALUE s2" newline AZ^ AZ^ " INT { 1 , 2 , 3 , } VALUE set2"
-newline AZ^ AZ^ " 0 VALUE-ARRAY iArr4" newline
+newline AZ^ AZ^ " 5 VALUE-ARRAY iArr4" newline
 " 0 VALUE sSet" newline AZ^ AZ^ AZ^ AZ^ checkOutput
 1018 " CONSTANTS s3  “Campbell” ^ “ and Ruth”  END " newline AZ^
-" VARIABLES k INT, iArr5 INT[], pSet ℙ(INT×INT) END " newline AZ^ AZ^ 
+" VARIABLES k INT, iArr5 INT[5], pSet ℙ(INT×INT) END " newline AZ^ AZ^ 
 Pconstants " Campbell" addQuotes1 sspace AZ^ "  and Ruth" addQuotes1
-"  AZ^ VALUE s3" newline " 0 VALUE k" newline " 0 VALUE-ARRAY iArr5" newline
+"  AZ^ VALUE s3" newline " 0 VALUE k" newline " 5 VALUE-ARRAY iArr5" newline
 " 0 VALUE pSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1019 " CONSTANTS i3 -123, p4  “Campbell” ↦ “Ruth”, b i3 > 0 END" newline AZ^
 " VARIABLES z FLOAT, s4 STRING END " AZ^ Pconstants " 123 -1 * VALUE i3" newline
@@ -100,6 +100,66 @@ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1021 " CONSTANTS arr ARRAY[ 1 , 2 , 3] END" newline " VARIABLES pair2 STRING×INT END "
 AZ^ AZ^ Pconstants " 3 VALUE-ARRAY arr" newline AZ^ " HERE 3 , 1 , 2 , 3 ,  to  arr"
 newline " 0 VALUE pair2" newline AZ^ AZ^ AZ^ AZ^ checkOutput
+STRING STRING PROD { } to types ( empty relation to avoid collisions )
+1022 " VARIABLES i INT, j INT, s STRING END " Pconstants
+" 0 VALUE i" newline AZ^ " 0 VALUE j" newline AZ^ AZ^ " 0 VALUE s" newline AZ^ AZ^  checkOutput
+1023 " VARIABLES s1 STRING, jj INT, ss STRING END " Pconstants
+" 0 VALUE s1" newline AZ^ " 0 VALUE jj" newline AZ^ AZ^ " 0 VALUE ss" newline
+AZ^ AZ^ checkOutput
+1024 " VARIABLES p STRING×STRING, iArr INT[5] END " Pconstants " 0 VALUE p" newline AZ^
+" 5 VALUE-ARRAY iArr" newline AZ^ AZ^ checkOutput
+1025 " VARIABLES p2 STRING×STRING, iArr2 INT[5], ii INT END " Pconstants
+" 0 VALUE p2" newline AZ^ " 5 VALUE-ARRAY iArr2" newline AZ^ AZ^ " 0 VALUE ii"
+newline AZ^ AZ^ checkOutput
+1026 " VARIABLES set ℙ(STRING), iSet ℙ(INT) END " Pconstants " 0 VALUE set"
+newline " 0 VALUE iSet" newline AZ^ AZ^ AZ^ checkOutput
+1027 " VARIABLES j1 INT, a FLOAT,iArr3 INT[5] END " Pconstants
+" 0 VALUE j1" newline AZ^ " 0 VALUE a" newline AZ^ AZ^
+" 5 VALUE-ARRAY iArr3" newline AZ^ AZ^ checkOutput
+1028 " VARIABLES s2 STRING, set2 ℙ(INT), iArr4 INT[5], sSet ℙ(STRING) END "
+Pconstants " 0 VALUE s2" newline AZ^ " 0 VALUE set2" newline AZ^ AZ^
+" 5 VALUE-ARRAY iArr4" newline " 0 VALUE sSet" newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1029 " VARIABLES s3  STRING × STRING, k INT, iArr5 INT[5], pSet ℙ(INT×INT) END " 
+Pconstants " 0 VALUE s3" newline " 0 VALUE k" newline " 5 VALUE-ARRAY iArr5" newline
+" 0 VALUE pSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1030 " VARIABLES i3 INT, p4 STRING×STRING, b BOO, z FLOAT, s4 STRING END " Pconstants
+" 0 VALUE i3" newline AZ^ " 0 VALUE p4" newline AZ^ AZ^ " 0 VALUE b" newline AZ^ AZ^
+" 0 VALUE z" newline AZ^ AZ^ " 0 VALUE s4" newline AZ^ AZ^ checkOutput
+1031 " VARIABLES set3 ℙ (INT × STRING), kk INT, pair INT×STRING END "
+Pconstants " 0 VALUE set3" newline " 0 VALUE kk" newline " 0 VALUE pair" newline
+AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1032 " VARIABLES arr INT[5], pair2 STRING×INT END " Pconstants
+" 5 VALUE-ARRAY arr" newline AZ^ " 0 VALUE pair2" newline AZ^ AZ^ checkOutput
+STRING STRING PROD { } to types ( empty relation to avoid collisions )
+1033 " VARIABLES i INT, j INT, s STRING END " Pvariables
+" 0 VALUE i" newline AZ^ " 0 VALUE j" newline AZ^ AZ^ " 0 VALUE s" newline AZ^ AZ^  checkOutput
+1034 " VARIABLES s1 STRING, jj INT, ss STRING END " Pvariables
+" 0 VALUE s1" newline AZ^ " 0 VALUE jj" newline AZ^ AZ^ " 0 VALUE ss" newline
+AZ^ AZ^ checkOutput
+1035 " VARIABLES p STRING×STRING, iArr INT[5] END " Pvariables " 0 VALUE p" newline AZ^
+" 5 VALUE-ARRAY iArr" newline AZ^ AZ^ checkOutput
+1036 " VARIABLES p2 STRING×STRING, iArr2 INT[5], ii INT END " Pvariables
+" 0 VALUE p2" newline AZ^ " 5 VALUE-ARRAY iArr2" newline AZ^ AZ^ " 0 VALUE ii"
+newline AZ^ AZ^ checkOutput
+1037 " VARIABLES set ℙ(STRING), iSet ℙ(INT) END " Pvariables " 0 VALUE set"
+newline " 0 VALUE iSet" newline AZ^ AZ^ AZ^ checkOutput
+1038 " VARIABLES j1 INT, a FLOAT,iArr3 INT[5] END " Pvariables
+" 0 VALUE j1" newline AZ^ " 0 VALUE a" newline AZ^ AZ^
+" 5 VALUE-ARRAY iArr3" newline AZ^ AZ^ checkOutput
+1039 " VARIABLES s2 STRING, set2 ℙ(INT), iArr4 INT[5], sSet ℙ(STRING) END "
+Pvariables " 0 VALUE s2" newline AZ^ " 0 VALUE set2" newline AZ^ AZ^
+" 5 VALUE-ARRAY iArr4" newline " 0 VALUE sSet" newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1040 " VARIABLES s3  STRING × STRING, k INT, iArr5 INT[5], pSet ℙ(INT×INT) END " 
+Pvariables " 0 VALUE s3" newline " 0 VALUE k" newline " 5 VALUE-ARRAY iArr5" newline
+" 0 VALUE pSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1041 " VARIABLES i3 INT, p4 STRING×STRING, b BOO, z FLOAT, s4 STRING END " Pvariables
+" 0 VALUE i3" newline AZ^ " 0 VALUE p4" newline AZ^ AZ^ " 0 VALUE b" newline AZ^ AZ^
+" 0 VALUE z" newline AZ^ AZ^ " 0 VALUE s4" newline AZ^ AZ^ checkOutput
+1042 " VARIABLES set3 ℙ (INT × STRING), kk INT, pair INT×STRING END "
+Pvariables " 0 VALUE set3" newline " 0 VALUE kk" newline " 0 VALUE pair" newline
+AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1043 " VARIABLES arr2 INT[5], pair2 STRING×INT END " Pvariables
+" 5 VALUE-ARRAY arr2" newline AZ^ " 0 VALUE pair2" newline AZ^ AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
