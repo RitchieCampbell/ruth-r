@@ -160,6 +160,8 @@ Pvariables " 0 VALUE set3" newline " 0 VALUE kk" newline " 0 VALUE pair" newline
 AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1043 " VARIABLES arr2 INT[5], pair2 STRING×INT END " Pvariables
 " 5 VALUE-ARRAY arr2" newline AZ^ " 0 VALUE pair2" newline AZ^ AZ^ checkOutput
+1044 " VARIABLES arr3 INT[i], pair3 STRING×INT END " Pvariables
+" i VALUE-ARRAY arr3" newline AZ^ " 0 VALUE pair3" newline AZ^ AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
