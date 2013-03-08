@@ -164,11 +164,11 @@ operation-inputs -blanks "  #" operation-type AZ^ AZ^ to operation-inputs
     Example:
     " i INT, s STRING ← foo(f FLOAT, b BOO) ≙ VARIABLES x INT END
     x := 3; IF f > x THEN s := “Campbell” ELSE s := “Ruth” END;
-    IF b THEN i := f + x ELSE i := f - x END
-    END             →
+    IF b THEN i := i + x ELSE i := i - x END END"
+    →
     : foo (: f b :) 0 VALUE x 3 to x
     f 3 S>F F> IF "Campbell" to s ELSE "Ruth" to s THEN
-    b IF f x S>F F+ to i ELSE f x S>F F- to i THEN i s ;
+    b IF i x + to i ELSE i x - to i THEN i s ;
     Which will have a type error, trying to assign a FLOAT to an INT!
 )
 blank-string to operation-end
@@ -185,7 +185,7 @@ THEN
 SWAP Poperationheader
 -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
 IF
-    endstring rsplit-for-keywords 0=
+    endString rsplit-for-keywords 0=
     IF
         ." VARIABLES without END error." ABORT
     THEN
@@ -195,7 +195,7 @@ locals CARD
 IF
     " (:" operation-stack "  :)" newline AZ^ AZ^ AZ^ to operation-stack
 THEN
-( Remove this bit later ) nowspace endstring truncate
+( Remove this bit later ) nowspace endString truncate
 Pmultipleinstruction
 operation-end -blanks AZ^
 operation-declarations SWAP AZ^
@@ -207,7 +207,7 @@ STRING STRING PROD { operation-name operation-inputs ↦ , } types ∪ to types
 
 (
 : Pmultipleoperations ( s -- s1 ) 
-sequence start-keywords2 end-keywords rsplit-for-blocks 
+sequence startKeywords2 endKeywords rsplitForBlocks 
 IF 
     SWAP Poperation SWAP RECURSE AZ^ 
 ELSE 

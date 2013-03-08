@@ -113,8 +113,8 @@ lQuote myazlength CONSTANT lQuoteLength
 rQuote myazlength CONSTANT rQuoteLength
 " SKIP" CONSTANT skip
 " VARIABLES" CONSTANT variables
-" END" CONSTANT endstring
-" CONSTANTS" CONSTANT constants-string
+" END" CONSTANT endString
+" CONSTANTS" CONSTANT constantsString
 " WHILE" CONSTANT while
 " ARRAY" VALUE array
 "  VALUE " VALUE value-string ( Note leading and trailing spaces )
@@ -179,15 +179,15 @@ INT { 9 , 10 , 11 , 12 , 13 , 32 , } CONSTANT whitespace
 whitespace INT { 0 , CHAR ; , } ∪ CONSTANT whitespace0;
 ( 0009 = HT tab \t, 000A(10) = LF new line \n, 000B(11) = VT 000C(12) = FF,
 000D(13) = CR, 0020(32) = space )
-STRING [ while , " IF" , " (" , ] CONSTANT start-keywords
-STRING [ while , " IF" , " (" , " ≙" , variables , ] CONSTANT start-keywords2
-STRING [ endstring , " )" , ] CONSTANT end-keywords
+STRING [ while , " IF" , " (" , ] CONSTANT startKeywords
+STRING [ while , " IF" , " (" , " ≙" , variables , ] CONSTANT startKeywords2
+STRING [ endString , " )" , ] CONSTANT endKeywords
 (
     Preceding 3 sets include brackets and words which can begin or end a block,
     eg WHILE . . . DO . . . END.
 )
-STRING { endstring , while , " IF" , " THEN" , " ELSE" , " DO" , array ,
-         constants-string , " PRINT" , " SKIP" , variables , recurse , }
+STRING { endString , while , " IF" , " THEN" , " ELSE" , " DO" , array ,
+         constantsString , " PRINT" , " SKIP" , variables , recurse , }
     CONSTANT keywords
 ( A set of words equalling keywords. )
 
@@ -1030,7 +1030,20 @@ startString string
 : check-type-int ( s1 s2 -- )
 (
     Where s1 is the operator/array index and s2 the type, which ought to be int.
-    If not, error message
+    If not, error messagepublic class Foo
+{
+   private Foo f;
+
+   public Foo()
+   {
+      f = new Foo();
+   }
+
+   public static void main(String[] args)
+   {
+      new Foo();
+   }
+}
 )
 nowspace DUP int stringEq
 IF
@@ -3214,14 +3227,14 @@ POP IF DROP NULL THEN
 
 : rsplit-for-keywords2
 (
-    Similar to rsplit-for-blocks, but splits around a single keyword, eg ELSE,
+    Similar to rsplitForBlocks, but splits around a single keyword, eg ELSE,
     which must be a separate word from the rest of the code (unlike operators,
     which can run against operands like this "i:=99"). Takes a string, already
     stripped of its surrounding keywords, and counts pairs of keywords until it
     finds the sought token. For example
     "IF j > 4 THEN i := 99 ELSE i := 1 END ELSE i := 0" is the THEN part of an
     IF-THEN but can itself split on the second ELSE. Typical usage:
-    <text above> "ELSE" start-keywords end-keywords rsplit-for-keywords2, which
+    <text above> "ELSE" startKeywords endKeywords rsplit-for-keywords2, which
     returns "IF j > 4 THEN i := 99 ELSE i := 1 END " " i := 0" "ELSE", spaces
     retained as shown.
 )
@@ -3301,7 +3314,7 @@ THEN
 string current op
 ;
 
-: rsplit-for-blocks ( s split-seq start-seq end-seq -- s1 s2 s3 )
+: rsplitForBlocks ( s split-seq start-seq end-seq -- s1 s2 s3 )
 (
     Where s is a text in a format like "i := i + 3; PRINT i" or
     "i := 0; WHILE i < 10 DO i := i + 1; PRINT i END".
@@ -3319,10 +3332,10 @@ string current op
     If no operator is found, the top value on the stack will be 0, and both top
     and 2nd values on the stack must be discarded as nonsense values. I
     Typical usage:
-    "WHILE i < 3 DO i := i + 1; PRINT i END; j := j * 2" sequence start-keywords
-       end-keywords rsplit-for-blocks
+    "WHILE i < 3 DO i := i + 1; PRINT i END; j := j * 2" sequence startKeywords
+       endKeywords rsplitForBlocks
     To find the ; at the end of an operation, add "VARIABLES" and "≙" to the
-    start-keywords seq.
+    startKeywords seq.
 )
 (: string splits starts ends :) 0 VALUE op 0 VALUE count
 splits CARD VALUE split-size starts CARD VALUE start-size
@@ -5868,10 +5881,10 @@ THEN ;
     Where s is an instruction in the form WHILE ... DO ... END
 )
 nowspace while decapitate  
-endstring OVER suffix? NOT
-OVER endaz endstring myazlength - alphanumeric IN NOT OR NOT 
+endString OVER suffix? NOT
+OVER endaz endString myazlength - alphanumeric IN NOT OR NOT 
 IF ." WHILE without END error." ABORT THEN 
-endstring truncate STRING [ " DO" , ] start-keywords end-keywords rsplit-for-blocks 
+endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks 
 IF  ( DO found )
     PUSH Pboolean POP Pmultipleinstruction WHILE_
 ELSE
@@ -5887,7 +5900,7 @@ THEN ;
     parsed with Pmultipleinstruction.
 )
 ( Split allowing for nested IF and WHILE, etc )
-else-ops start-keywords end-keywords rsplit-for-blocks
+else-ops startKeywords endKeywords rsplitForBlocks
 IF ( There is an ELSE found )
     PUSH Pmultipleinstruction POP Pmultipleinstruction ELSE_
 ELSE
@@ -5904,11 +5917,11 @@ THEN
     multiple instruction, split if the keyword ELSE is used into two halves.
 )
 nowspace " IF" decapitate
-endstring OVER suffix?
-OVER endaz endstring myazlength - C@ alphanumeric IN NOT AND
+endString OVER suffix?
+OVER endaz endString myazlength - C@ alphanumeric IN NOT AND
 IF
-    endstring truncate
-    then-ops start-keywords end-keywords rsplit-for-blocks
+    endString truncate
+    then-ops startKeywords endKeywords rsplitForBlocks
     IF
         PUSH Pboolean POP Pthen IF-THEN_
     ELSE
@@ -5922,7 +5935,7 @@ THEN
 : Pchoice ( s -- s1 )
 (
     Takes a String and splits it on the ⊓ choice operator ([] not used: may be
-    needed for arrays), which is right-associative, with rsplit-for-blocks. If
+    needed for arrays), which is right-associative, with rsplitForBlocks. If
     the operator is found, the left string is parsed as a guard and the parser
     recursively parses the right string. If no operator is found, the right
     substring is nonsense amnd discarded and the whole string is regarded as a
@@ -5931,7 +5944,7 @@ THEN
     Example: "i := i + 1 ⊓ i := i + 2" gives this postfix:
     "<CHOICE i 1 + to i [] i 2 + to i CHOICE>"
 )
-choice start-keywords end-keywords rsplit-for-blocks
+choice startKeywords endKeywords rsplitForBlocks
 IF ( ⊓ operator found )
     PUSH Pguard ( Left = guard )
     POP RECURSE []_ ( Right parsed and added with []_ operation )
@@ -5947,7 +5960,7 @@ THEN ;
     (and new lines). The []_ operation can be called, which converts it to the 
     full FORTH postfix.
 )
-choice start-keywords end-keywords rsplit-for-blocks
+choice startKeywords endKeywords rsplitForBlocks
 DUP IF  ( L = guard, R = ?choice to parse recursively )
     PUSH PUSH Pguard2 newline AZ^
     POP RECURSE newline AZ^ AZ^
@@ -5963,10 +5976,10 @@ THEN
     " i 3 <" " boolean" i " 1 + to i" WHILE_ with quotes and additional new
     lines. WHILE_ can be called, and does type test
 )
-nowspace while decapitate endstring OVER suffix? NOT
-OVER endaz endstring myazlength - alphanumeric IN NOT OR NOT
+nowspace while decapitate endString OVER suffix? NOT
+OVER endaz endString myazlength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN
-endstring truncate STRING [ " DO" , ] start-keywords end-keywords rsplit-for-blocks
+endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks
 IF ( found DO )
     PUSH Pboolean2 POP Pmultipleinstruction2 AZ^ while bar-line AZ^ AZ^
 ELSE ( not found DO )
@@ -5976,10 +5989,10 @@ THEN ;
 ( Placeholders for operations still to be written. )
 : Pselection2 ." Pselection2 not implemented completely." ABORT ; (
 nowspace " IF" decapitate
-endstring OVER suffix? OVER endaz endstring myazlength - C@ alphanumeric IN NOT AND
+endString OVER suffix? OVER endaz endString myazlength - C@ alphanumeric IN NOT AND
 IF
-    endstring truncate
-    then-ops start-keywords end-keywords rsplit-for-blocks
+    endString truncate
+    then-ops startKeywords endKeywords rsplitForBlocks
     IF
         PUSH Pboolean2 POP Pthen2 AZ^ " IF-THEN" bar-line AZ^ AZ^
     ELSE
@@ -6098,7 +6111,7 @@ THEN ;
     No need for type-checking because passing a non-Boolean to Pboolean will
     result in an error from Patom or similar.
 )
-guard start-keywords end-keywords rsplit-for-blocks
+guard startKeywords endKeywords rsplitForBlocks
 IF
     PUSH Pboolean POP RECURSE -->_
 ELSE
@@ -6115,7 +6128,7 @@ THEN
     No need for type-checking because passing a non-Boolean to Pboolean will
     result in an error from Patom or similar.
 )
-guard start-keywords end-keywords rsplit-for-blocks
+guard startKeywords endKeywords rsplitForBlocks
 DUP IF
     PUSH PUSH Pboolean2
     newline POP RECURSE AZ^ AZ^
@@ -6142,7 +6155,7 @@ THEN
     "BEGIN i 3 < WHILE i 1 + to i i . REPEAT j 2 * to j j ." with appropriate
     newlines
 )
-sequence start-keywords end-keywords rsplit-for-blocks
+sequence startKeywords endKeywords rsplitForBlocks
 IF       
     PUSH ( Left substring is a choice instruction )
     Pchoice
@@ -6163,7 +6176,7 @@ THEN ;
     similar. The ;_ operation can be called from the output, which catenates
     the instructions into one.
 )
-sequence start-keywords end-keywords rsplit-for-blocks
+sequence startKeywords endKeywords rsplitForBlocks
 DUP IF
     PUSH PUSH ( Keep left as choice ) Pchoice2 POP RECURSE
     newline POP bar-line AZ^ AZ^ AZ^ AZ^
@@ -6394,7 +6407,7 @@ IF
     DUP variables whitespace followed-by?
     IF
         variables decapitate
-        endstring rsplit-for-keywords 0= ( END missing = error )
+        endString rsplit-for-keywords 0= ( END missing = error )
         IF
             ." VARIABLES without END error" ABORT
         ELSE
@@ -6474,12 +6487,12 @@ THEN ;
     of the program. testing note: Must have something even whitespace after END
 )
 -wspace
-constants-string OVER prefix?
+constantsString OVER prefix?
 IF
-    DUP constants-string whitespace followed-by?
+    DUP constantsString whitespace followed-by?
     IF
-        constants-string decapitate
-        endstring rsplit-for-keywords 0= ( no "END" found = error )
+        constantsString decapitate
+        endString rsplit-for-keywords 0= ( no "END" found = error )
         IF
             ." CONSTANTS without END error." ABORT
         ELSE
