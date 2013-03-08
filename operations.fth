@@ -2476,7 +2476,7 @@ ELSE
             THEN
         THEN
     THEN
-THEN ;
+THEN newline AZ^ ;
 (
     Above can be refactored something like this:
     STRING STRING PROD { int "  . " ↦ , boolean "  booleanPrint " ↦ ,
