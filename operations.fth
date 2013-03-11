@@ -5914,7 +5914,7 @@ THEN
     the output is a postfix representation "i 3 < IF i 1 + to i THEN".
     Checks that END and THEN are in their right locations (IF has already been
     tested for) and parses the first part as a Boolean and the second part as a
-    multiple instruction, split if the keyword ELSE is used into two halves.
+    multiple instruction. Pthen splits it into two halves if ELSE is used.
 )
 nowspace " IF" decapitate
 endString OVER suffix?

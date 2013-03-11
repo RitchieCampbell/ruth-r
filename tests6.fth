@@ -162,6 +162,22 @@ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 " 5 VALUE-ARRAY arr2" newline AZ^ " 0 VALUE pair2" newline AZ^ AZ^ checkOutput
 1044 " VARIABLES arr3 INT[i], pair3 STRING×INT END " Pvariables
 " i VALUE-ARRAY arr3" newline AZ^ " 0 VALUE pair3" newline AZ^ AZ^ checkOutput
+1045 " ii := 123" Passignment " 123 to ii" newline AZ^ checkOutput
+1046 " ii := 123" Pinstruction " 123 to ii" newline AZ^ checkOutput
+1047 " s1 := “Campbell”" Passignment " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1048 " s1 := “Campbell”" Pinstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1049 " pair := 123 ↦ “Campbell”" Passignment " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1050 " pair := 123 ↦ “Campbell”" Pinstruction " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1051 " iArr := ARRAY[99, 100, 101]" Passignment " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1052 " iArr := ARRAY[99, 100, 101]" Pinstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1053 " iArr[2] := 999" Passignment " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1054 " iArr[2] := 999" Pinstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1055 " iSet := {1, 2, 3}" Passignment " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1056 " iSet := {1, 2, 3}" Pinstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
