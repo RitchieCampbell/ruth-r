@@ -67,7 +67,7 @@ REPEAT
 : noblanks ( az -- az2 with leading and trailing spaces removed )
     -blanks blanks- ;
 
-: myazlength ( az -- n number of "real" ASCII characters )
+: myAZLength ( az -- n number of "real" ASCII characters )
 0
 BEGIN
     OVER C@
@@ -109,8 +109,8 @@ NIP
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
 " ⊓" CONSTANT choice-string
 "  [] " CONSTANT sq-brackets ( Note leading and trailing spaces )
-lQuote myazlength CONSTANT lQuoteLength
-rQuote myazlength CONSTANT rQuoteLength
+lQuote myAZLength CONSTANT lQuoteLength
+rQuote myAZLength CONSTANT rQuoteLength
 " SKIP" CONSTANT skip
 " VARIABLES" CONSTANT variables
 " END" CONSTANT endString
@@ -377,7 +377,7 @@ IF ." true" ELSE ." false" THEN ;
                              If az2 is same length as az1 or longer, returns
                              blank string
            )
-    2DUP myazlength SWAP myazlength
+    2DUP myAZLength SWAP myAZLength
     OVER > IF
         NIP OVER endaz SWAP - 1 + 0 SWAP C!
     ELSE
@@ -388,7 +388,7 @@ IF ." true" ELSE ." false" THEN ;
 : decapitate ( az1 az2 --az1C which is az1 shortened by the removal from its
                               start of the same number of characters as the
                               length of az2 )
-    myazlength +
+    myAZLength +
 ;
 
 : -wspace ( az -- az with leading whitespace removed )
@@ -414,7 +414,7 @@ IF ." true" ELSE ." false" THEN ;
     az1 az2 -- f
     Whether az1 is a suffix, not necessarily shorter, of az2.
 )
-    2DUP myazlength SWAP myazlength
+    2DUP myAZLength SWAP myAZLength
     2DUP < NOT IF       ( if top string no shorter than second: otherwise false )
         - +             ( add the difference in lengths to the start of the top )
                         ( String )
@@ -433,7 +433,7 @@ IF ." true" ELSE ." false" THEN ;
     " PRINTER i + 3" " PRINT" whitespace returns false, as PRINT isn't followed
     by whitespace
 )
-ROT ROT myazlength + head SWAP IN ;
+ROT ROT myAZLength + head SWAP IN ;
 
 : doubleSpaceRemover ( s -- s )
 (
@@ -719,7 +719,7 @@ AND
 DUP CLONE-STRING ( stack = "1.23e45" "1.23e45" )
 e-minus rsplit ( stack = "1.23e45" "1.23" "45" "e" )
 IF ( Found e/e- )
-    DUP myazlength 0 >          ( stack = "1.23e45" "1.23" "45" -1 )
+    DUP myAZLength 0 >          ( stack = "1.23e45" "1.23" "45" -1 )
     SWAP digits0 stringconsists? AND ( stack = "1.23e45" "1.23" -1 )
     SWAP DUP digits0 stringconsists?
                                 ( stack = "1.23e45" -1 "1.23" 0 )
@@ -817,7 +817,7 @@ THEN
         ." Unmatched quotes: still inside String as follows:"
         10 EMIT DROP .AZ ABORT
     THEN  
-    rQuote myazlength + NIP
+    rQuote myAZLength + NIP
 ;
 
 : stringStartFinder 
@@ -1546,11 +1546,11 @@ l-value sspace r-value sspace operator AZ^ AZ^ AZ^ AZ^ boolean
 ( If single-letter String assume a true tree with 1 token in. )
 ( This version uses 32=space, but it could be changed to accept any whitespace. )
 nowspace
-DUP myazlength 0=
+DUP myAZLength 0=
 IF
     ." Empty type received: not permitted." ABORT
 THEN
-DUP myazlength 1 = NOT
+DUP myAZLength 1 = NOT
 IF
     sspace AZ^ ( Strip off spaces, leaving 1 trailing space )
     ( Put 0 to count tokens onto stack as 2nd element )
@@ -2386,7 +2386,7 @@ start ( 1st result on stack )
 op  
 IF  
     0 current C! ( truncate 1st string ) 
-    current op myazlength + to current
+    current op myAZLength + to current
     current ( 2nd result on stack if op /= 0 )
 ELSE
     0 ( 2nd result on stack if op = 0 )
@@ -2575,7 +2575,7 @@ op
 IF
     end 1+ to end    ( Terminate string at op )
     0 end C!
-    end op myazlength + to end ( Move forward length of op )
+    end op myAZLength + to end ( Move forward length of op )
 THEN
 string end op
 ;
@@ -2636,7 +2636,7 @@ op
 IF
     end 1+ -blanks to end ( Go after next space )
     0 end C!              ( Terminate string with null character )
-    end op myazlength + to end ( Move forward length of "op" string )
+    end op myAZLength + to end ( Move forward length of "op" string )
 THEN
 string end op
 ;
@@ -2838,7 +2838,7 @@ nowspace
 " ]" OVER suffix? NOT
 IF ." [ without ending ] in array: " .AZ ."  passed" ABORT THEN
 array decapitate [CHAR] [ [CHAR] ] bracketRemover2
-DUP nowspace myazlength
+DUP nowspace myAZLength
     IF 1 SWAP PUSH array[_ POP ParrayList array]_
 ELSE
     DROP " HERE 0 , " array
@@ -3180,7 +3180,7 @@ WHILE
 REPEAT
 op
 IF
-    blank-string string op myazlength +
+    blank-string string op myAZLength +
 ELSE
     string 0
 THEN
@@ -3220,7 +3220,7 @@ WHILE
     1+      ( Next character )
 REPEAT 
 0 OVER 1- C!        ( Put null just before keyword )
-1- OVER myazlength + SWAP   ( 1 character beyond keyword )
+1- OVER myAZLength + SWAP   ( 1 character beyond keyword )
 POP IF DROP NULL THEN
 ( If TRUE on US, failed to find keyword, so leave NULL as error marker )
 ;
@@ -3269,7 +3269,7 @@ WHILE
             ELSE    ( . . . or is beginning of string )
                 end-count 1+ to end-count
             THEN
-            current token myazlength + to current ( Move beyond "token" )
+            current token myAZLength + to current ( Move beyond "token" )
         THEN
     REPEAT 
     lQuote current prefix?
@@ -3292,7 +3292,7 @@ WHILE
             token current prefix? current 1- head alphanumeric IN NOT
             current token whitespace0; followed-by? AND AND ( Allow \0 at string end )
             IF
-                current token myazlength + to current
+                current token myAZLength + to current
                 end-count 1- to end-count
             THEN
         REPEAT
@@ -3309,7 +3309,7 @@ REPEAT
 op
 IF
     0 current C!
-    current op myazlength + to current
+    current op myAZLength + to current
 THEN
 string current op
 ;
@@ -3362,7 +3362,7 @@ WHILE
                 THEN
             ELSE
                 end-count 1+ to end-count  ( . . . or at beginning of the text )
-                current token myazlength + to current
+                current token myAZLength + to current
                 ( Move on length of the token )
             THEN
         THEN
@@ -3388,7 +3388,7 @@ WHILE
             AND AND     ( . . . and followed by w " ∇" space ; or end of string. )
         IF
             end-count 1- to end-count
-            current token myazlength + to current
+            current token myAZLength + to current
             ( Move on length of the keyword )
         THEN
         
@@ -3412,7 +3412,7 @@ REPEAT
 op
 IF
     0 current 1- C!
-    current op myazlength + 1- to current
+    current op myAZLength + 1- to current
 THEN
 string
 current
@@ -3675,7 +3675,7 @@ op
 IF
     end 1+ -blanks to end ( Go after next space )
     0 end C!              ( Terminate string with null character )
-    end op myazlength + to end ( Move forward length of "op" string )
+    end op myAZLength + to end ( Move forward length of "op" string )
 THEN
 string end op
 ;
@@ -5553,7 +5553,7 @@ IF
     THEN
     PUSH 2DUP nowspace SWAP nowspace suffix? NOT 
     ROT nowspace ROT nowspace OVER OVER truncate nowspace
-    myazlength " ∀" myazlength <>
+    myAZLength " ∀" myAZLength <>
     ( " ∀" and " ∃" same length ) PUSH ROT POP OR
     IF
         ." Bound variable before and after • different. Text = " 2DROP .AZ ABORT
@@ -5642,7 +5642,7 @@ IF
     THEN
     PUSH 2DUP nowspace SWAP nowspace suffix? NOT 
     ROT nowspace ROT nowspace OVER OVER truncate nowspace
-    myazlength " ∀" myazlength <>
+    myAZLength " ∀" myAZLength <>
     ( " ∀" and " ∃" same length ) PUSH ROT POP OR
     IF
         ." Bound variable before and after • different. Text = " 2DROP .AZ ABORT
@@ -5882,7 +5882,7 @@ THEN ;
 )
 nowspace while decapitate  
 endString OVER suffix? NOT
-OVER endaz endString myazlength - alphanumeric IN NOT OR NOT 
+OVER endaz endString myAZLength - alphanumeric IN NOT OR NOT 
 IF ." WHILE without END error." ABORT THEN 
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks 
 IF  ( DO found )
@@ -5918,7 +5918,7 @@ THEN
 )
 nowspace " IF" decapitate
 endString OVER suffix?
-OVER endaz endString myazlength - C@ alphanumeric IN NOT AND
+OVER endaz endString myAZLength - C@ alphanumeric IN NOT AND
 IF
     endString truncate
     then-ops startKeywords endKeywords rsplitForBlocks
@@ -5977,7 +5977,7 @@ THEN
     lines. WHILE_ can be called, and does type test
 )
 nowspace while decapitate endString OVER suffix? NOT
-OVER endaz endString myazlength - alphanumeric IN NOT OR NOT
+OVER endaz endString myAZLength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks
 IF ( found DO )
@@ -5989,7 +5989,7 @@ THEN ;
 ( Placeholders for operations still to be written. )
 : Pselection2 ." Pselection2 not implemented completely." ABORT ; (
 nowspace " IF" decapitate
-endString OVER suffix? OVER endaz endString myazlength - C@ alphanumeric IN NOT AND
+endString OVER suffix? OVER endaz endString myAZLength - C@ alphanumeric IN NOT AND
 IF
     endString truncate
     then-ops startKeywords endKeywords rsplitForBlocks
@@ -6021,7 +6021,7 @@ THEN ; )
     If an empty string is passed, or the keyword SKIP, leaves empty string on
     the stack.
 )
-nowspace DUP skip stringEq SWAP myazlength 0= OR NOT
+nowspace DUP skip stringEq SWAP myAZLength 0= OR NOT
 IF
     ." Incorrect identification of skip instruction" ABORT
 THEN
@@ -6058,7 +6058,7 @@ ELSE
             DUP C@ [CHAR] ( =
             IF PbracketedInstruction2
             ELSE
-                DUP DUP myazlength 0= SWAP skip stringEq OR
+                DUP DUP myAZLength 0= SWAP skip stringEq OR
                 IF Pskip2
                 ELSE
                     Passignment2
@@ -6093,7 +6093,7 @@ ELSE
             IF
                 PbracketedInstruction
             ELSE
-                DUP DUP myazlength 0= SWAP skip stringEq OR
+                DUP DUP myAZLength 0= SWAP skip stringEq OR
                 IF
                     Pskip
                 ELSE
@@ -6304,7 +6304,7 @@ IF
     IF
         ." ] without [ error in " SWAP .AZ ABORT
     THEN
-    " ]" truncate nowspace DUP myazlength
+    " ]" truncate nowspace DUP myAZLength
     IF
         Parith " Array Index" SWAP check-type-int
     ELSE
@@ -6326,7 +6326,7 @@ THEN
 )
 array-seq lsplit
 IF
-    nowspace " ]" truncate DUP myazlength
+    nowspace " ]" truncate DUP myAZLength
     IF  ( Right string ought now to be 0 length )
         sq-brackets-abort
     THEN

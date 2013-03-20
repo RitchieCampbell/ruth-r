@@ -190,6 +190,69 @@ newline AZ^ checkOutput
 " Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
 1065 " PRINT ii > jj" Pprint " ii jj > booleanPrint " newline AZ^ checkOutput
 1066 " PRINT ii > jj" Pinstruction " ii jj > booleanPrint " newline AZ^ checkOutput
+1067 " PRINT 1.2 + 0.000234 * 3.45e67" Pprint " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1068 " PRINT 1.2 + 0.000234 * 3.45e67" Pinstruction " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1069 " IF b THEN PRINT “Campbell” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1070 " IF b THEN PRINT “Campbell” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1071 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline  " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1072 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1073 " IF i < 3 THEN jj := 4 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1074 " IF i < 3 THEN jj := 4 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1075 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1076 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1077 " WHILE jj < 3 DO jj := jj + 1 END" Ploop " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+1078 " WHILE jj < 3 DO jj := jj + 1 END" Pinstruction " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+1069 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
+1070 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1052 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1054 " iArr[2] := 999" PmultipleInstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1056 " iSet := {1, 2, 3}" PmultipleInstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1058 " PRINT ii" PmultipleInstruction " ii . " newline AZ^ checkOutput
+1060 " PRINT 1 + 2 * 3" PmultipleInstruction " 1 2 3 * + . " newline AZ^ checkOutput
+1062 " PRINT “Campbell” " PmultipleInstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1064 " PRINT “Campbell” ↦ “Ruth”" PmultipleInstruction " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1066 " PRINT ii > jj" PmultipleInstruction " ii jj > booleanPrint " newline AZ^ checkOutput
+1068 " PRINT 1.2 + 0.000234 * 3.45e67" PmultipleInstruction " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1070 " IF b THEN PRINT “Campbell” END" PmultipleInstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1072 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" PmultipleInstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1073 " IF i < 3 THEN jj := 4 END" PmultipleInstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1076 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" PmultipleInstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1077 " WHILE jj < 3 DO jj := jj + 1 END" PmultipleInstruction " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
