@@ -178,6 +178,18 @@ newline AZ^ checkOutput
 1054 " iArr[2] := 999" Pinstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
 1055 " iSet := {1, 2, 3}" Passignment " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
 1056 " iSet := {1, 2, 3}" Pinstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1057 " PRINT ii" Pprint " ii . " newline AZ^ checkOutput
+1058 " PRINT ii" Pinstruction " ii . " newline AZ^ checkOutput
+1059 " PRINT 1 + 2 * 3" Pprint " 1 2 3 * + . " newline AZ^ checkOutput
+1060 " PRINT 1 + 2 * 3" Pinstruction " 1 2 3 * + . " newline AZ^ checkOutput
+1061 " PRINT “Campbell” " Pprint " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1062 " PRINT “Campbell” " Pinstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1063 " PRINT “Campbell” ↦ “Ruth”" Pprint " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1064 " PRINT “Campbell” ↦ “Ruth”" Pinstruction " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1065 " PRINT ii > jj" Pprint " ii jj > booleanPrint " newline AZ^ checkOutput
+1066 " PRINT ii > jj" Pinstruction " ii jj > booleanPrint " newline AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 

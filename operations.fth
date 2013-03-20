@@ -5463,8 +5463,8 @@ ELSE ( If operator found, assume right is an "implies" and recurse on the left )
     POP PimpliesBoolean2 AZ^ sspace AZ^ POP AZ^ bar-line AZ^
 THEN ;
 
-NULL OP Pmultipleinstruction
-NULL OP Pmultipleinstruction2
+NULL OP PmultipleInstruction
+NULL OP PmultipleInstruction2
 
 : quantified_
 (
@@ -5701,7 +5701,7 @@ THEN
 )
 diamond rsplit DUP 
 IF  
-    PUSH PUSH Pmultipleinstruction POP Pequiv POP ♢_ 
+    PUSH PUSH PmultipleInstruction POP Pequiv POP ♢_ 
 ELSE
     2DROP Pquantified
 THEN ; ' P to Pdiamond
@@ -5886,7 +5886,7 @@ OVER endaz endString myazlength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN 
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks 
 IF  ( DO found )
-    PUSH Pboolean POP Pmultipleinstruction WHILE_
+    PUSH Pboolean POP PmultipleInstruction WHILE_
 ELSE
     ." WHILE without DO error." ABORT
 THEN ;
@@ -5895,16 +5895,16 @@ THEN ;
 (
     Where the input is the infix contents of the "THEN" part of an if-then
     statement. It is divided on "ELSE"; if ELSE is found, it is regarded as
-    consisting of two blocks, each to be parsed with Pmultipleinstruction, and
+    consisting of two blocks, each to be parsed with PmultipleInstruction, and
     joined with the ELSE_ opration. Otherwise there is only one block, to be
-    parsed with Pmultipleinstruction.
+    parsed with PmultipleInstruction.
 )
 ( Split allowing for nested IF and WHILE, etc )
 else-ops startKeywords endKeywords rsplitForBlocks
 IF ( There is an ELSE found )
-    PUSH Pmultipleinstruction POP Pmultipleinstruction ELSE_
+    PUSH PmultipleInstruction POP PmultipleInstruction ELSE_
 ELSE
-    DROP Pmultipleinstruction
+    DROP PmultipleInstruction
 THEN
 ;
 
@@ -5981,7 +5981,7 @@ OVER endaz endString myazlength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks
 IF ( found DO )
-    PUSH Pboolean2 POP Pmultipleinstruction2 AZ^ while bar-line AZ^ AZ^
+    PUSH Pboolean2 POP PmultipleInstruction2 AZ^ while bar-line AZ^ AZ^
 ELSE ( not found DO )
     ." WHILE without DO error." ABORT
 THEN ;
@@ -6030,19 +6030,19 @@ blank-string
 
 : Pskip2 Pskip ( Leaves empty string on stack ) ;
 
-: Pbracketedinstruction ( s -- s1 )
+: PbracketedInstruction ( s -- s1 )
 (
     Takes an instruction or multiple instructions in round brackets (), strips
     the () with bracketRemover2 (throws error if brackets unbalanced) and
-    passes the resultant text to Pmultipleinstruction on the assumption it is
+    passes the resultant text to PmultipleInstruction on the assumption it is
     multiple instructions grouped with () for precedence's sake.
 )
-[CHAR] ( [CHAR] ) bracketRemover2 Pmultipleinstruction
+[CHAR] ( [CHAR] ) bracketRemover2 PmultipleInstruction
 ;
 
-: Pbracketedinstruction2 ( As above, but in two stages )
+: PbracketedInstruction2 ( As above, but in two stages )
 [CHAR] ( [CHAR] )
-bracketRemover2 Pmultipleinstruction2 ;
+bracketRemover2 PmultipleInstruction2 ;
 
 : Pinstruction2 ( s -- s1 )
 ( As below, but in two stages ) nowspace
@@ -6056,7 +6056,7 @@ ELSE
         IF Pselection2            
         ELSE
             DUP C@ [CHAR] ( =
-            IF Pbracketedinstruction2
+            IF PbracketedInstruction2
             ELSE
                 DUP DUP myazlength 0= SWAP skip stringEq OR
                 IF Pskip2
@@ -6091,7 +6091,7 @@ ELSE
         ELSE
             DUP C@ [CHAR] ( =
             IF
-                Pbracketedinstruction
+                PbracketedInstruction
             ELSE
                 DUP DUP myazlength 0= SWAP skip stringEq OR
                 IF
@@ -6140,7 +6140,7 @@ THEN
 
 ' P to Pguard2
 
-: P ( : Pmultipleinstruction ) ( s -- s1 )
+: P ( : PmultipleInstruction ) ( s -- s1 )
 (
     Where s is an instruction in the format "i := i + 1; PRINT i", which is
     split on the first ; allowing for keywords like WHILE and IF or (). The text
@@ -6151,7 +6151,7 @@ THEN
     of parsing the left string with the ;_ operation.
     Typical usage:
     " WHILE i < 3 DO i := i + 1; PRINT i END; j := j * 2; PRINT j"
-    Pmultipleinstruction. Splits first on the ; after END, giving this result:
+    PmultipleInstruction. Splits first on the ; after END, giving this result:
     "BEGIN i 3 < WHILE i 1 + to i i . REPEAT j 2 * to j j ." with appropriate
     newlines
 )
@@ -6166,9 +6166,9 @@ ELSE     ( No operator found: left string is a choice, right nonsense )
     DROP Pchoice
 THEN ;
 
-' P to Pmultipleinstruction
+' P to PmultipleInstruction
 
-: P ( : Pmultipleinstruction2 ) ( s -- s1 )
+: P ( : PmultipleInstruction2 ) ( s -- s1 )
 (
     Similar to above. Takes an instruction in the format "i := i + 1; PRINT i",
     handled similarly, but returns "i 1 + to i" "i ." ;_ with the quotes (and
@@ -6183,7 +6183,7 @@ DUP IF
 ELSE
     2DROP Pchoice2 ( Null operator, right = nonsense: lose 2. Left = choice )
 THEN ;
-' P to Pmultipleinstruction2
+' P to PmultipleInstruction2
 
 NULL OP Pprod NULL OP Pprodforarguments
 
@@ -6401,7 +6401,7 @@ NULL OP Poperations
     return "0 VALUE i 0 VALUE s 0 VALUE seq" with appropriate newlines, and the
     three types "i ↦ INT, s ↦ STRING, seq ↦ INT STRING PROD POW" are added to
     the "types" relation.
-) ( Pmultipleinstruction must be replaced by Pmultipleoperation or similar )
+) ( PmultipleInstruction must be replaced by Pmultipleoperation or similar )
 -wspace variables OVER prefix?
 IF
     DUP variables whitespace followed-by?
@@ -6411,7 +6411,7 @@ IF
         IF
             ." VARIABLES without END error" ABORT
         ELSE
-            PUSH Pvariableslist POP Pmultipleinstruction AZ^
+            PUSH Pvariableslist POP PmultipleInstruction AZ^
         THEN
     ELSE
         Poperations
@@ -6508,5 +6508,5 @@ ELSE
 THEN
 ;
 
-: P Pmultipleinstruction ; ' P to Poperations
+: P PmultipleInstruction ; ' P to Poperations
 
