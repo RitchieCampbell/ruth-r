@@ -224,6 +224,19 @@ checkOutput
 1078 " WHILE jj < 3 DO jj := jj + 1 END" Pinstruction " BEGIN" newline " jj 3 <" newline
 " WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
 checkOutput
+types STRING STRING PROD { " bb" boolean |-> , } ∪ to types
+1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1080 " bb := ∀i3 • i3 ∈ iSet ⇒ i3 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i3 i3 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1081 " bb := ∃i4 • i4 ∈ iSet ∧ i4 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i4 i4 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1082 " bb := ∃i5 • i5 ∈ iSet ∧ i5 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i5 i5 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1069 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
 1070 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
 1052 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
@@ -253,6 +266,12 @@ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1077 " WHILE jj < 3 DO jj := jj + 1 END" PmultipleInstruction " BEGIN" newline " jj 3 <" newline
 " WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
 checkOutput
+1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
+"    iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1080 " bb := ∃i2 • i2 ∈ iSet ∧ i2 < 3  " Passignment " INT { <COLLECT" newline
+"    iSet CHOICE to i2 i2 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
