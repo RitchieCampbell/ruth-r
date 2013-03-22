@@ -237,6 +237,13 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1082 " bb := ∃i5 • i5 ∈ iSet ∧ i5 < 3  " Passignment " INT { <COLLECT" newline
 "     iSet CHOICE to i5 i5 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1083 " ii := 1 ⊓ ii := 2" Pchoice " <CHOICE" newline " 1 to ii" newline
+"  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1084 " iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2}" Passignment " INT {  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+1086 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Passignment
 1069 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
 1070 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
 1052 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
@@ -266,12 +273,14 @@ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1077 " WHILE jj < 3 DO jj := jj + 1 END" PmultipleInstruction " BEGIN" newline " jj 3 <" newline
 " WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
 checkOutput
-1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
-"    iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+1079 " bb := ∀i6 • i6 ∈ iSet ⇒ i6 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i6 i6 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1080 " bb := ∃i2 • i2 ∈ iSet ∧ i2 < 3  " Passignment " INT { <COLLECT" newline
-"    iSet CHOICE to i2 i2 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+1080 " bb := ∃i7 • i7 ∈ iSet ∧ i7 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i7 i7 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1084 " ii := 1 ⊓ ii := 2" PmultipleInstruction " <CHOICE" newline " 1 to ii" newline
+"  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
