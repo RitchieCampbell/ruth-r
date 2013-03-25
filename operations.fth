@@ -91,7 +91,7 @@ NIP
 " “" CONSTANT lQuote
 " ”" CONSTANT rQuote
 "  " CONSTANT sspace ( String containing a single space )
-" "  CONSTANT blank-string ( the empty String )
+" "  CONSTANT blankString ( the empty String )
 " =" CONSTANT equals
 " F=" CONSTANT f-equals
 "  --> " CONSTANT guard-string
@@ -286,12 +286,12 @@ INT INT PROD { CHAR [ CHAR ]  ↦ , CHAR ( CHAR )  ↦ , CHAR { CHAR }  ↦ , }
 STRING [ " 0" , " 1" , " 2" , " 3" , " 4" , " 5" , " 6" , " 7" , " 8" , " 9" , ]
 CONSTANT numbers
 
-blank-string VALUE operation-end
-blank-string VALUE operation-inputs
-blank-string VALUE operation-body
-blank-string VALUE operation-type
-blank-string VALUE operation-stack
-blank-string VALUE operation-name
+blankString VALUE operation-end
+blankString VALUE operation-inputs
+blankString VALUE operation-body
+blankString VALUE operation-type
+blankString VALUE operation-stack
+blankString VALUE operation-name
 (
    Consider using operation-name for recursion; if the name of a function is
    the same as operation-name, change it to RECURSE.
@@ -303,7 +303,7 @@ blank-string VALUE operation-name
    NULL OP foo ... : bar ... foo ... ; : P ... ; ' P to foo
    This would necessitate an additional keyword in the language, maybe DEFERRED
 )
-blank-string VALUE operation-declarations
+blankString VALUE operation-declarations
 
 : iToAZ ( i -- s )        
 (
@@ -321,9 +321,9 @@ ELSE
     IF
         " -"recurse
     ELSE
-        blank-string
+        blankString
     THEN
-        blank-string ROT
+        blankString ROT
     BEGIN
         DUP     ( Continue until division reduces int to 0. )
     WHILE
@@ -381,7 +381,7 @@ IF ." true" ELSE ." false" THEN ;
     OVER > IF
         NIP OVER endaz SWAP - 1 + 0 SWAP C!
     ELSE
-        2DROP DROP blank-string
+        2DROP DROP blankString
     THEN
 ;
 
@@ -2223,7 +2223,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
         Since () brackets are only used in function calls, this type of bracket
         is handled differently from [] or {}. See the )_ function.
      )
-    " (" blank-string NULL
+    " (" blankString NULL
 ;
 
 : ♢_ ( sub exp type op -- S♢E_exp type2 )
@@ -2417,7 +2417,7 @@ op
 IF
     right nowspace
 ELSE
-    blank-string
+    blankString
 THEN
 ;
 
@@ -2783,7 +2783,7 @@ string ( STRING )
 ;
 
 : array[_ ( i -- i "" 0 ) ( Where i is 0 for an empty array, 1 for a full array )
-blank-string 0 ;
+blankString 0 ;
 
 : array,_ ( i l-value l-type/null r-value r-type -- i+1 l-value,r-value type )
 (
@@ -3180,7 +3180,7 @@ WHILE
 REPEAT
 op
 IF
-    blank-string string op myAZLength +
+    blankString string op myAZLength +
 ELSE
     string 0
 THEN
@@ -6025,7 +6025,7 @@ nowspace DUP skip stringEq SWAP myAZLength 0= OR NOT
 IF
     ." Incorrect identification of skip instruction" ABORT
 THEN
-blank-string
+blankString
 ;
 
 : Pskip2 Pskip ( Leaves empty string on stack ) ;

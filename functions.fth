@@ -171,12 +171,12 @@ operation-inputs -blanks "  #" operation-type AZ^ AZ^ to operation-inputs
     b IF i x + to i ELSE i x - to i THEN i s ;
     Which will have a type error, trying to assign a FLOAT to an INT!
 )
-blank-string to operation-end
-blank-string to operation-inputs
-blank-string to operation-type
-blank-string to operation-stack
-blank-string to operation-name
-blank-string to operation-declarations
+blankString to operation-end
+blankString to operation-inputs
+blankString to operation-type
+blankString to operation-stack
+blankString to operation-name
+blankString to operation-declarations
 STRING STRING PROD { } to locals ( Empty the "locals" relation )
 def-seq rsplit 0=
 IF

@@ -253,6 +253,105 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 1087 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1088 " " Pinstruction blankString checkOutput
+1089 " " Pskip blankString checkOutput
+1090 " SKIP Pinstruction blankString checkOutput
+1091 " SKIP" Pskip blankString checkOutput
+1092 " (ii := 123)" PbracketedInstruction " 123 to ii" newline AZ^ checkOutput
+1093 " (ii := 123)" Pinstruction " 123 to ii" newline AZ^ checkOutput
+1094 " (s1 := “Campbell”)" PbracketedInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1095 " (s1 := “Campbell”)" Pinstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1096 " (pair := 123 ↦ “Campbell”)" PbracketedInstruction " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1097 " (pair := 123 ↦ “Campbell”)" Pinstruction " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1098 " (iArr := ARRAY[99, 100, 101])" PbracketedInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1099 " (iArr := ARRAY[99, 100, 101])" Pinstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1100 " (iArr[2] := 999)" PbracketedInstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1101 " (iArr[2] := 999)" Pinstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1102 " (iSet := {1, 2, 3})" PbracketedInstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1103 " (iSet := {1, 2, 3})" Pinstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1104 " (PRINT ii)" PbracketedInstruction " ii . " newline AZ^ checkOutput
+1105 " (PRINT ii)" Pinstruction " ii . " newline AZ^ checkOutput
+1106 " (PRINT 1 + 2 * 3)" PbracketedInstruction " 1 2 3 * + . " newline AZ^ checkOutput
+1107 " (PRINT 1 + 2 * 3)" Pinstruction " 1 2 3 * + . " newline AZ^ checkOutput
+1108 " (PRINT “Campbell” )" PbracketedInstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1109 " (PRINT “Campbell” )" Pinstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1110 " (PRINT “Campbell” ↦ “Ruth”)" PbracketedInstruction " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1111 " (PRINT “Campbell” ↦ “Ruth”)" Pinstruction " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1112 " (PRINT ii > jj)" PbracketedInstruction " ii jj > booleanPrint " newline AZ^ checkOutput
+1113 " (PRINT ii > jj)" Pinstruction " ii jj > booleanPrint " newline AZ^ checkOutput
+( 1067 " PRINT 1.2 + 0.000234 * 3.45e67" Pprint " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1068 " PRINT 1.2 + 0.000234 * 3.45e67" Pinstruction " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1069 " IF b THEN PRINT “Campbell” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1070 " IF b THEN PRINT “Campbell” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1071 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline  " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1072 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1073 " IF i < 3 THEN jj := 4 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1074 " IF i < 3 THEN jj := 4 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1075 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1076 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1077 " WHILE jj < 3 DO jj := jj + 1 END" Ploop " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+1078 " WHILE jj < 3 DO jj := jj + 1 END" Pinstruction " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+types STRING STRING PROD { " bb" boolean |-> , } ∪ to types
+1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1080 " bb := ∀i3 • i3 ∈ iSet ⇒ i3 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i3 i3 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1081 " bb := ∃i4 • i4 ∈ iSet ∧ i4 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i4 i4 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1082 " bb := ∃i5 • i5 ∈ iSet ∧ i5 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i5 i5 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1083 " ii := 1 ⊓ ii := 2" Pchoice " <CHOICE" newline " 1 to ii" newline
+"  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1084 " iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2}" Passignment " INT {  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+1085 " iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2}" Pinstruction " INT {  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+1086 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1087 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1088 " " Pinstruction blankString checkOutput
+1089 " " Pskip blankString checkOutput
+1090 " SKIP" Pinstruction blankString checkOutput
+1091 " SKIP" Pskip blankString checkOutput
 1069 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
 1070 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
 1052 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
@@ -293,6 +392,103 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1086 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-
+1088 " ;" PmultipleInstruction newline newline AZ^ checkOutput
+1090 " SKIP" PmultipleInstruction blankString checkOutput
+1045 " ii := 123" Passignment " 123 to ii" newline AZ^ checkOutput
+1046 " ii := 123" Pinstruction " 123 to ii" newline AZ^ checkOutput
+1047 " s1 := “Campbell”" Passignment " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1048 " s1 := “Campbell”" Pinstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1049 " pair := 123 ↦ “Campbell”" Passignment " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1050 " pair := 123 ↦ “Campbell”" Pinstruction " 123 " " Campbell" addQuotes1
+"  |->I,$ to pair" newline AZ^ AZ^ AZ^ checkOutput
+1051 " iArr := ARRAY[99, 100, 101]" Passignment " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1052 " iArr := ARRAY[99, 100, 101]" Pinstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+newline AZ^ checkOutput
+1053 " iArr[2] := 999" Passignment " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1054 " iArr[2] := 999" Pinstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1055 " iSet := {1, 2, 3}" Passignment " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1056 " iSet := {1, 2, 3}" Pinstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1057 " PRINT ii" Pprint " ii . " newline AZ^ checkOutput
+1058 " PRINT ii" Pinstruction " ii . " newline AZ^ checkOutput
+1059 " PRINT 1 + 2 * 3" Pprint " 1 2 3 * + . " newline AZ^ checkOutput
+1060 " PRINT 1 + 2 * 3" Pinstruction " 1 2 3 * + . " newline AZ^ checkOutput
+1061 " PRINT “Campbell” " Pprint " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1062 " PRINT “Campbell” " Pinstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
+1063 " PRINT “Campbell” ↦ “Ruth”" Pprint " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1064 " PRINT “Campbell” ↦ “Ruth”" Pinstruction " Campbell" addQuotes1 sspace
+" Ruth" addQuotes1 "  |->$,$ .PAIR " newline AZ^ AZ^ AZ^ AZ^ checkOutput
+1065 " PRINT ii > jj" Pprint " ii jj > booleanPrint " newline AZ^ checkOutput
+1066 " PRINT ii > jj" Pinstruction " ii jj > booleanPrint " newline AZ^ checkOutput
+1067 " PRINT 1.2 + 0.000234 * 3.45e67" Pprint " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1068 " PRINT 1.2 + 0.000234 * 3.45e67" Pinstruction " 1.2 0.000234 3.45e67 F* F+ F."
+newline AZ^ checkOutput
+1069 " IF b THEN PRINT “Campbell” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1070 " IF b THEN PRINT “Campbell” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1071 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pselection
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline  " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1072 " IF b THEN PRINT “Campbell” ELSE PRINT “Ruth” END" Pinstruction
+" b" newline " IF" newline " Campbell" addQuotes1 "  .AZ " newline newline " ELSE"
+newline " Ruth" addQuotes1 "  .AZ " newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1073 " IF i < 3 THEN jj := 4 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1074 " IF i < 3 THEN jj := 4 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " THEN" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1075 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pselection " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1076 " IF i < 3 THEN jj := 4 ELSE jj := jj - 1 END" Pinstruction " i 3 <" newline " IF" newline
+" 4 to jj" newline newline " ELSE" newline " jj 1 - to jj" newline newline " THEN"
+AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1077 " WHILE jj < 3 DO jj := jj + 1 END" Ploop " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+1078 " WHILE jj < 3 DO jj := jj + 1 END" Pinstruction " BEGIN" newline " jj 3 <" newline
+" WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
+checkOutput
+types STRING STRING PROD { " bb" boolean |-> , } ∪ to types
+1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1080 " bb := ∀i3 • i3 ∈ iSet ⇒ i3 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i3 i3 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1081 " bb := ∃i4 • i4 ∈ iSet ∧ i4 < 3  " Pinstruction " INT { <COLLECT" newline
+"     iSet CHOICE to i4 i4 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1082 " bb := ∃i5 • i5 ∈ iSet ∧ i5 < 3  " Passignment " INT { <COLLECT" newline
+"     iSet CHOICE to i5 i5 3 < --> 0" newline " TILL CARD SATISFIED> } CARD 0 <>"
+newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1083 " ii := 1 ⊓ ii := 2" Pchoice " <CHOICE" newline " 1 to ii" newline
+"  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1084 " iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2}" Passignment " INT {  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+1085 " iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2}" Pinstruction " INT {  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+1086 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1087 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
+newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
+" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1088 " " Pinstruction blankString checkOutput
+1089 " " Pskip blankString checkOutput
+1090 " SKIP" Pinstruction blankString checkOutput
+1091 " SKIP" Pskip blankString checkOutput
+)
 " HereEndethThe6thTestFile." CR .AZ CR
 
