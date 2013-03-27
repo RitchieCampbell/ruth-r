@@ -30,9 +30,9 @@ IF
     ." Local variable " SWAP .AZ ."  declared twice: here return value." ABORT
 THEN
 SWAP test-form-for-identifier ( "INT" "i" )
-operation-end sspace AZ^ OVER AZ^ to operation-end ( ""→"i " or "s"→"s i " )
+operation-end sSpace AZ^ OVER AZ^ to operation-end ( ""→"i " or "s"→"s i " )
 type-value OVER AZ^ newline AZ^ operation-declarations AZ^ to operation-declarations
-OVER operation-type sspace AZ^ SWAP AZ^ to operation-type
+OVER operation-type sSpace AZ^ SWAP AZ^ to operation-type
 SWAP STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
@@ -65,9 +65,9 @@ IF
     ABORT
 THEN
 SWAP test-form-for-identifier ( "INT" "i" )
-operation-stack sspace
+operation-stack sSpace
 AZ^ OVER AZ^ to operation-stack
-SWAP operation-inputs sspace AZ^ OVER AZ^ to operation-inputs
+SWAP operation-inputs sSpace AZ^ OVER AZ^ to operation-inputs
 STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
@@ -146,7 +146,7 @@ THEN                        ( Awkward way to split on brackets )
 DUP [CHAR] ( stringcontainschar?
 IF
     DUP CLONE-STRING DUP [CHAR] ( first-character 0 SWAP C!
-    SWAP OVER myazlength +
+    SWAP OVER myAZLength +
     [CHAR] ( [CHAR] ) bracketRemover2 Pparameters
 THEN
 nowspace test-form-for-identifier to operation-name
@@ -158,7 +158,7 @@ operation-inputs -blanks "  #" operation-type AZ^ AZ^ to operation-inputs
 : Poperation
 (
     split on ≙ left to Poperationheader, right to Plocalvariablelist and
-    Pmultipleinstruction, then add ": " operation-name operation-stack
+    PmultipleInstruction, then add ": " operation-name operation-stack
     operation-declarations stack contents and operation-end, leave whole
     operation on stack for future catenation.
     Example:
@@ -196,11 +196,11 @@ IF
     " (:" operation-stack "  :)" newline AZ^ AZ^ AZ^ to operation-stack
 THEN
 ( Remove this bit later ) nowspace endString truncate
-Pmultipleinstruction
+PmultipleInstruction
 operation-end -blanks AZ^
 operation-declarations SWAP AZ^
 operation-stack SWAP AZ^
-" : " operation-name sspace AZ^ AZ^ SWAP AZ^
+" : " operation-name sSpace AZ^ AZ^ SWAP AZ^
 ( Put this operation's type into the types relation, so it can be called later )
 STRING STRING PROD { operation-name operation-inputs ↦ , } types ∪ to types
 ;
