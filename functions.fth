@@ -18,10 +18,10 @@ THEN ;
 
 : Psinglereturnvalue ( s -- )
 (
-    Where s is in the form "i INT". Adds "i " onto operation-end, "i ↦ INT" to
+    Where s is in the form "i INT". Adds "i " onto operationEnd, "i ↦ INT" to
     the "locals" relation, "0 VALUE i" to operation-declarations and "INT" to
-    operation-type. After several passes operation-end might be "i s " and
-    operation-type "INT STRING".
+    operationBody. After several passes operationEnd might be "i s " and
+    operationBody "INT STRING".
 )
 wspace-split nowspace Parraytypeforvariables nowspace
 ( "i" "INT" or "set" "INT POW" or "iArray" "INT ARRAY" )
@@ -30,16 +30,16 @@ IF
     ." Local variable " SWAP .AZ ."  declared twice: here return value." ABORT
 THEN
 SWAP test-form-for-identifier ( "INT" "i" )
-operation-end sSpace AZ^ OVER AZ^ to operation-end ( ""→"i " or "s"→"s i " )
-type-value OVER AZ^ newline AZ^ operation-declarations AZ^ to operation-declarations
-OVER operation-type sSpace AZ^ SWAP AZ^ to operation-type
+operationEnd sSpace AZ^ OVER AZ^ to operationEnd ( ""→"i " or "s"→"s i " )
+typeValue OVER AZ^ newline AZ^ operation-declarations AZ^ to operation-declarations
+OVER operationBody sSpace AZ^ SWAP AZ^ to operationBody
 SWAP STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
 : Preturnvalues ( s -- )
 (
     Where s is like "i INT, s STRING" and operation-declarations
-    "0 VALUE i 0 VALUE s" or similar, operation-end "s i ;" and operation-type
+    "0 VALUE i 0 VALUE s" or similar, operationEnd "s i ;" and operationBody
     = output type part "INT STRING". Note opposite order.
     The catenation is done by Psinglereturnvalue.
 )
@@ -54,8 +54,8 @@ THEN
 : Psingleparameter ( s -- )
 (
     Where s is in the form "i INT" and s1 "0 VALUE i". Also adds "i ↦ INT" to
-    the "locals" relation. Adds "i" to operation-stack and "INT" to
-    operation-inputs.
+    the "locals" relation. Adds "i" to operationStack and "INT" to
+    operationInputs.
 )
 wspace-split nowspace Parraytypeforvariables nowspace
 ( "i" "INT" or "set" "INT POW" or "iArr" "INT ARRAY" )
@@ -65,9 +65,9 @@ IF
     ABORT
 THEN
 SWAP test-form-for-identifier ( "INT" "i" )
-operation-stack sSpace
-AZ^ OVER AZ^ to operation-stack
-SWAP operation-inputs sSpace AZ^ OVER AZ^ to operation-inputs
+operationStack sSpace
+AZ^ OVER AZ^ to operationStack
+SWAP operationInputs sSpace AZ^ OVER AZ^ to operationInputs
 STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
@@ -77,7 +77,7 @@ STRING STRING PROD { ↦ , } locals ∪ to locals
     on the left and recursing on the right. Psingleparameter does the
     catenating.
     Where s is in the form "i INT, s STRING" or similar. Leaves "INT STRING" as
-    operation-inputs, "i s" as operation-stack, which needs be completed later
+    operationInputs, "i s" as operationStack, which needs be completed later
     with (: :)
 )
 comma rsplit
@@ -106,7 +106,7 @@ IF
 THEN        ( "i" "INT" )
 Parraytypeforvariables
 OVER SWAP nowspace STRING STRING PROD { ↦ , } locals ∪ to locals
-type-value SWAP newline AZ^ AZ^
+typeValue SWAP newline AZ^ AZ^
 operation-declarations SWAP AZ^ to operation-declarations
 ;
 
@@ -133,8 +133,8 @@ THEN
 (
     Where s is in the form "i INT, s STRING ← foo (f FLOAT, b BOO)" and splits
     on the ← passing "i INT, s STRING" to Preturnvalues and "f FLOAT, b BOO" to
-    Pparameters. Passes foo to operation-name.
-    Adds operation-inputs # to operation-type and completes operation-stack with
+    Pparameters. Passes foo to operationName.
+    Adds operationInputs # to operationBody and completes operationStack with
     (: :)
 )
 return-seq rsplit
@@ -149,17 +149,17 @@ IF
     SWAP OVER myAZLength +
     [CHAR] ( [CHAR] ) bracketRemover2 Pparameters
 THEN
-nowspace test-form-for-identifier to operation-name
-newline operation-end -blanks AZ^ newline " ;" newline AZ^ AZ^ AZ^ to operation-end
+nowspace test-form-for-identifier to operationName
+newline operationEnd -blanks AZ^ newline " ;" newline AZ^ AZ^ AZ^ to operationEnd
 ( Consider whether you always need a # in the middle of operation type )
-operation-inputs -blanks "  #" operation-type AZ^ AZ^ to operation-inputs
+operationInputs -blanks "  #" operationBody AZ^ AZ^ to operationInputs
 ;
 
 : Poperation
 (
     split on ≙ left to Poperationheader, right to Plocalvariablelist and
-    PmultipleInstruction, then add ": " operation-name operation-stack
-    operation-declarations stack contents and operation-end, leave whole
+    PmultipleInstruction, then add ": " operationName operationStack
+    operation-declarations stack contents and operationEnd, leave whole
     operation on stack for future catenation.
     Example:
     " i INT, s STRING ← foo(f FLOAT, b BOO) ≙ VARIABLES x INT END
@@ -171,11 +171,11 @@ operation-inputs -blanks "  #" operation-type AZ^ AZ^ to operation-inputs
     b IF i x + to i ELSE i x - to i THEN i s ;
     Which will have a type error, trying to assign a FLOAT to an INT!
 )
-blankString to operation-end
-blankString to operation-inputs
-blankString to operation-type
-blankString to operation-stack
-blankString to operation-name
+blankString to operationEnd
+blankString to operationInputs
+blankString to operationBody
+blankString to operationStack
+blankString to operationName
 blankString to operation-declarations
 STRING STRING PROD { } to locals ( Empty the "locals" relation )
 def-seq rsplit 0=
@@ -193,16 +193,16 @@ IF
 THEN
 locals CARD
 IF
-    " (:" operation-stack "  :)" newline AZ^ AZ^ AZ^ to operation-stack
+    " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
 ( Remove this bit later ) nowspace endString truncate
 PmultipleInstruction
-operation-end -blanks AZ^
+operationEnd -blanks AZ^
 operation-declarations SWAP AZ^
-operation-stack SWAP AZ^
-" : " operation-name sSpace AZ^ AZ^ SWAP AZ^
+operationStack SWAP AZ^
+" : " operationName sSpace AZ^ AZ^ SWAP AZ^
 ( Put this operation's type into the types relation, so it can be called later )
-STRING STRING PROD { operation-name operation-inputs ↦ , } types ∪ to types
+STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 ;
 
 (

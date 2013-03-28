@@ -93,22 +93,22 @@ NIP
 "  " CONSTANT sSpace ( String containing a single space )
 " "  CONSTANT blankString ( the empty String )
 " =" CONSTANT equals
-" F=" CONSTANT f-equals
-"  --> " CONSTANT guard-string
+" F=" CONSTANT Fequals
+"  --> " CONSTANT guardString
 " .." CONSTANT dots
 " 0 VALUE " CONSTANT 0value
-" , " CONSTANT comma-space
+" , " CONSTANT commaSpace
 "  VALUE-ARRAY " CONSTANT value-array
 " ♢" CONSTANT diamondString
 " ∇" CONSTANT nablaString
-0value VALUE type-value
+0value VALUE typeValue
 10 CONSTANT \n ( the line feed character, 0x0a = 10 in decimal )
 "  " \n OVER C! CONSTANT newline
 "  to " CONSTANT to_     ( Note has additional leading space )
 " <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
-" ⊓" CONSTANT choice-string
-"  [] " CONSTANT sq-brackets ( Note leading and trailing spaces )
+" ⊓" CONSTANT choiceString
+"  [] " CONSTANT sqBrackets ( Note leading and trailing spaces )
 lQuote myAZLength CONSTANT lQuoteLength
 rQuote myAZLength CONSTANT rQuoteLength
 " SKIP" CONSTANT skip
@@ -119,7 +119,7 @@ rQuote myAZLength CONSTANT rQuoteLength
 " ARRAY" VALUE array
 "  VALUE " VALUE value-string ( Note leading and trailing spaces )
 " RECURSE" CONSTANT recurse
-sSpace VALUE operation-name
+sSpace VALUE operationName
 
 ( this types set only for testing purposes: to be removed later )
 STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
@@ -239,8 +239,8 @@ STRING [ " :=" , " :∈" , ] CONSTANT assignment
 STRING [ " THEN" , ] CONSTANT then-ops
 STRING [ " ELSE" , ] CONSTANT else-ops
 STRING [ " ;" , ] CONSTANT sequence ( instructions separated by ; )
-STRING [ choice-string , ] CONSTANT choice ( instructions separated by ⊓  )
-STRING [ guard-string , " →" , ] CONSTANT guard
+STRING [ choiceString , ] CONSTANT choice ( instructions separated by ⊓  )
+STRING [ guardString , " →" , ] CONSTANT guard
 " ×" CONSTANT times        ( For creating pair types with the × operator )
 STRING [ times , ] CONSTANT times-sq
 " ℙ" CONSTANT pow          ( For creating set  types with the ℙ operator )
@@ -286,15 +286,15 @@ INT INT PROD { CHAR [ CHAR ]  ↦ , CHAR ( CHAR )  ↦ , CHAR { CHAR }  ↦ , }
 STRING [ " 0" , " 1" , " 2" , " 3" , " 4" , " 5" , " 6" , " 7" , " 8" , " 9" , ]
 CONSTANT numbers
 
-blankString VALUE operation-end
-blankString VALUE operation-inputs
-blankString VALUE operation-body
-blankString VALUE operation-type
-blankString VALUE operation-stack
-blankString VALUE operation-name
+blankString VALUE operationEnd
+blankString VALUE operationInputs
+blankString VALUE operationBody
+blankString VALUE operationBody
+blankString VALUE operationStack
+blankString VALUE operationName
 (
-   Consider using operation-name for recursion; if the name of a function is
-   the same as operation-name, change it to RECURSE.
+   Consider using operationName for recursion; if the name of a function is
+   the same as operationName, change it to RECURSE.
    You can do it like this
    " foo(1, 2, 3)" Pexpression SWAP last-wSpaceSplit 0 SWAP C! " RECURSE" AZ^ SWAP
    If you do it in Pfunction, you would have to move these above declarations to
@@ -761,7 +761,7 @@ IF
     10 EMIT ." only letters and numbers: " .AZ ."  passed." ABORT
 THEN
 ( For use with recursive calls of the same function name )
-operation-name OVER stringEq
+operationName OVER stringEq
 IF
     DROP recurse
 THEN
@@ -1397,12 +1397,12 @@ l-type nowspace to l-type r-type nowspace to r-type
 l-type int stringEq r-type float stringEq AND
 IF
     l-value StoF AZ^ to l-value float to l-type
-    f-equals to op
+    Fequals to op
 ELSE
     l-type float stringEq r-type int stringEq AND
     IF
         r-value StoF AZ^ to r-value float to r-type
-        f-equals to op
+        Fequals to op
     ELSE    ( Lines adding quotes appear to create " " text " " )
 (        l-value l-type addQuotesIfString1 to l-value )
 (        r-value r-type addQuotesIfString1 to r-value )
@@ -1415,7 +1415,7 @@ ELSE
             ELSE
                 l-type float stringEq
                 IF
-                    f-equals to op
+                    Fequals to op
                 ELSE
                 "  PROD" l-type suffix?
                     IF
@@ -1659,8 +1659,8 @@ DROP 2DROP ( empty three values from stack )
     instruction. Tests s2 for marking as Boolean type.
     "i 3 <" "boolean" "i 1 + to i" returns "i 3 < --> i 1 + to i", for example.
 )
-ROT ROT guard-string SWAP boolean check-types-for-booleans
-guard-string ROT newline AZ^ AZ^ AZ^
+ROT ROT guardString SWAP boolean check-types-for-booleans
+guardString ROT newline AZ^ AZ^ AZ^
 ;
 ( Synonym for above ) : →_ -->_ ;
 
@@ -1675,14 +1675,14 @@ guard-string ROT newline AZ^ AZ^ AZ^
     " i 1 - to i" "<CHOICE i 1 + to i [] i 2 + to i CHOICE>" []_ returns
     "<CHOICE i 1 - to i [] i 1 + to i [] i 2 + to i CHOICE>"
     [] associates to the right. Does not throw any error messages.
-    Uses the choice< "<CHOICE ", choice> " CHOICE>" and sq-brackets " [] "
+    Uses the choice< "<CHOICE ", choice> " CHOICE>" and sqBrackets " [] "
     strings, which are global variables.
 )
 choice< OVER prefix? ( Already a choice: take <CHOICE off start )
 IF 
-    choice< decapitate choice< ROT sq-brackets AZ^ AZ^ SWAP AZ^
+    choice< decapitate choice< ROT sqBrackets AZ^ AZ^ SWAP AZ^
 ELSE ( Not already choice: Add both <CHOICE and CHOICE> )
-    choice< ROT sq-brackets AZ^ AZ^ SWAP choice> AZ^ AZ^
+    choice< ROT sqBrackets AZ^ AZ^ SWAP choice> AZ^ AZ^
 THEN
 ;
 
@@ -2716,9 +2716,9 @@ PargumentList
 ( Retrieve function name )
 POP ( stack = "(" "ii jj" "INT1 INT2" "kk" "INT3" "foo" ) )
 )_ 
-SWAP lastWSpaceSplit operation-name stringEq
+SWAP lastWSpaceSplit operationName stringEq
 IF  ( Change name of operation to "RECURSE" for recursive programming. )
-    operation-name truncate recurse AZ^
+    operationName truncate recurse AZ^
 THEN
 SWAP
 ;
@@ -2793,7 +2793,7 @@ blankString 0 ;
 (: count l-value l-type r-value r-type :)
 l-type IF " Array membership" l-type r-type test-two-types-same THEN
 count 1+
-l-value comma-space r-value sSpace AZ^ AZ^ AZ^ r-type
+l-value commaSpace r-value sSpace AZ^ AZ^ AZ^ r-type
 ;
 
 : array]_ ( i value l-type r-value r-type -- array-text type-array )
@@ -2805,8 +2805,8 @@ l-value comma-space r-value sSpace AZ^ AZ^ AZ^ r-type
 )
 (: count l-value l-type r-value r-type :)
 l-type IF " Array membership" l-type r-type test-two-types-same THEN
-" HERE " count iToAZ AZ^ sSpace AZ^ l-value AZ^ comma-space AZ^
-r-value AZ^ sSpace AZ^ comma-space AZ^
+" HERE " count iToAZ AZ^ sSpace AZ^ l-value AZ^ commaSpace AZ^
+r-value AZ^ sSpace AZ^ commaSpace AZ^
 r-type sSpace array AZ^ AZ^
 ;
 
@@ -6089,7 +6089,7 @@ ELSE
         IF
             Pselection
         ELSE
-            DUP C@ [CHAR] ( =
+            DUP head [CHAR] ( =
             IF
                 PbracketedInstruction
             ELSE
@@ -6097,7 +6097,13 @@ ELSE
                 IF
                     Pskip
                 ELSE
-                    Passignment
+                    DUP CLONE-STRING choice rsplit
+                    IF
+                        2DROP
+                        Pchoice
+                    ELSE
+                        Passignment
+                    THEN
                 THEN
             THEN
         THEN
@@ -6157,13 +6163,13 @@ THEN
 )
 sequence startKeywords endKeywords rsplitForBlocks
 IF       
-    PUSH ( Left substring is a choice instruction )
+    PUSH ( Left substring is an instruction )
     Pchoice
     POP  ( Recursively parse "right" substring )
     RECURSE
     ;_   ( Use ;_ operation to catenate operations )
-ELSE     ( No operator found: left string is a choice, right nonsense )
-    DROP Pchoice
+ELSE     ( No operator found: left string is an instruction, right nonsense )
+    DROP Pinstruction
 THEN ;
 
 ' P to PmultipleInstruction
@@ -6292,10 +6298,10 @@ check-single-tree ;
 
 : Parraytypeforvariables ( s -- s1, and side-effect )
 (
-    INT[3] → 3 VALUE-ARRAY to type-value, and INT ARRAY to s1.
+    INT[3] → 3 VALUE-ARRAY to typeValue, and INT ARRAY to s1.
     Similar to below, but uses Ppow which declares type and adds it to types,
     whereas the arguments version checks the type has already been declared.
-    If no value is given in the [], accepts it and assumes 0 length: type-value
+    If no value is given in the [], accepts it and assumes 0 length: typeValue
     is "0 VALUE-ARRAY"
 )
 nowspace " ]" OVER suffix?
@@ -6310,10 +6316,10 @@ IF
     ELSE
         DROP " 0"
     THEN
-    value-array AZ^ to type-value ( write 123 VALUE-ARRAY foo NB: 0 acceptable )
+    value-array AZ^ to typeValue ( write 123 VALUE-ARRAY foo NB: 0 acceptable )
     "  ARRAY" AZ^
 ELSE    ( No []: remaining top value on stack is nonsense value )
-    0value to type-value ( Write 0 VALUE foo )
+    0value to typeValue ( Write 0 VALUE foo )
     Pvariabletype
 THEN
 ;
@@ -6353,7 +6359,7 @@ IF
 THEN
 Parraytypeforarguments
 OVER SWAP nowspace STRING STRING PROD { ↦ , } locals ∪ to locals
-type-value SWAP newline AZ^ AZ^
+typeValue SWAP newline AZ^ AZ^
 ;
 
 : Pvariable ( s -- s1 )
@@ -6371,7 +6377,7 @@ IF
 THEN
 Parraytypeforvariables
 OVER SWAP nowspace STRING STRING PROD { ↦ , } types ∪ to types
-type-value SWAP newline AZ^ AZ^
+typeValue SWAP newline AZ^ AZ^
 ;
 
 : Pvariableslist ( s -- s1 )
