@@ -394,7 +394,7 @@ IF ." true" ELSE ." false" THEN ;
 : -wspace ( az -- az with leading whitespace removed )
     BEGIN DUP head whitespace IN WHILE tail REPEAT ;
 
-: nowspace ( az -- az2 with leading and trailing whitespace removed )
+: noWSpace ( az -- az2 with leading and trailing whitespace removed )
     -wspace
     DUP endaz
         BEGIN DUP head whitespace IN WHILE 1 - REPEAT 1 + 0 SWAP C! ;
@@ -576,7 +576,7 @@ AZ^ AZ^ AZ^ AZ^ AZ^ ( catenate 5 times )
     on screen; this cannot be copied-and-pasted, but it could if the quotes were
     added. If not string, removes top value and returns 2nd value unchanged.
 ) 
-nowspace string stringEq
+noWSpace string stringEq
 IF
     addQuotes1
 THEN
@@ -664,7 +664,7 @@ NIP
      ( Throws error if "s" not in correct format, e.g. 0123 or 123.4 )
      ( Does not allow numbers beginning with - sign: this must be handled )
      ( elsewhere. Special cases for 0 and 2147483648. )
-nowspace
+noWSpace
 DUP DUP
 digits stringbegins?
 SWAP
@@ -751,7 +751,7 @@ THEN
     If identifier starts with a letter and is all alphanumeric, returns argument
     unchanged. Otherwise error message. Also error if a keyword passed.
 )
-nowspace
+noWSpace
 DUP keywords IN IF
     ." Keyword  " .AZ ."  used out of correct context." ABORT
 THEN
@@ -779,7 +779,7 @@ NULL OP Parray
     variables take precedence over global: uses the "locals" relation.
     Also accepts array elements eg arr[1], which are passed to Parray
 )
-nowspace
+noWSpace
 DUP keywords IN IF ." Keyword " .AZ ."  used out of correct context." ABORT THEN
 DUP [CHAR] [ stringcontainschar?
 IF
@@ -860,7 +860,7 @@ start end
 ( If text not starting with the appropriate bracket is passed, no change )
 0 0
 (: string cl cr old-string brackets :)
-string nowspace to old-string
+string noWSpace to old-string
 string head cl =
 IF
     1 to brackets
@@ -1045,7 +1045,7 @@ startString string
    }
 }
 )
-nowspace DUP int stringEq
+noWSpace DUP int stringEq
 IF
     2DROP
 ELSE
@@ -1057,7 +1057,7 @@ THEN ;
     Where s1 is the operator and s2 and s3 the two types, which should both be
     "INT"; throws error message otherwise
 )
-nowspace SWAP nowspace SWAP 2DUP stringEq OVER int stringEq AND NOT
+noWSpace SWAP noWSpace SWAP 2DUP stringEq OVER int stringEq AND NOT
 IF
     ." Incorrect types for " ROT .AZ ."  operator: both should be " int .AZ CR
     SWAP .AZ ."  and " .AZ ."  passed." ABORT
@@ -1088,7 +1088,7 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
 
 : check-types-for-arithmetic
 ( s1 s2 s3 -- Check types appropriate for arithmetic: "INT" or "FLOAT" both )
-    SWAP nowspace SWAP nowspace
+    SWAP noWSpace SWAP noWSpace
     2DUP DUP float stringEq SWAP int stringEq OR
     SWAP DUP float stringEq SWAP int stringEq OR
     AND NOT
@@ -1148,7 +1148,7 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     (: l-value l-type r-value r-type :)
     "  -" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float stringEq r-type nowspace float stringEq OR
+    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
     IF
         l-type int stringEq
         IF
@@ -1169,7 +1169,7 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     (: l-value l-type r-value r-type :)
     "  *" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float stringEq r-type nowspace float stringEq OR
+    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
     IF
         l-type int stringEq
         IF
@@ -1192,7 +1192,7 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
     ( floating-point numbers as well as INTs )
     "  /" VALUE op
     op l-type r-type check-types-for-arithmetic
-    l-type nowspace float stringEq r-type nowspace float stringEq OR
+    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
     IF
         l-type int stringEq
         IF
@@ -1222,7 +1222,7 @@ addSubtract
 
 : check-type-for-uminus ( az -- Check type appropriate for uminus op )
 ( This operation stands on its own as the only unary arithmetic operation )
-    nowspace DUP DUP int stringEq NOT SWAP float stringEq NOT AND
+    noWSpace DUP DUP int stringEq NOT SWAP float stringEq NOT AND
     IF
         ." Type error for unary - operator: " .AZ ."  offered; INT and FLOAT"
         ."  permitted." ABORT
@@ -1246,7 +1246,7 @@ addSubtract
 (
     Pass "⇒" "Boolean" "Boolean" or similar. Throws error if not both Boolean.
 )
-    OVER nowspace boolean stringEq OVER nowspace boolean stringEq AND NOT
+    OVER noWSpace boolean stringEq OVER noWSpace boolean stringEq AND NOT
     IF
         ." Type error for " ROT .AZ ."  operator. "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1300,7 +1300,7 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 
 : check-type-for-not ( s1 -- Check appropriate type for unary not ¬ )
 ( Operation standing alone because there is only one unary boolean connective )
-    DUP nowspace boolean stringEq NOT
+    DUP noWSpace boolean stringEq NOT
     IF
         ." Type error for ¬ not operator: " .AZ ."  offered. " ABORT        
     THEN
@@ -1314,7 +1314,7 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 
 : check-types-for-set-membership ( s1 s2 s3 -- Check appropriate types for ∈ etc )
     ( s2 has "POW" as a suffix and the remainders of the two strings are identical )
-    OVER nowspace OVER nowspace SWAP "  POW" AZ^ stringEq NOT
+    OVER noWSpace OVER noWSpace SWAP "  POW" AZ^ stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator. "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1352,7 +1352,7 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 ;
 
 : test-two-types-same ( s1 s2 s3 -- Check two types identical )
-    OVER nowspace OVER nowspace stringEq NOT
+    OVER noWSpace OVER noWSpace stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator. Should both be same: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -1361,7 +1361,7 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
 ;
 
 : test-two-types-different ( s1 s2 s3 -- check two types different )
-    2DUP nowspace SWAP nowspace stringEq
+    2DUP noWSpace SWAP noWSpace stringEq
     IF
         ." Type error for " ROT .AZ ."  operator. Cannot accept " .AZ
         ABORT
@@ -1393,7 +1393,7 @@ create all the other words required from F< and F0=. )
 )
 (: l-value l-type r-value r-type :)
 equals VALUE op
-l-type nowspace to l-type r-type nowspace to r-type
+l-type noWSpace to l-type r-type noWSpace to r-type
 l-type int stringEq r-type float stringEq AND
 IF
     l-value StoF AZ^ to l-value float to l-type
@@ -1545,7 +1545,7 @@ l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
 ( INT INT PROD STRING PROD POW would be single tree, for example. )
 ( If single-letter String assume a true tree with 1 token in. )
 ( This version uses 32=space, but it could be changed to accept any whitespace. )
-nowspace
+noWSpace
 DUP myAZLength 0=
 IF
     ." Empty type received: not permitted." ABORT
@@ -1596,7 +1596,7 @@ THEN
     otherwise error message and crashes application.
     Assumes s1 is what is required and s2 is what is supplied.
 )
-nowspace SWAP nowspace 2DUP stringEq NOT
+noWSpace SWAP noWSpace 2DUP stringEq NOT
 ( After 1 SWAP now has s1=required on top of stack and s2=supplied second. )
 IF
     ." Type error for " ROT .AZ ."  operator: types ought to be the same."
@@ -1607,7 +1607,7 @@ DROP 2DROP ( empty three values from stack )
 ;
 
 : check-same-kind-set ( s1 s2 s2 -- Check two sets of same type )
-    OVER nowspace OVER nowspace
+    OVER noWSpace OVER noWSpace
     DUP " POW" SWAP suffix? ROT ROT stringEq AND NOT
     IF
         ." Type error for " ROT .AZ
@@ -1769,7 +1769,7 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
 : ↦_ ( s1 s2 s3 s4 -- ss1 ss2 )
     (: l-value l-type r-value r-type :)
     "  |->" VALUE op
-    l-type nowspace to l-type r-type nowspace to r-type
+    l-type noWSpace to l-type r-type noWSpace to r-type
     " ↦" l-type r-type check-types-not-null
     l-type float stringEq r-type float stringEq OR
     IF
@@ -1850,8 +1850,8 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
 
 : check-same-kind-relation ( s1 s2 s3 -- Check s2+s2 same kind of relation )
 2DUP
-    nowspace "  PROD POW" SWAP suffix?
-    SWAP nowspace "  PROD POW" SWAP suffix?
+    noWSpace "  PROD POW" SWAP suffix?
+    SWAP noWSpace "  PROD POW" SWAP suffix?
     AND NOT
 IF
     ." Type error for " ROT .AZ
@@ -1879,19 +1879,19 @@ DROP 2DROP
 
 : check-types-domain-restriction
     ( s1 s2 s3 (cloned) -- Check appropriate types for domain restriction )
-    "  PROD POW" OVER nowspace suffix? NOT
+    "  PROD POW" OVER noWSpace suffix? NOT
     IF
         ." Type error for " ROT .AZ
         ."  operator: right type should end in PROD POW: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
     THEN
-    OVER nowspace "  POW" SWAP suffix? NOT
+    OVER noWSpace "  POW" SWAP suffix? NOT
     IF
         ." Type error for " ROT .AZ
         ."  operator: left type should end in POW: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
     THEN
-    OVER nowspace CLONE-STRING "  POW" truncate OVER prefix? NOT
+    OVER noWSpace CLONE-STRING "  POW" truncate OVER prefix? NOT
     IF
         ." Type error for " ROT .AZ
         ."  operator: both types should start the same way: "
@@ -1952,7 +1952,7 @@ DROP 2DROP
 
 : check-types-range-restriction
     ( s1 s2 s3 (cloned) -- check appropriate types )
-    nowspace SWAP nowspace SWAP
+    noWSpace SWAP noWSpace SWAP
     "  POW" OVER suffix? NOT
     IF
         ." Type error for " ROT .AZ
@@ -2002,7 +2002,7 @@ DROP 2DROP
 ;
 
 : check-types-set-catenation ( s1 s2 s3 -- Whether appropriate types )
-" INT " OVER nowspace prefix? NOT
+" INT " OVER noWSpace prefix? NOT
 IF
     ." Type error for " ROT .AZ
     ."  operator: Both types must start with INT: "
@@ -2014,7 +2014,7 @@ IF
     ."  operator: Both types must end with PROD POW: "
     SWAP .AZ ."  and " .AZ ."  offered." ABORT
 THEN
-DUP nowspace OVER nowspace stringEq NOT
+DUP noWSpace OVER noWSpace stringEq NOT
 IF
     ." Type error for " ROT .AZ ."  operator: Both types must be identical: "
     SWAP .AZ ."  and " .AZ ."  offered." ABORT
@@ -2036,7 +2036,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 ;
 
 : check-types-set-append ( s1 s2 s3 -- Check appropriate type )
-    2DUP nowspace " INT " SWAP AZ^ "  PROD POW" AZ^ SWAP nowspace
+    2DUP noWSpace " INT " SWAP AZ^ "  PROD POW" AZ^ SWAP noWSpace
     stringEq NOT
     IF
             ." Type error for " ROT .AZ
@@ -2053,12 +2053,12 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 ;
 
 : check-types-set-truncation ( s1 s2 s3 -- Check appropriate types )
-    DUP nowspace int stringEq NOT
+    DUP noWSpace int stringEq NOT
     IF
         ." Type error for " ROT .AZ ."  operator: right type must be INT: "
         SWAP .AZ ."  and " .AZ ."  offered." ABORT
     THEN
-    OVER nowspace " INT " OVER prefix? NOT OVER "  PROD POW" SWAP suffix? NOT OR
+    OVER noWSpace " INT " OVER prefix? NOT OVER "  PROD POW" SWAP suffix? NOT OR
     IF
         ." Type error for " ROT .AZ
         ."  operator. Right type must start with INT and end PROD POW: "
@@ -2255,7 +2255,7 @@ l-value constants IN
 IF
     ." Cannot assign to " l-value .AZ ." : declared as constant." ABORT
 THEN    ( If l-type ends ARRAY and r-type is ARRAY, assume is empty array )
-"  ARRAY" l-type nowspace suffix? array r-type stringEq AND NOT
+"  ARRAY" l-type noWSpace suffix? array r-type stringEq AND NOT
 IF
     " := (assignment)" l-type r-type test-two-types-same
 THEN
@@ -2304,7 +2304,7 @@ DUP head 0= IF ." No middle space found in " .AZ ABORT THEN
     character after the last whitespace character. No error messages. If no
     whitespace found, simply returns a duplicate of the original String
 )
-nowspace DUP endaz
+noWSpace DUP endaz
 BEGIN
     2DUP < OVER C@ whitespace IN NOT AND ( Not reached start or not w-space )
 WHILE
@@ -2406,16 +2406,16 @@ op  ( 3rd result on stack )
     Note the types must be separated by single spaces.
 )
 (: f-name in-types :)
-f-name nowspace to f-name in-types nowspace to in-types
+f-name noWSpace to f-name in-types noWSpace to in-types
 types f-name APPLY CLONE-STRING hash rsplit VALUE left VALUE right VALUE op
-left nowspace in-types stringEq NOT
+left noWSpace in-types stringEq NOT
 IF
-    ." Incorrect input types for function " f-name .AZ ." ." CR left nowspace
+    ." Incorrect input types for function " f-name .AZ ." ." CR left noWSpace
     .AZ ."  required and " in-types .AZ ."  received." ABORT
 THEN
 op
 IF
-    right nowspace
+    right noWSpace
 ELSE
     blankString
 THEN
@@ -2438,14 +2438,14 @@ THEN
     (: bracket l-value l-type r-value r-type f-name :)
     bracket " (" test-same-bracket ( feed bracket, check correct to match () )
     ( No need to check whether same types in this instance )
-    l-value sSpace r-value AZ^ AZ^ nowspace sSpace f-name AZ^ AZ^
+    l-value sSpace r-value AZ^ AZ^ noWSpace sSpace f-name AZ^ AZ^
     l-type 0= IF sSpace to l-type THEN
     f-name l-type sSpace r-type AZ^ AZ^ get-return-type-function
 ;
 
 : PRINT_ ( s type -- s1 being the original formula with the instruction to print
                         appended. Type must be one of the basic types. )
-nowspace
+noWSpace
 DUP int stringEq ( . for ints )
 IF
     DROP "  . " AZ^
@@ -2699,7 +2699,7 @@ NULL OP Puminus
     function taking multiple input types, which types must be identical.
 )
 ( comments for stack contents after passing "  foo(ii, jj, kk)  " )
-PUSH (_ POP nowspace DUP endaz
+PUSH (_ POP noWSpace DUP endaz
 ( stack: 5 items = "(" "" null "foo(ii, jj, kk)" ")" )
 DUP ROT ROT [CHAR] ( [CHAR] ) openBracketFinder
 ( stack: 6 items = "(" "" null ")" "foo(ii, jj, kk)" "(ii, jj, kk)" )
@@ -2754,7 +2754,7 @@ THEN ;
 ( Start by putting bracket on stack )
 " (" bar-line AZ^ SWAP ( stack = "(_" "foo(x, y, z)" ) )
 ( Split by matching brackets )
-nowspace DUP endaz DUP ROT ROT ( ( stack = "(_" ")" "foo(x, y, z)" ")" )
+noWSpace DUP endaz DUP ROT ROT ( ( stack = "(_" ")" "foo(x, y, z)" ")" )
 [CHAR] ( [CHAR] ) openBracketFinder
 ( stack = "(_" ")" "foo(x, y, z)" "(x, y, z)" )
 ( Split string by putting \0 instead of the brackets )
@@ -2834,11 +2834,11 @@ THEN
     and the type "INT ARRAY". Strips the beginning and the end with bracket
     remover, and passes the contents to ParrayList.
 )
-nowspace
+noWSpace
 " ]" OVER suffix? NOT
 IF ." [ without ending ] in array: " .AZ ."  passed" ABORT THEN
 array decapitate [CHAR] [ [CHAR] ] bracketRemover2
-DUP nowspace myAZLength
+DUP noWSpace myAZLength
     IF 1 SWAP PUSH array[_ POP ParrayList array]_
 ELSE
     DROP " HERE 0 , " array
@@ -2854,7 +2854,7 @@ NULL OP Pdiamond ( used in Patom, defined 3000 lines below! )
     as a number, or bracketed expressions with () [] and {}.
     Does not accept lists; these are parsed by the Plist operation.
 )
-nowspace
+noWSpace
 DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean
@@ -2954,7 +2954,7 @@ THEN
     may be executed.
     See also Patom and ParithAtom2.
 )
-nowspace
+noWSpace
 DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean addQuotes2
@@ -3025,7 +3025,7 @@ NULL OP Parith2
 (
     Recurse for multiple indices: "arr" Pid "3" array_ "4" array_ works nicely.
 )
-nowspace ROT nowspace ROT nowspace CLONE-STRING ( iString arrString arrType )
+noWSpace ROT noWSpace ROT noWSpace CLONE-STRING ( iString arrString arrType )
 ROT DUP ( Clone & retain original iString in case needed for error message )
 CLONE-STRING Parith ( arrString arrType iString iStringPostfix iType )
 DUP int stringEq    
@@ -3089,7 +3089,7 @@ THEN
     Differs from the Patom operation in that this operation only handles arith-
     metical values.
 )
-nowspace
+noWSpace
 DUP head [CHAR] ( =
 IF
     [CHAR] ( [CHAR] ) bracketRemover2
@@ -3128,7 +3128,7 @@ THEN
     function calls not yet implemented. Consider how to refactor out the
     duplication with ParithAtom.
 )
-nowspace
+noWSpace
 DUP head [CHAR] ( =
 IF
     [CHAR] ( [CHAR] ) bracketRemover2
@@ -3246,7 +3246,7 @@ starts CARD VALUE start-size
 ends CARD VALUE end-size
 0 VALUE end-count
 0 VALUE token
-string nowspace to string
+string noWSpace to string
 string VALUE current
 BEGIN
     current head op 0= AND ( Iterate until found end of String or "op" found )
@@ -3340,7 +3340,7 @@ string current op
 (: string splits starts ends :) 0 VALUE op 0 VALUE count
 splits CARD VALUE split-size starts CARD VALUE start-size
 ends CARD VALUE end-size 0 VALUE end-count 0 VALUE token
-string nowspace to string string VALUE current
+string noWSpace to string string VALUE current
 BEGIN
     current head op 0= AND ( Iterate until end of string or "op" found. )
 WHILE
@@ -3616,7 +3616,7 @@ THEN
 )
 (: string seq set minus float-contents letters e-char :)
 0 0 0 0 VALUE op VALUE count VALUE backtrack VALUE count2
-string nowspace to string
+string noWSpace to string
 string endaz VALUE end
 seq CARD VALUE size
 float-antecedents CARD VALUE size2
@@ -3831,7 +3831,7 @@ NULL OP Pboolean2
     expression, which is passed back to PequivBoolean.
     For identifiers and TRUE/FALSE, the string is returned unchanged.
 )
-nowspace
+noWSpace
 DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean
@@ -3850,7 +3850,7 @@ ELSE
                 IF
                     Pfunction
                 ELSE
-                    Pid DUP nowspace boolean stringEq NOT
+                    Pid DUP noWSpace boolean stringEq NOT
                     IF
                         ." The identifier " SWAP .AZ ."  ought to be " boolean
                         .AZ ."  type and is actually " .AZ ABORT
@@ -3871,7 +3871,7 @@ THEN
     the type and quotes. Bracketed expressions are passed back to PequivBoolean2
     and true/false TRUE/FALSE and identifiers 
 )
-nowspace
+noWSpace
 DUP true stringEq OVER True stringEq OR
 IF
     DROP True boolean addQuotes2
@@ -3891,7 +3891,7 @@ ELSE
                 IF
                     Pfunction addQuotes2 ( refactor if Pfunction2 written )
                 ELSE
-                    Pid DUP nowspace boolean stringEq NOT
+                    Pid DUP noWSpace boolean stringEq NOT
                     IF
                         ." The identifier " SWAP .AZ ." ought to be " boolean
                         .AZ ."  type and is actually " .AZ ABORT
@@ -3931,13 +3931,13 @@ THEN
     the operand represents a set, but in those other functions the input means
     something different.
 )
-nowspace
+noWSpace
 DUP letter stringbegins?
 IF
     DUP [CHAR] ( stringcontainschar?
     IF      ( Must be function call )
         Pfunction ( refactor to Pfunction2 when available )
-        nowspace "  POW" OVER suffix? NOT
+        noWSpace "  POW" OVER suffix? NOT
         IF
             ." Type received not set: " .AZ ."  received." ABORT
         THEN addQuotes2
@@ -3945,7 +3945,7 @@ IF
         DUP alphanumeric stringconsists?
         IF
             Pid
-            nowspace "  POW" OVER suffix? NOT
+            noWSpace "  POW" OVER suffix? NOT
             IF
                 ." Type received not set: " .AZ ."  received." ABORT
             THEN
@@ -3996,7 +3996,7 @@ NULL OP Psequence2
 )
 rangeRestriction2 lsplit DUP 0=
 IF  ( No operator found: must be plain old sequence; String OK, but only for ^ )
-    2DROP nowspace lQuote OVER prefix?
+    2DROP noWSpace lQuote OVER prefix?
     IF
         Pstring
     ELSE
@@ -4039,7 +4039,7 @@ THEN ;
     case quotes must be added. Error reporting from those functions, if
     appropriate.
 )
-nowspace
+noWSpace
 DUP letter stringbegins?
 IF
     DUP [CHAR] ( stringcontainschar?
@@ -4079,7 +4079,7 @@ THEN
     In all cases the type is INT foo PROD POW: throws an error if the type is
     not in this format.
 )
-nowspace
+noWSpace
 BEGIN
 DUP head [CHAR] ( = 
 WHILE
@@ -4146,7 +4146,7 @@ NULL OP PjoinedSet
     Psequence. ( Blank pairs of round brackets in this function to maintain
     syntax highlighting.
 ) )
-nowspace
+noWSpace
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracketRemover2 ( Remove {} ) ( Can be refactored )
@@ -4231,7 +4231,7 @@ THEN
 rangeRestriction lsplit
 DUP 0=
 IF  ( top and middle elements nonsense, 3rd value is a string or set. )
-    2DROP nowspace lQuote OVER prefix?
+    2DROP noWSpace lQuote OVER prefix?
     IF
         Pstring
     ELSE
@@ -5511,7 +5511,7 @@ newline AZ^ boolean
     represents success.
 )
 ( " ∀x • x ∈ iset ⇒ x < 0" )
-nowspace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
+noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
 IF
     bullet-seq rsplit 0=
     IF
@@ -5551,8 +5551,8 @@ IF
         ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
         2DROP 2DROP .AZ ABORT
     THEN
-    PUSH 2DUP nowspace SWAP nowspace suffix? NOT 
-    ROT nowspace ROT nowspace OVER OVER truncate nowspace
+    PUSH 2DUP noWSpace SWAP noWSpace suffix? NOT 
+    ROT noWSpace ROT noWSpace OVER OVER truncate noWSpace
     myAZLength " ∀" myAZLength <>
     ( " ∀" and " ∃" same length ) PUSH ROT POP OR
     IF
@@ -5560,13 +5560,13 @@ IF
     THEN
     ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀" "x" US="x < 0" "iset" )
     ( Check "x" not already used as local variable. )
-    nowspace DUP locals DOM IN
+    noWSpace DUP locals DOM IN
     IF
         ." Bound variable " .AZ ."  already declared as local variable." CR
         ." Text = " DROP .AZ ABORT
     THEN
     ( stack = "∀ x • x ∈ i ⇒ x < 0" "∀" "x" US= "x < 0" "iset" )
-    POP nowspace types OVER APPLY DUP "  POW" SWAP suffix? NOT
+    POP noWSpace types OVER APPLY DUP "  POW" SWAP suffix? NOT
     IF
         ." The type " DROP .AZ
         ."  in the expression " 2DROP .AZ ."  is not a set." ABORT
@@ -5600,7 +5600,7 @@ THEN
     Pboolean.
 )
 ( " ∀x • x ∈ iset ⇒ x < 0" )
-nowspace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
+noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
 IF
     bullet-seq rsplit 0=
     IF
@@ -5640,8 +5640,8 @@ IF
         ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
         2DROP 2DROP .AZ ABORT
     THEN
-    PUSH 2DUP nowspace SWAP nowspace suffix? NOT 
-    ROT nowspace ROT nowspace OVER OVER truncate nowspace
+    PUSH 2DUP noWSpace SWAP noWSpace suffix? NOT 
+    ROT noWSpace ROT noWSpace OVER OVER truncate noWSpace
     myAZLength " ∀" myAZLength <>
     ( " ∀" and " ∃" same length ) PUSH ROT POP OR
     IF
@@ -5649,13 +5649,13 @@ IF
     THEN
     ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀" "x" US="x < 0" "iset" )
     ( Check "x" not already used as local variable. )
-    nowspace DUP locals DOM IN
+    noWSpace DUP locals DOM IN
     IF
         ." Bound variable " .AZ ."  already declared as local variable." CR
         ." Text = " DROP .AZ ABORT
     THEN
     ( stack = "∀ x • x ∈ i ⇒ x < 0" "∀" "x" US= "x < 0" "iset" )
-    POP nowspace types OVER APPLY DUP "  POW" SWAP suffix? NOT
+    POP noWSpace types OVER APPLY DUP "  POW" SWAP suffix? NOT
     IF
         ." The type " DROP .AZ
         ."  in the expression " 2DROP .AZ ."  is not a set." ABORT
@@ -5880,7 +5880,7 @@ THEN ;
 (
     Where s is an instruction in the form WHILE ... DO ... END
 )
-nowspace while decapitate  
+noWSpace while decapitate  
 endString OVER suffix? NOT
 OVER endaz endString myAZLength - alphanumeric IN NOT OR NOT 
 IF ." WHILE without END error." ABORT THEN 
@@ -5916,7 +5916,7 @@ THEN
     tested for) and parses the first part as a Boolean and the second part as a
     multiple instruction. Pthen splits it into two halves if ELSE is used.
 )
-nowspace " IF" decapitate
+noWSpace " IF" decapitate
 endString OVER suffix?
 OVER endaz endString myAZLength - C@ alphanumeric IN NOT AND
 IF
@@ -5976,7 +5976,7 @@ THEN
     " i 3 <" " boolean" i " 1 + to i" WHILE_ with quotes and additional new
     lines. WHILE_ can be called, and does type test
 )
-nowspace while decapitate endString OVER suffix? NOT
+noWSpace while decapitate endString OVER suffix? NOT
 OVER endaz endString myAZLength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks
@@ -5988,7 +5988,7 @@ THEN ;
 
 ( Placeholders for operations still to be written. )
 : Pselection2 ." Pselection2 not implemented completely." ABORT ; (
-nowspace " IF" decapitate
+noWSpace " IF" decapitate
 endString OVER suffix? OVER endaz endString myAZLength - C@ alphanumeric IN NOT AND
 IF
     endString truncate
@@ -6021,7 +6021,7 @@ THEN ; )
     If an empty string is passed, or the keyword SKIP, leaves empty string on
     the stack.
 )
-nowspace DUP skip stringEq SWAP myAZLength 0= OR NOT
+noWSpace DUP skip stringEq SWAP myAZLength 0= OR NOT
 IF
     ." Incorrect identification of skip instruction" ABORT
 THEN
@@ -6045,7 +6045,7 @@ blankString
 bracketRemover2 PmultipleInstruction2 ;
 
 : Pinstruction2 ( s -- s1 )
-( As below, but in two stages ) nowspace
+( As below, but in two stages ) noWSpace
 DUP " PRINT " 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
 IF Pprint2
 ELSE
@@ -6076,7 +6076,7 @@ THEN
    Instructions in round brackets () to have their brackets stripped; they may
    be multiple instructions.
 )
-nowspace DUP
+noWSpace DUP
 " PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
 IF
     Pprint
@@ -6102,6 +6102,7 @@ ELSE
                         2DROP
                         Pchoice
                     ELSE
+                        2DROP
                         Passignment
                     THEN
                 THEN
@@ -6199,9 +6200,9 @@ NULL OP Pprod NULL OP Pprodforarguments
     adding it to user-types, checks whether it is in declared-user-types. If not
     error message sent. (User-defined types not yet implemented.)
 )
-nowspace pow-seq rsplit-for-uminus
+noWSpace pow-seq rsplit-for-uminus
 IF
-    NIP nowspace DUP head [CHAR] ( = NOT
+    NIP noWSpace DUP head [CHAR] ( = NOT
     IF
         ." The ℙ operator must be followed by (. ℙ" .AZ ."  passed." ABORT
     THEN
@@ -6224,9 +6225,9 @@ THEN
     The () mean ℙ has a higher precedence than ×, which must be put in the ()
     Anything in () is passed back to the Pprod operation
 )
-nowspace pow-seq rsplit-for-uminus
+noWSpace pow-seq rsplit-for-uminus
 IF
-    NIP nowspace DUP head [CHAR] ( = NOT
+    NIP noWSpace DUP head [CHAR] ( = NOT
     IF
         ." The ℙ operator must be followed by (. ℙ" .AZ ."  passed." ABORT
     THEN
@@ -6248,7 +6249,7 @@ THEN ;
     Very similar to Pprod but the version of Ppow tests the type has already
     been declared
 )
-nowspace times-sq rsplit
+noWSpace times-sq rsplit
 IF
     SWAP Ppowforarguments SWAP RECURSE ×_
 ELSE
@@ -6261,7 +6262,7 @@ THEN ;
     Where s1 is a type string in a format like "foo × bar" and s2 its postfix
     representation eg "foo bar PROD".
 )
-nowspace times-sq rsplit
+noWSpace times-sq rsplit
 IF
     SWAP Ppow SWAP RECURSE ×_
 ELSE
@@ -6304,13 +6305,13 @@ check-single-tree ;
     If no value is given in the [], accepts it and assumes 0 length: typeValue
     is "0 VALUE-ARRAY"
 )
-nowspace " ]" OVER suffix?
+noWSpace " ]" OVER suffix?
 IF
     array-seq lsplit 0=
     IF
         ." ] without [ error in " SWAP .AZ ABORT
     THEN
-    " ]" truncate nowspace DUP myAZLength
+    " ]" truncate noWSpace DUP myAZLength
     IF
         Parith " Array Index" SWAP check-type-int
     ELSE
@@ -6332,11 +6333,11 @@ THEN
 )
 array-seq lsplit
 IF
-    nowspace " ]" truncate DUP myAZLength
+    noWSpace " ]" truncate DUP myAZLength
     IF  ( Right string ought now to be 0 length )
         sq-brackets-abort
     THEN
-    DROP nowspace RECURSE array AZ^
+    DROP noWSpace RECURSE array AZ^
 ELSE
     DROP Pargumenttype
 THEN
@@ -6351,14 +6352,14 @@ THEN
     that any types required have already been declared, otherwise returning an
     error
 )
-wSpaceSplit nowspace SWAP nowspace SWAP
+wSpaceSplit noWSpace SWAP noWSpace SWAP
 OVER test-form-for-identifier
 OVER locals DOM IN
 IF
     ." Parameter " OVER .AZ ."  already declared as local variable." ABORT
 THEN
 Parraytypeforarguments
-OVER SWAP nowspace STRING STRING PROD { ↦ , } locals ∪ to locals
+OVER SWAP noWSpace STRING STRING PROD { ↦ , } locals ∪ to locals
 typeValue SWAP newline AZ^ AZ^
 ;
 
@@ -6369,14 +6370,14 @@ typeValue SWAP newline AZ^ AZ^
     relation.
 )
 wSpaceSplit ( "i" "INT" )
-nowspace SWAP nowspace SWAP
+noWSpace SWAP noWSpace SWAP
 OVER test-form-for-identifier
 types DOM IN
 IF
     ." Variable " OVER .AZ ."  already declared as variable or constant." ABORT
 THEN
 Parraytypeforvariables
-OVER SWAP nowspace STRING STRING PROD { ↦ , } types ∪ to types
+OVER SWAP noWSpace STRING STRING PROD { ↦ , } types ∪ to types
 typeValue SWAP newline AZ^ AZ^
 ;
 
@@ -6447,7 +6448,7 @@ THEN
 ( Best to change from atom to expression, otherwise pairs were not getting
 parsed as constants correctly. Needs change in grammar, too. )
 wSpaceSplit ( "i" "123" )
-nowspace SWAP nowspace SWAP ( Refactor )
+noWSpace SWAP noWSpace SWAP ( Refactor )
 OVER constants IN ( already been declared )
 IF
     ." Constant " OVER .AZ ."  declared twice" ABORT

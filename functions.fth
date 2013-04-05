@@ -5,7 +5,7 @@ STRING STRING PROD { } to locals ( to be removed later )
     If identifier starts with a letter and is all alphanumeric, returns argument
     unchanged. Otherwise error message. Also error if a keyword passed.
 )
-nowspace
+noWSpace
 DUP keywords IN IF
     ." Keyword " .AZ ."  used out of correct context." ABORT
 THEN
@@ -23,7 +23,7 @@ THEN ;
     operationBody. After several passes operationEnd might be "i s " and
     operationBody "INT STRING".
 )
-wspace-split nowspace Parraytypeforvariables nowspace
+wSpaceSplit noWSpace Parraytypeforvariables noWSpace
 ( "i" "INT" or "set" "INT POW" or "iArray" "INT ARRAY" )
 OVER locals DOM IN
 IF
@@ -57,7 +57,7 @@ THEN
     the "locals" relation. Adds "i" to operationStack and "INT" to
     operationInputs.
 )
-wspace-split nowspace Parraytypeforvariables nowspace
+wSpaceSplit noWSpace Parraytypeforvariables noWSpace
 ( "i" "INT" or "set" "INT POW" or "iArr" "INT ARRAY" )
 OVER locals DOM IN
 IF
@@ -96,8 +96,8 @@ THEN
     Otherwise adds "0 VALUE i" to operation-declarations and "i ↦ INT" to the
     locals relation.
 )
-wspace-split            ( "i" "INT" )
-nowspace SWAP nowspace SWAP
+wSpaceSplit            ( "i" "INT" )
+noWSpace SWAP noWSpace SWAP
 OVER test-form-for-identifier        ( "i" "INT" "i" )
 locals DOM IN
 IF
@@ -105,7 +105,7 @@ IF
     ." parameter." ABORT
 THEN        ( "i" "INT" )
 Parraytypeforvariables
-OVER SWAP nowspace STRING STRING PROD { ↦ , } locals ∪ to locals
+OVER SWAP noWSpace STRING STRING PROD { ↦ , } locals ∪ to locals
 typeValue SWAP newline AZ^ AZ^
 operation-declarations SWAP AZ^ to operation-declarations
 ;
@@ -149,7 +149,7 @@ IF
     SWAP OVER myAZLength +
     [CHAR] ( [CHAR] ) bracketRemover2 Pparameters
 THEN
-nowspace test-form-for-identifier to operationName
+noWSpace test-form-for-identifier to operationName
 newline operationEnd -blanks AZ^ newline " ;" newline AZ^ AZ^ AZ^ to operationEnd
 ( Consider whether you always need a # in the middle of operation type )
 operationInputs -blanks "  #" operationBody AZ^ AZ^ to operationInputs
@@ -195,7 +195,7 @@ locals CARD
 IF
     " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
-( Remove this bit later ) nowspace endString truncate
+( Remove this bit later ) noWSpace endString truncate
 PmultipleInstruction
 operationEnd -blanks AZ^
 operation-declarations SWAP AZ^
