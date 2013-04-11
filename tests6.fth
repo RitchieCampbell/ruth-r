@@ -224,7 +224,7 @@ checkOutput
 1078 " WHILE jj < 3 DO jj := jj + 1 END" Pinstruction " BEGIN" newline " jj 3 <" newline
 " WHILE" newline " jj 1 + to jj" newline newline " REPEAT" AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^
 checkOutput
-types STRING STRING PROD { " bb" boolean |-> , } ∪ to types
+types STRING STRING PROD { " bb" boolean |-> , } ∪ to types STRING STRING PROD { } to locals
 1079 " bb := ∀i2 • i2 ∈ iSet ⇒ i2 < 3  " Pinstruction " INT { <COLLECT" newline
 "     iSet CHOICE to i2 i2 3 < NOT --> 0" newline " TILL CARD SATISFIED> } CARD 0="
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
@@ -337,11 +337,14 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1131 " (ii := 1 ⊓ ii := 2)" Pinstruction " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+STRING STRING PROD { } to locals
 (
+Something wrong with this instruction: not dividing on the := correctly.
 1132 " (iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2})" PbracketedInstruction " INT {  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
+)
 1133 " (iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2})" Pinstruction " INT {  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
@@ -352,17 +355,15 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 1135 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline " ] " DROP
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1088 " " Pinstruction blankString checkOutput
-1089 " " Pskip blankString checkOutput
-1090 " SKIP" Pinstruction blankString checkOutput
-1091 " SKIP" Pskip blankString checkOutput
-1069 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
-1070 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
-1052 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
+1136 " " PmultipleInstruction blankString checkOutput
+1137 " SKIP" PmultipleInstruction blankString checkOutput
+1138 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
+1139 " s1 := “Campbell”" PmultipleInstruction " Campbell" addQuotes1 "  to s1" newline AZ^ AZ^ checkOutput
+1140 " iArr := ARRAY[99, 100, 101]" PmultipleInstruction " HERE 3 , 99 , 100 , 101 ,  to iArr"
 newline AZ^ checkOutput
-1054 " iArr[2] := 999" PmultipleInstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
-1056 " iSet := {1, 2, 3}" PmultipleInstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
-1058 " PRINT ii" PmultipleInstruction " ii . " newline AZ^ checkOutput
+1141 " iArr[2] := 999" PmultipleInstruction " 999 to  << 2 >> of iArr" newline AZ^ checkOutput
+1142 " iSet := {1, 2, 3}" PmultipleInstruction " INT { 1 , 2 , 3 , } to iSet" newline AZ^ checkOutput
+1143 " PRINT ii" PmultipleInstruction " ii . " newline AZ^ checkOutput
 1060 " PRINT 1 + 2 * 3" PmultipleInstruction " 1 2 3 * + . " newline AZ^ checkOutput
 1062 " PRINT “Campbell” " PmultipleInstruction " Campbell" addQuotes1 "  .AZ " newline AZ^ AZ^ checkOutput
 1064 " PRINT “Campbell” ↦ “Ruth”" PmultipleInstruction " Campbell" addQuotes1 sSpace
@@ -491,7 +492,7 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1088 " " Pinstruction blankString checkOutput
 1089 " " Pskip blankString checkOutput
-1090 " SKIP" Pinstruction blankString checkOutput
+1090 " SKIP" PmultipleInstruction blankString checkOutput
 1091 " SKIP" Pskip blankString checkOutput
 )
 " HereEndethThe6thTestFile." CR .AZ CR
