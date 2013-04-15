@@ -137,7 +137,7 @@ THEN
     Adds operationInputs # to operationBody and completes operationStack with
     (: :)
 )
-return-seq rsplit
+returnSeq rsplit
 IF ( "i INT, s STRING ← foo (f FLOAT, b BOO)" if not = no return values )
     SWAP Preturnvalues      ( Return values to global variable )
 ELSE
@@ -178,7 +178,7 @@ blankString to operationStack
 blankString to operationName
 blankString to operation-declarations
 STRING STRING PROD { } to locals ( Empty the "locals" relation )
-def-seq rsplit 0=
+defSeq rsplit 0=
 IF
     ." Operation without ≙ " ABORT
 THEN
