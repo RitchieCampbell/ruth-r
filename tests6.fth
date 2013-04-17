@@ -338,20 +338,14 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1131 " (ii := 1 ⊓ ii := 2)" Pinstruction " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 STRING STRING PROD { } to locals
-(
-Something wrong with this instruction: not dividing on the := correctly.
-Needs ugly hack: add [ { } ] to startKeywords and endKeywords and spaces after
-{ and before }.
-Suggested solution: consider adding bracket-seeking function to Pchoice.
-)
-1132 " (iSet := { ii := 1 ⊓ ii := 2 ♢ ii * 2 })" PbracketedInstruction " INT {  <RUN <CHOICE"
+1132 " (iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2})" PbracketedInstruction " INT {  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1133 " (iSet := { ii := 1 ⊓ ii := 2 ♢ ii * 2 })" Pinstruction " INT {  <RUN <CHOICE"
+1133 " (iSet := {ii := 1 ⊓ ii := 2 ♢ ii * 2})" Pinstruction " INT {  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1134 " iSeq := [ ii := 1 ⊓ ii := 2 ∇ ii * 2 ]" PbracketedInstruction " INT [  <RUN <CHOICE"
+1134 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" PbracketedInstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1135 " iSeq := [ii := 1 ⊓ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"

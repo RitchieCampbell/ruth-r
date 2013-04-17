@@ -181,9 +181,9 @@ INT { 9 , 10 , 11 , 12 , 13 , 32 , } CONSTANT whitespace
 whitespace INT { 0 , CHAR ; , } ∪ CONSTANT whitespace0;
 ( 0009 = HT tab \t, 000A(10) = LF new line \n, 000B(11) = VT 000C(12) = FF,
 000D(13) = CR, 0020(32) = space )
-STRING [ while , " IF" , " (" , " {" , " [" , ] CONSTANT startKeywords
-STRING [ while , " IF" , " (" , " ≙" , variables , " {" , " [" , ] CONSTANT startKeywords2
-STRING [ endString , " )" , " }" , " ]" , ] CONSTANT endKeywords
+STRING [ while , " IF" , " (" , ] CONSTANT startKeywords
+STRING [ while , " IF" , " (" , " ≙" , variables , ] CONSTANT startKeywords2
+STRING [ endString , " )" , ] CONSTANT endKeywords
 (
     Preceding 3 sets include brackets and words which can begin or end a block,
     eg WHILE . . . DO . . . END.
@@ -3359,7 +3359,7 @@ WHILE
         current token whitespace followed-by? AND ( . . . followed by wspace )
         IF
             current string >
-           IF
+            IF
                 current 1- head alphanumeric IN NOT
                 IF                      ( . . . and not preceded by alphanum. )
                     end-count 1+ to end-count
@@ -3375,9 +3375,9 @@ WHILE
     IF  ( Skip over all parts in quotes. )
         current stringEndFinder to current
     THEN
-    current C@ [CHAR] ( =
+    current C@ bracket-chars DOM IN
     IF  ( Skip all text in brackets )
-        current [CHAR] ( [CHAR] ) close-bracket-finder to current
+        current DUP C@ bracket-chars OVER APPLY close-bracket-finder to current
     THEN
     0 to count
     BEGIN
