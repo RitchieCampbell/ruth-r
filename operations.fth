@@ -110,7 +110,7 @@ NIP
 " <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
 " ⊓" CONSTANT choiceString
-"  [] " CONSTANT sq-brackets ( Note leading and trailing spaces )
+"  [] " CONSTANT sqBrackets ( Note leading and trailing spaces )
 lQuote myAZLength CONSTANT lQuoteLength
 rQuote myAZLength CONSTANT rQuoteLength
 " SKIP" CONSTANT skip
@@ -1677,14 +1677,14 @@ guard-string ROT newline AZ^ AZ^ AZ^
     " i 1 - to i" "<CHOICE i 1 + to i [] i 2 + to i CHOICE>" []_ returns
     "<CHOICE i 1 - to i [] i 1 + to i [] i 2 + to i CHOICE>"
     [] associates to the right. Does not throw any error messages.
-    Uses the choice< "<CHOICE ", choice> " CHOICE>" and sq-brackets " [] "
+    Uses the choice< "<CHOICE ", choice> " CHOICE>" and sqBrackets " [] "
     strings, which are global variables.
 )
 choice< OVER prefix? ( Already a choice: take <CHOICE off start )
 IF 
-    choice< decapitate choice< ROT sq-brackets AZ^ AZ^ SWAP AZ^
+    choice< decapitate choice< ROT sqBrackets AZ^ AZ^ SWAP AZ^
 ELSE ( Not already choice: Add both <CHOICE and CHOICE> )
-    choice< ROT sq-brackets AZ^ AZ^ SWAP choice> AZ^ AZ^
+    choice< ROT sqBrackets AZ^ AZ^ SWAP choice> AZ^ AZ^
 THEN
 ;
 
