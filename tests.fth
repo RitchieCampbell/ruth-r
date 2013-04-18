@@ -95,16 +95,16 @@ STRING STRING PROD { " i123" int |->$,$ , " f1" float |->$,$ , } types ∪ to ty
 69 " foo2"  Pid " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 70 " foo2"  Pexpression " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 71 " i123"        Patom " i123" int              checkOutputAndType
-72 " iArr[2]"    Patom SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-73 " iArr[1 + 2 * 3]"    Patom SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-74 " iArr[2]"    Parray SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-75 " iArr[1 + 2 * 3]"    Parray SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-76 " iArr[2]"    Parith SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-77 " iArr[1 + 2 * 3]"    Parith SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-78 " iArr[2]"    ParithExp SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-79 " iArr[1 + 2 * 3]"    ParithExp SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-80 " iArr[2]"    Pexpression SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-81 " iArr[1 + 2 * 3]"    Pexpression SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+72 " iArr[2]"    Patom SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+73 " iArr[1 + 2 * 3]"    Patom SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+74 " iArr[2]"    Parray SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+75 " iArr[1 + 2 * 3]"    Parray SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+76 " iArr[2]"    Parith SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+77 " iArr[1 + 2 * 3]"    Parith SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+78 " iArr[2]"    ParithExp SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+79 " iArr[1 + 2 * 3]"    ParithExp SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+80 " iArr[2]"    Pexpression SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+81 " iArr[1 + 2 * 3]"    Pexpression SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
 82 " iArr"    Pid " iArr" " INT ARRAY"          checkOutputAndType
 83 " iArr"    Patom " iArr" " INT ARRAY"        checkOutputAndType
 84 " iArr"    Parith " iArr" " INT ARRAY"       checkOutputAndType
@@ -192,14 +192,14 @@ DROP 102 (_ " 1, 2, 3" Plist " foo" )_ " 1 2 3 foo" " foo" checkOutputAndType
 165 " (foo2)"  Patom " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 166 " (foo2)"  Pexpression " foo2" " INT1 INT2 INT3 # foofoo baa" checkOutputAndType
 167 " (i123)"        Patom " i123" int              checkOutputAndType
-168 " (iArr[2])"     Patom SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-169 " (iArr[1 + 2 * 3])"    Patom SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-170 " (iArr[2])"     Parith SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-171 " (iArr[1 + 2 * 3])"    Parith SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-172 " (iArr[2])"     ParithExp SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-173 " (iArr[1 + 2 * 3])"    ParithExp SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
-174 " (iArr[2])"     Pexpression SWAP nowspace SWAP " << 2 >> of iArr" int checkOutputAndType
-175 " iArr[1 + 2 * 3]"    Pexpression SWAP nowspace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+168 " (iArr[2])"     Patom SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+169 " (iArr[1 + 2 * 3])"    Patom SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+170 " (iArr[2])"     Parith SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+171 " (iArr[1 + 2 * 3])"    Parith SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+172 " (iArr[2])"     ParithExp SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+173 " (iArr[1 + 2 * 3])"    ParithExp SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
+174 " (iArr[2])"     Pexpression SWAP noWSpace SWAP " << 2 >> of iArr" int checkOutputAndType
+175 " iArr[1 + 2 * 3]"    Pexpression SWAP noWSpace SWAP " << 1 2 3 * + >> of iArr" int checkOutputAndType
 176 " (iArr)"       Patom " iArr" " INT ARRAY"        checkOutputAndType
 177 " (iArr)"       Parith " iArr" " INT ARRAY"       checkOutputAndType
 178 " (iArr)"       ParithExp " iArr" " INT ARRAY"    checkOutputAndType

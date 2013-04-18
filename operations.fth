@@ -109,7 +109,7 @@ NIP
 "  to " CONSTANT to_     ( Note has additional leading space )
 " <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
-" ⊓" CONSTANT choiceString
+" ▯" CONSTANT choiceString
 "  [] " CONSTANT sqBrackets ( Note leading and trailing spaces )
 lQuote myAZLength CONSTANT lQuoteLength
 rQuote myAZLength CONSTANT rQuoteLength
@@ -241,7 +241,7 @@ STRING [ " :=" , " :∈" , ] CONSTANT assignment
 STRING [ " THEN" , ] CONSTANT thenOps
 STRING [ " ELSE" , ] CONSTANT elseOps
 STRING [ " ;" , ] CONSTANT sequence ( instructions separated by ; )
-STRING [ choiceString , ] CONSTANT choice ( instructions separated by ⊓  )
+STRING [ choiceString , ] CONSTANT choice ( instructions separated by ▯  )
 STRING [ guard-string , " →" , ] CONSTANT guard
 " ×" CONSTANT times        ( For creating pair types with the × operator )
 STRING [ times , ] CONSTANT timesSq
@@ -5685,7 +5685,7 @@ THEN
 
 : P ( : Pdiamond ) ( s -- s1 s2 )
 (
-    Where s is in the format "i := 1 ⊓ i := 2 ♢ i + 1" and the output is the
+    Where s is in the format "i := 1 ▯ i := 2 ♢ i + 1" and the output is the
     postfix form "INT {  <RUN <CHOICE 1 to i [] 2 to i CHOICE> i 1 + RUN> }" and
     the type "INT POW". Uses the ♢_ operation, which returns the type of the
     expression plus POW as its type, and the S and E parts of the input string
@@ -5938,18 +5938,18 @@ THEN
 
 : Pchoice ( s -- s1 )
 (
-    Takes a String and splits it on the ⊓ choice operator ([] not used: may be
+    Takes a String and splits it on the ▯ choice operator ([] not used: may be
     needed for arrays), which is right-associative, with rsplitForBlocks. If
     the operator is found, the left string is parsed as a guard and the parser
     recursively parses the right string. If no operator is found, the right
     substring is nonsense amnd discarded and the whole string is regarded as a
     guard.
     If it is necessary to reassemble the postfix string, calls the []_ word.
-    Example: "i := i + 1 ⊓ i := i + 2" gives this postfix:
+    Example: "i := i + 1 ▯ i := i + 2" gives this postfix:
     "<CHOICE i 1 + to i [] i 2 + to i CHOICE>"
 )
 choice startKeywords endKeywords rsplitForBlocks
-IF ( ⊓ operator found )
+IF ( ▯ operator found )
     PUSH Pguard ( Left = guard )
     POP RECURSE []_ ( Right parsed and added with []_ operation )
 ELSE
@@ -5958,9 +5958,9 @@ THEN ;
 
 : Pchoice2 ( s -- s1 )
 (
-    As above, but uses the []_ operation. Splits string on ⊓ choice operator,
+    As above, but uses the []_ operation. Splits string on ▯ choice operator,
     parsing left as if guard and recursing on right (if found). For example,
-    "i := i + 1 ⊓  i := i + 2" becomes "i 1 + to i" "i 2 + to i" []_ with quotes
+    "i := i + 1 ▯  i := i + 2" becomes "i 1 + to i" "i 2 + to i" []_ with quotes
     (and new lines). The []_ operation can be called, which converts it to the 
     full FORTH postfix.
 )
