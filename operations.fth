@@ -212,7 +212,8 @@ INT { CHAR e , CHAR . , } CONSTANT e-dot
     syntax requires the high precedence operations be declared first.
 )
 STRING [ " +" , " -" , ] CONSTANT plusminus
-STRING [ " *" , " /" , ] CONSTANT timesdivide
+: % MOD ;
+STRING [ " *" , " /" , " %" , ] CONSTANT timesdivide
 STRING [ " -" , ] CONSTANT uminus
 STRING [ " >" , " <" , " ≤" , " ≥" , ] CONSTANT ineq
 STRING [ " :/" , " :" , " ∈" , " ∉" , " =!" , " =/" , " =" , " ≠" , ]
@@ -1032,20 +1033,7 @@ startString string
 : check-type-int ( s1 s2 -- )
 (
     Where s1 is the operator/array index and s2 the type, which ought to be int.
-    If not, error messagepublic class Foo
-{
-   private Foo f;
-
-   public Foo()
-   {
-      f = new Foo();
-   }
-
-   public static void main(String[] args)
-   {
-      new Foo();
-   }
-}
+    If not, error message
 )
 noWSpace DUP int stringEq
 IF
@@ -1102,8 +1090,6 @@ lValue sSpace rValue sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
 ;
 
 : addSubtract ( s1 s2 s3 s4 s5 -- ss1 ss2 )
-    ( As with all arithmetic operations, this must be changed to incorporate )
-    ( floating-point numbers as well as INTs )
     (: lValue lType rValue rType operator :)
     operator lType rType check-types-for-arithmetic
     lType float stringEq rType float stringEq OR
