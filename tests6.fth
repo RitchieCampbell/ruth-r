@@ -498,6 +498,7 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 1214 " i2 := 87 + 65 * 43 % 21" Passignment " 87 65 43 * 21 % + to i2" AZN^ checkOutput
 1215 " i2 := 87 + 65 * 43 % 21" Pinstruction " 87 65 43 * 21 % + to i2" AZN^ checkOutput
 1216 " (i2 := i; ii := i)  ▯ (i2 := i + 1; ii := i + 1); PRINT i2 + ii" PmultipleInstruction
-" <CHOICE" AZN^ " i to i2" AZN
+" <CHOICE" AZN^ " i to i2" AZN^^ AZN^ " i to ii" AZN^^ AZN^ "  [] i 1 + to i2" AZN^^ AZN^
+" i 1 + to ii" AZN^^ AZN^ "  CHOICE>" AZN^^ AZN^ " i2 ii + . " AZN^^ AZN^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
