@@ -492,7 +492,7 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 1206 " SKIP" Pskip blankString checkOutput
 1207 " 1 + 2 * 3 % 4" Pexpression " 1 2 3 * 4 % +" int checkOutputAndType
 1208 " 1 + 2 * 3 % 4" Parith " 1 2 3 * 4 % +" int checkOutputAndType
-1209 " 12 + 3 3 % 4" Pinstruction " 1 2 3 * 4 % + to i2" AZN^ checkOutput
+1209 " i2 := 1 + 2 * 3 % 4" Pinstruction " 1 2 3 * 4 % + to i2" AZN^ checkOutput
 1212 " i2 := 1 + 2 * 3 % 4" Passignment " 1 2 3 * 4 % + to i2" AZN^ checkOutput
 1213 " i2 := 1 + 2 * 3 % 4" PmultipleInstruction " 1 2 3 * 4 % + to i2" AZN^ checkOutput
 1214 " i2 := 87 + 65 * 43 % 21" Passignment " 87 65 43 * 21 % + to i2" AZN^ checkOutput
