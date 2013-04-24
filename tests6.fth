@@ -30,6 +30,21 @@ ELSE
     ." . at test No " .
 THEN ;
 
+: stringComparer ( s1 s2 -- .. ) ( Displays difference between 2 strings )
+2DUP myAZLength SWAP myAZLength <>
+IF
+    ." Lengths differ: " OVER myAZLength . ."  and " DUP myAZLength . CR
+THEN
+BEGIN
+    DUP head
+WHILE
+    DUP head PUSH OVER head POP = NOT
+    IF
+        OVER head EMIT ."   and  " DUP head EMIT ."  at " DUP . CR
+    THEN
+    1+ SWAP 1+ SWAP 
+REPEAT 2DROP ;
+
 STRING STRING PROD { } to constants ( empty relation to avoid collisions )
 1001 " CONSTANTS i 123 END " Pconstants " 123 VALUE i" newline AZ^ checkOutput
 1002 " CONSTANTS s  “Campbell” END " Pconstants " Campbell" addQuotes1
@@ -500,5 +515,28 @@ newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 1216 " (i2 := i; ii := i)  ▯ (i2 := i + 1; ii := i + 1); PRINT i2 + ii" PmultipleInstruction
 " <CHOICE" AZN^ " i to i2" AZN^^ AZN^ " i to ii" AZN^^ AZN^ "  [] i 1 + to i2" AZN^^ AZN^
 " i 1 + to ii" AZN^^ AZN^ "  CHOICE>" AZN^^ AZN^ " i2 ii + . " AZN^^ AZN^ checkOutput
+1217 " i2 := i; ii := i ▯ i2 := i + 1; ii := i + 1; PRINT i2 + ii" PmultipleInstruction
+" i to i2" AZN^ AZN^ " <CHOICE" AZN^^ " i to ii" AZN^^ "  [] i 1 + to i2" AZN^^
+"  CHOICE>" AZN^ AZN^^ " i 1 + to ii" AZN^^ AZN^ " i2 ii + . " AZN^^ AZN^ AZN^ AZN^
+checkOutput
+1218 " ii := 123; ii < 100 → PRINT ii" PmultipleInstruction " 123 to ii" AZN^ AZN^
+" ii 100 < --> ii . " AZN^^ AZN^ AZN^ checkOutput
+1219 " ii := 123; ii < 100 → PRINT ii ▯ PRINT “Campbell”" PmultipleInstruction
+" 123 to ii" AZN^ AZN^ " <CHOICE" AZN^^
+" ii 100 < --> ii . " AZN^^ AZN^ "  [] " AZ^ " Campbell" addQuotes1 "  .AZ " AZ^
+AZN^^ "  CHOICE>" AZN^^ AZN^ checkOutput
+1220 " ii := 2 ▯ ii := 3" Pchoice " <CHOICE" AZN^ " 2 to ii" AZN^^ "  [] 3 to ii"
+AZN^^ "  CHOICE>" AZN^^ checkOutput
+1221 " ii := 2 ▯ ii := 3" PmultipleInstruction " <CHOICE" AZN^ " 2 to ii" AZN^^
+"  [] 3 to ii" AZN^^ "  CHOICE>" AZN^^ checkOutput
+1222 " ii < 3 → ii := 4" Pguard " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
+1223 " ii < 3 → ii := 4" Pchoice " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
+1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
+L functions.fth ( may be redundant )
+STRING STRING PROD { } to types
+" j INT ← factorial(i INT) \def  IF i = 0 THEN j := 1 ELSE j := i * factorial(i - 1) END END"
+Poperation " : factorial (: i :)" AZN^ " 0 VALUE j" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
+" 1 to j" AZN AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to j" AZN^ AZN^^ " THEN" AZN^^
+" j" AZN^^ " ;" AZ^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
