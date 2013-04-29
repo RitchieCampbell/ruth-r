@@ -534,9 +534,9 @@ AZN^^ "  CHOICE>" AZN^^ checkOutput
 1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 L functions.fth ( may be redundant )
 STRING STRING PROD { } to types
-" j INT ← factorial(i INT) \def  IF i = 0 THEN j := 1 ELSE j := i * factorial(i - 1) END END"
+1225 " j INT ← factorial(i INT) \def  IF i = 0 THEN j := 1 ELSE j := i * factorial(i - 1) END END"
 Poperation " : factorial (: i :)" AZN^ " 0 VALUE j" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
-" 1 to j" AZN AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to j" AZN^ AZN^^ " THEN" AZN^^
-" j" AZN^^ " ;" AZ^ checkOutput
+" 1 to j" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to j" AZN^ AZN^^ " THEN" AZN^^
+" j" AZN^^ " ;" AZN^^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR

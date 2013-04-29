@@ -2311,11 +2311,12 @@ THEN
 )
 STRING INT PROD
 {
-    " ⁀"  ' ⁀_ |->$,I  , " ^"   ' ^_ |->$,I ,
-    " ▷-" '  ▷-_ |->$,I , " ▷"   ' ▷_ |->$,I ,
-    " ←"  '  ←_ |->$,I  , " ↓"   ' ↓_ |->$,I ,
-    " ↑"  '  ↑_ |->$,I  , " ="   ' =_ |->$,I , 
-    " =/" '  ≠_ |->$,I  , " ≠"   ' ≠_ |->$,I , 
+    " ⁀"  ' ⁀_  |->$,I , " ^"   ' ^_  |->$,I ,
+    " ▷-" ' ▷-_ |->$,I , " ▷"   ' ▷_  |->$,I ,
+    " ←"  ' ←_  |->$,I , " ↓"   ' ↓_  |->$,I ,
+    " ↑"  ' ↑_  |->$,I , " ="   ' =_  |->$,I , 
+    " =/" ' ≠_  |->$,I , " ≠"   ' ≠_  |->$,I , 
+    " :=" ' :=_ |->$,I , " :∈"  ' :∈_ |->$,I ,
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
@@ -5677,7 +5678,7 @@ THEN
     expression plus POW as its type, and the S and E parts of the input string
     with type, {}, and RUN tags added.
     Splits a string on the ♢ operator, into an expression parsed with Pequiv on
-    the right, and a substitution/son the left.
+    the right, not quantifications, and substitutions on the left.
     Note the ♢ operator is not associative and can only be used once in an
     expression, so it can be split on with the rsplit operation. It has a lower
     precedence than the := to its left and returns a bunch, but RVM_FORTH does
@@ -5848,22 +5849,22 @@ NULL OP Pguard NULL OP Pguard2
 (
     Where s is in the format "i := 1 + 2 * 3" or similar and s1 its postfix
     representation, ie "1 2 3 * + to i". Splits the string input on the :=
-    to form three parts. Calls Pid on the left operand and Pexpression on the
-    right, then uses :=_ to test that the types are correct, and convert the two
-    parts into a single expression.
+    to form three parts. Calls Pleftvalue on the left operand and Pexpressionlist
+    on the right, then uses :=_ to test that the types are correct, and convert
+    the two parts into a single expression. Supports multiple assignments.
 )
 assignment rsplit
-0=
+DUP 0=
 IF ( No operator found: must be expression; change to Pfunction later )
-    DROP Pexpression whitespace stringconsists? NOT
+    2DROP Pexpression whitespace stringconsists? NOT
     IF  ( If "return type" not empty, will incorrectly leave value on stack. )
         ." Passed expression/function returning a value to an instruction:" CR
         ." Only null return permitted here." ABORT
     THEN
 ELSE
-    PUSH Pleftvalue ( Left operand is an identifier/identifiers )
+    PUSH PUSH Pleftvalue ( Left operand is an identifier/identifiers )
     POP Pexpressionlist ( Right operand is an expression/expressions )
-    :=_
+    operationSwaps POP APPLY EXECUTE
 THEN ;
 
 : Ploop ( s -- s1 )
@@ -5924,11 +5925,11 @@ THEN
 
 : Pchoice ( s -- s1 )
 (
-    Takes a String and splits it on the ▯ choice operator ([] not used: may be
-    needed for arrays), which is right-associative, with rsplitForBlocks. If
+    Takes a String and splits it on the ▯ choice operator; [] not used: may be
+    needed for arrays, which is right-associative, with rsplitForBlocks. If
     the operator is found, the left string is parsed as a guard and the parser
     recursively parses the right string. If no operator is found, the right
-    substring is nonsense amnd discarded and the whole string is regarded as a
+    substring is nonsense and discarded and the whole string is regarded as a
     guard.
     If it is necessary to reassemble the postfix string, calls the []_ word.
     Example: "i := i + 1 ▯ i := i + 2" gives this postfix:
@@ -5936,7 +5937,7 @@ THEN
 )
 choice startKeywords endKeywords rsplitForBlocks
 IF ( ▯ operator found )
-    PUSH Pguard ( Left = guard )
+    PUSH RECURSE ( Left = choice or guard )
     POP RECURSE []_ ( Right parsed and added with []_ operation )
 ELSE
     DROP Pguard ( No operator: right = nonsense [deleted], left = guard )
@@ -6070,7 +6071,7 @@ THEN
    respective parsers, otherwise assumed to be an assignment.
    Instructions in round brackets () to have their brackets stripped; they may
    be multiple instructions.
-)
+) ( Can be refactored with wspaceSplit and a relation to function pointers. )
 noWSpace DUP
 " PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
 IF
