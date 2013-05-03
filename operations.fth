@@ -5702,7 +5702,7 @@ THEN ; ' P to Pdiamond
 ( Where s is an expression string, and this calls the other parsers and )
 ( operator functions to return s1 which is the string in postfix for FORTH and )
 ( s2 which is the type string. )
-Pquantified
+Pdiamond
 ;
 
 ' P to Pexpression
