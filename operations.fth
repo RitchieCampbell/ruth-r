@@ -211,9 +211,9 @@ INT { CHAR e , CHAR . , } CONSTANT e-dot
     shown and handled after the low precedence operators, but the RVM FORTH
     syntax requires the high precedence operations be declared first.
 )
-STRING [ " +" , " -" , ] CONSTANT plusminus
+STRING [ " +" , " -" , ] CONSTANT plusMinus
 : % MOD ;
-STRING [ " *" , " /" , " %" , ] CONSTANT timesdivide
+STRING [ " *" , " /" , " %" , ] CONSTANT timesDivide
 STRING [ " -" , ] CONSTANT uminus
 STRING [ " >" , " <" , " ≤" , " ≥" , ] CONSTANT ineq
 STRING [ " :/" , " :" , " ∈" , " ∉" , " =!" , " =/" , " =" , " ≠" , ]
@@ -232,7 +232,7 @@ STRING [ " ^" , " ⁀" , " ←" , " ↑" , " ↓" , ]
         CONSTANT rangeRestriction2 ( for taking ▷- ▷ out of sequence use )
 : ▷- |>> ;
 ( Have to define & use ▷- rather than -▷, otherwise you always find ▷ first )
-STRING [ dots , ] CONSTANT dots-seq
+STRING [ dots , ] CONSTANT dotsSeq
 STRING [ " #" , ] CONSTANT hash
 STRING [ " e-" , " e" , ] CONSTANT e-minus
 STRING [ " ." , ] CONSTANT dot
@@ -2581,12 +2581,12 @@ string end op
  a close round bracket. If any other character precedes the minus, it is a
  sign-change operator which needs to be parsed differently. Obviously this
  operation can be used for other Jekyll-and-Hyde operators mutandis mutatis.
- Usage: text plusminus antecedents " -" lsplit-for-minus.
+ Usage: text plusMinus antecedents " -" lsplit-for-minus.
  Similar to the ordinary lsplit operation with the additional check for the
  operator, and which character [whitespace excepted] precedes it.
  Note that if the op value on the stack is null = 0, the value below it must
  be regarded as a nonsense value and deleted from the stack.
- Typical usage: (text) plusminus antecedents " -" lsplit-for-minus
+ Typical usage: (text) plusMinus antecedents " -" lsplit-for-minus
 )
 ( string seq set minus: already on stack ) 0 0 0 0 ( 8 values now on stack )
 (: string seq set minus end op count size :)
@@ -2836,6 +2836,7 @@ ELSE
 THEN ;
 
 NULL OP Pdiamond ( used in Patom, defined 3000 lines below! )
+NULL OP Psequence NULL OP Psequence2 NULL OP Pset
 
 : Patom ( s -- s1 s2 )
 (
@@ -2883,35 +2884,11 @@ ELSE
                     ELSE    ( Ripe for refactoring with [] function: duplicate code should be in Psequence or Pset )
                         DUP head [CHAR] [ =
                         IF
-                            [CHAR] [ [CHAR] ] bracketRemover
-                            " ♢" OVER isSubstringOf?
-                            IF   ( Can't nest S♢E inside [] or S∇E )
-                                ." Error: Expression " CR .AZ
-                                ."  contains ♢ inside [...]"
-                                ABORT
-                            THEN
-                            " ∇" OVER isSubstringOf?
-                            IF   ( Preferential choice with ∇ in )
-                                Pdiamond
-                            ELSE ( Ordinary sequence )
-                                PUSH [_ POP Plist ]_
-                            THEN
-                        ELSE    ( refactor as above with Pset, moving NULL OP Pset earlier )
+                            Psequence
+                        ELSE
                             DUP head [CHAR] { =
                             IF
-                                [CHAR] { [CHAR] } bracketRemover
-                                " ∇" OVER isSubstringOf?
-                                IF   ( Can't nest S∇E inside S♢E )
-                                    ." Error: Expression " CR .AZ
-                                    ."  contains ∇ inside {...}"
-                                    ABORT
-                                THEN
-                                " ♢" OVER isSubstringOf?
-                                IF   ( An S ♢ E expression )
-                                    Pdiamond
-                                ELSE ( An ordinary set )
-                                    PUSH {_ POP Plist }_
-                                THEN
+                                Pset
                             ELSE
                                 lQuote OVER prefix?
                                 IF
@@ -3035,7 +3012,7 @@ THEN
 "  << " SWAP "  >> of " AZ^ AZ^ ROT AZ^ SWAP ( <<i>>-of-arrString outputType )
 ;
 
-: split-for-arrays ( s1 -- s2 s3 )
+: splitForArrays ( s1 -- s2 s3 )
 (
     Where s1 is an array-type expression eg "arr[1]" and the output is the
     first part and the index. Can accept multiple indices. For example,
@@ -3055,9 +3032,9 @@ DUP endaz [CHAR] [ [CHAR] ] openBracketFinder 0 OVER C! 1+ " ]" truncate
     its type "foo". Uses the array_ operation recursively like this
     "arr" "foo ARRAY ARRAY ARRAY" "1" array_ "2" array_ "3" array_ →
     "<< 3 >> of << 2 >> of << 1 >> of arr" "foo".
-    Splits on [ with the split-for-arrays operation.
+    Splits on [ with the splitForArrays operation.
 )
-( arr[1] ) split-for-arrays    ( arr    1 )
+( arr[1] ) splitForArrays    ( arr    1 )
 OVER [CHAR] [ stringcontainschar? ( Recurse to the left if arr2[1] on left )
 IF
     PUSH RECURSE POP array_
@@ -3146,7 +3123,7 @@ ELSE
 THEN
 ;
 
-: rsplit-for-uminus ( s seq -- s1 s2 s3 )
+: rSplitForUminus ( s seq -- s1 s2 s3 )
 (
     Where s is an input string, eg "-123" "-123.45" "-123.45e67" "123.45e-67" or
     "-123.45e-67" or similar, which is split on the strings in the seq, eg
@@ -3178,7 +3155,7 @@ THEN
 op
 ;
 
-: rsplit-for-keywords ( s  s1 -- s2 s3 s1 )
+: rSplitForKeywords ( s  s1 -- s2 s3 s1 )
 (
     Where s is a string of the form "i < 3 THEN i := i + 1" and s1 a keyword eg
     "THEN" sought. Finds the keyword, preceded and followed by whitespace, but
@@ -3216,7 +3193,7 @@ POP IF DROP NULL THEN
 ( If TRUE on US, failed to find keyword, so leave NULL as error marker )
 ;
 
-: rsplit-for-keywords2
+: rSplitForKeywords2
 (
     Similar to rsplitForBlocks, but splits around a single keyword, eg ELSE,
     which must be a separate word from the rest of the code (unlike operators,
@@ -3225,7 +3202,7 @@ POP IF DROP NULL THEN
     finds the sought token. For example
     "IF j > 4 THEN i := 99 ELSE i := 1 END ELSE i := 0" is the THEN part of an
     IF-THEN but can itself split on the second ELSE. Typical usage:
-    <text above> "ELSE" startKeywords endKeywords rsplit-for-keywords2, which
+    <text above> "ELSE" startKeywords endKeywords rSplitForKeywords2, which
     returns "IF j > 4 THEN i := 99 ELSE i := 1 END " " i := 0" "ELSE", spaces
     retained as shown.
 )
@@ -3419,7 +3396,7 @@ op ;
     This version only accepts something already presumed to be an arithmetical
     expression
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP ParithAtom2
@@ -3440,7 +3417,7 @@ THEN
     " 33 -1 *" and " INT". The sign-change operator is right-associative and
     unary.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP ParithAtom
@@ -3460,7 +3437,7 @@ THEN
     operations, which may throw errors.
     Uses rsplit because sign-change - is a right-associative unary operator.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 0=
 IF
     DROP Patom2
@@ -3478,7 +3455,7 @@ THEN
     "3 -1 *" and type eg "INT". The sign-change operator is a right-associative
     unary operator.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP Patom
@@ -3496,7 +3473,7 @@ THEN
  expression is followed by its type. The left part from the
  lsplit is parsed resursively.
 )
-timesdivide lsplit
+timesDivide lsplit
 DUP 0=
 IF
     2DROP Puminus
@@ -3511,7 +3488,7 @@ THEN
 : Pterm2 ( s -- s1 )
 (
     Where s is in the form 123 * 456 or similar, and the String is split with
-    timesdivide and the lsplit operation. Assuming an operator is found, the
+    timesDivide and the lsplit operation. Assuming an operator is found, the
     left subexpression recurses, the right subexpression is passed to the next
     parser (Puminus2) and the whole lot is catenated with the operator to form a
     String in this format: " 123" " INT" " 456" " INT" *_ which is later passed
@@ -3519,7 +3496,7 @@ THEN
     If no operator, the right subexpression and operator are dropped as nonsense
     and the left subexpression passed to Puminus2.
 )
-timesdivide lsplit
+timesDivide lsplit
 DUP 0=
 IF
 ( left subexpression to next parser: returns two strings catenated with quotes )
@@ -3543,7 +3520,7 @@ THEN
     operator is found, the expression must be arithmetical, so the arithmetic
     parsers are used.
 )
-timesdivide lsplit
+timesDivide lsplit
 DUP 0=
 IF
     2DROP PuminusExp
@@ -3567,7 +3544,7 @@ THEN
     no operator is found, this might be a unary minus expression or something
     else, so it is parsed further accordingly.
 )
-timesdivide lsplit
+timesDivide lsplit
 ( If no operator, string-nonsense-null. If operator, left-right-operator left )
 DUP 0=
 IF
@@ -3579,7 +3556,7 @@ ELSE
 THEN
 ;
 
-: lsplit-for-minus-and-float ( s seq set op-string set2 set3 c -- s1 s2 op )
+: lsplitForMinusAndFloat ( s seq set op-string set2 set3 c -- s1 s2 op )
 (
  s is a string in the form "a + b" and seq is a sequence of strings
  eg  ["+", "-"], s1 is the string as far as the operator, s2 after it, and op
@@ -3602,8 +3579,8 @@ THEN
  Note that if the op value on the stack is null = 0, the value below it must
  be regarded as a nonsense value and deleted from the stack.
  Typical usage:
- (text) plusminus antecedents " -" digits0. letter CHAR e
- lsplit-for-minus-and-float
+ (text) plusMinus antecedents " -" digits0. letter CHAR e
+ lsplitForMinusAndFloat
 )
 (: string seq set minus float-contents letters e-char :)
 0 0 0 0 VALUE op VALUE count VALUE backtrack VALUE count2
@@ -3671,7 +3648,7 @@ THEN
 string end op
 ;
 
-: P ( to be redefined as Parith ) ( s -- s1 s2 )
+: P ( : Parith ) ( s -- s1 s2 )
 (
     Where s is the original string, eg "a + b" and s1 the string converted to
     postfix notation and s2 the type, returned from parsers farther down the
@@ -3681,8 +3658,8 @@ string end op
     operand to the next parser (Pterm) and returns the postfix representation
     of the expression.
 )
-plusminus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+plusMinus antecedents " -" digits0. letter [CHAR] e
+lsplitForMinusAndFloat
 DUP 0=
 IF
     2DROP Pterm
@@ -3694,10 +3671,9 @@ ELSE
 THEN
 ;
 
-
 ' P to Parith
 
-: P ( to be redefined as Parith2 ) ( s -- s1 )
+: P ( : Parith2 ) ( s -- s1 )
 (
     Where s is in the form i + j and s1 " i" " INT" " j" " INT" +_ which can be
     fed later and produces error messages at that stage.
@@ -3705,8 +3681,8 @@ THEN
     otherwise recurses on the left subexpression and passes the right substring
     to Pterm2, and catenates with the operator
 )
-plusminus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+plusMinus antecedents " -" digits0. letter [CHAR] e
+lsplitForMinusAndFloat
 ( Distinguish subtraction minus from sign-change minus from negative exponent )
 DUP 0=
 IF
@@ -3732,8 +3708,8 @@ THEN
     operand is used; this is passed to PtermExp2 as a term or another sort of
     expression.
 )
-plusminus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+plusMinus antecedents " -" digits0. letter [CHAR] e
+lsplitForMinusAndFloat
 ( Distinguishes subtraction minus from sign-change minus and negative exponent )
 DUP 0=
 IF
@@ -3760,8 +3736,8 @@ THEN
     Differs from Parith only in that Parith "knows" it has an arithmetic sub-
     expression passed to it.
 )
-plusminus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+plusMinus antecedents " -" digits0. letter [CHAR] e
+lsplitForMinusAndFloat
 ( Distinguishes subtraction minus from sign-change minus and negative exponent )
 DUP 0=
 IF
@@ -3781,7 +3757,7 @@ THEN
     Splits with rsplit; .. is non-associative. Returns "123 234 .." using the
     .._ operation, which tests the types, and also returns the type "INT POW".
 )
-dots-seq rsplit
+dotsSeq rsplit
 IF
 ( Operator is found. Note this operator only has two operands; can't recurse )
     PUSH Parith POP Parith
@@ -3790,8 +3766,6 @@ ELSE
     DROP ParithExp
 THEN
 ;
-
-NULL OP Pset
 
 : PenumeratedSet ( s -- s1 s2 )
 (
@@ -3802,7 +3776,7 @@ NULL OP Pset
     Differs from PenumeratedExp only in that one knows the expression represent
     a set before reaching this stage of parsing.
 )
-dots-seq rsplit
+dotsSeq rsplit
 IF
 ( Operator is found. Note this operator only has two operands; can't recurse )
     PUSH Parith POP Parith
@@ -3964,9 +3938,6 @@ ELSE ( If we have got here it should be in the format {i, j, k} )
 THEN
 ;
 
-NULL OP Psequence
-NULL OP Psequence2
-
 : PrangeRestrictedSeq ( s -- s2 t2 )
 (
     Where s is a string in a format like
@@ -4079,18 +4050,9 @@ REPEAT
 DUP head [CHAR] [ =
 IF
     [CHAR] [ [CHAR] ] bracketRemover2 ( Remove []: should be refactored )
-    diamondString OVER isSubstringOf?
-    IF ( S♢E nested inside [] = error )
-        ." Error: expression " CR .AZ ."  contains ♢ inside [...]" ABORT
-    THEN
-    nablaString OVER isSubstringOf?
-    IF
-        Pdiamond
-    ELSE
-        PUSH [_ POP      ( Put [ [ null below present text )
-        Plist            ( Parse remaining text as list )
-        ]_ 
-    THEN
+    PUSH [_ POP      ( Put [ [ null below present text )
+    Plist            ( Parse remaining text as list )
+    ]_ 
 ELSE
     DUP letter stringbegins?
     IF
@@ -4174,7 +4136,7 @@ ELSE
                 THEN
             THEN
         ELSE ( Doesn't start with { or letters with or without () )
-            dots-seq rsplit
+            dotsSeq rsplit
             IF
                 PUSH Parith POP Parith .._
             ELSE
@@ -5501,7 +5463,7 @@ newline AZ^ boolean
     adding only false values, or true resultant set adding true values after ∃
     represents success.
 )
-( " ∀x • x ∈ iset ⇒ x < 0" )
+( " ∀x • x ∈ iset ⇒ x < 0" ) .S
 noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
 IF
     bulletSeq rsplit 0=
@@ -5685,11 +5647,14 @@ THEN
     not support bunches, so it must be converted to a set by being enclosed in
     {} braces in the original code. This whole expression therefore returns a
     set, which can be assigned, etc. The equivalent for preferential choice uses
-    the ∇ operator and must be enclosed in square brackets [] in the code, to
-    denote it returns a sequence rather than a bunch. Both these versions are
-    handled by the ♢_ operation.
+    the ∇ operator and must be enclosed in round brackets in the code, to
+    maintain precedences of := operators. Both these versions are handled by the
+    ♢_ operation.
     This operation should only be called from inside Patom or similar.
 )
+( Change: if starts with { use clone string, strip {} check for ♢, if so split,
+  if nothing found is ordinary set. Maybe better called from inside Pset.
+  If ∇ found, should not start with any sort of brackets. )
 diamond rsplit DUP 
 IF  
     PUSH PUSH PmultipleInstruction POP Pequiv POP ♢_ 
@@ -6189,7 +6154,7 @@ NULL OP Pprod NULL OP Pprodforarguments
     adding it to user-types, checks whether it is in declared-user-types. If not
     error message sent. (User-defined types not yet implemented.)
 )
-noWSpace powSeq rsplit-for-uminus
+noWSpace powSeq rSplitForUminus
 IF
     NIP noWSpace DUP head [CHAR] ( = NOT
     IF
@@ -6209,12 +6174,12 @@ THEN
 : Ppow ( s1 -- s2 )
 (
     Splits on the ℙ operator: a type which is a member of ℙ(foo) is a set of foo
-    Uses the rsplit-for-uminus operation; like the sign-change operator, this is
+    Uses the rSplitForUminus operation; like the sign-change operator, this is
     a right-associative unary operator, which must be followed by its type in ()
     The () mean ℙ has a higher precedence than ×, which must be put in the ()
     Anything in () is passed back to the Pprod operation
 )
-noWSpace powSeq rsplit-for-uminus
+noWSpace powSeq rSplitForUminus
 IF
     NIP noWSpace DUP head [CHAR] ( = NOT
     IF
@@ -6403,7 +6368,7 @@ IF
     DUP variables whitespace followed-by?
     IF
         variables decapitate
-        endString rsplit-for-keywords 0= ( END missing = error )
+        endString rSplitForKeywords 0= ( END missing = error )
         IF
             ." VARIABLES without END error" ABORT
         ELSE
@@ -6488,7 +6453,7 @@ IF
     DUP constantsString whitespace followed-by?
     IF
         constantsString decapitate
-        endString rsplit-for-keywords 0= ( no "END" found = error )
+        endString rSplitForKeywords 0= ( no "END" found = error )
         IF
             ." CONSTANTS without END error." ABORT
         ELSE

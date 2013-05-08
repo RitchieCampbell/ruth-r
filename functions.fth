@@ -185,7 +185,7 @@ THEN
 SWAP Poperationheader
 -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
 IF
-    endString rsplit-for-keywords 0=
+    endString rSplitForKeywords 0=
     IF
         ." VARIABLES without END error." ABORT
     THEN
