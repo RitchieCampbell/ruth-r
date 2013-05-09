@@ -64,7 +64,7 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 841 " ¬({false} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 842 " ¬{false} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 843 " ¬{false} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-844 " {¬(true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+844 " (¬{true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 845 " ¬({true} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 846 " ¬{true} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 847 " ¬{true} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
@@ -149,9 +149,8 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
 899 " (“(¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT ¬ " boolean AZ^ AZ^ AZ^
+" (¬(Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
-." Line 900 follows." CR
 900 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
@@ -206,7 +205,7 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 948 " ¬b" Pexpression         " b ¬"     boolean checkOutputAndType
 949 " ¬b" Pboolean            " b ¬"     boolean checkOutputAndType
-950 " ¬b" Patom               " b ¬"     boolean checkOutputAndType
+( 950 " ¬b" Patom " b ¬" boolean checkOutputAndType removed as not an atom )
 types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ to types
 951 " ¬flag(1, 2, 3)" Pexpression " 1 2 3 flag ¬" boolean checkOutputAndType
 952 " ¬flag(1, 2, 3)" Pboolean " 1 2 3 flag ¬" boolean checkOutputAndType
@@ -283,6 +282,7 @@ AZ^ " INT POW" checkOutputAndType
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
+(
 997 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pexpression SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
@@ -299,5 +299,6 @@ AZ^ " INT INT PROD POW" checkOutputAndType
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
 AZ^ " INT INT PROD POW" checkOutputAndType
+)
 
 CR " HereEndethThe5thTestFile" .AZ CR

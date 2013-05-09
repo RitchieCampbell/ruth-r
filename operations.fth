@@ -5463,7 +5463,7 @@ newline AZ^ boolean
     adding only false values, or true resultant set adding true values after ∃
     represents success.
 )
-( " ∀x • x ∈ iset ⇒ x < 0" ) .S
+( " ∀x • x ∈ iset ⇒ x < 0" )
 noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
 IF
     bulletSeq rsplit 0=
