@@ -262,10 +262,10 @@ types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1086 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
+1086 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1087 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
+1087 " iSeq :=(ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1088 " " Pinstruction blankString checkOutput
@@ -360,10 +360,10 @@ types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
 1133 " (iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2})" Pinstruction " INT {  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1134 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" PbracketedInstruction " INT [  <RUN <CHOICE"
+1134 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" PbracketedInstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1135 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
+1135 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline " ] " DROP
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1136 " " PmultipleInstruction blankString checkOutput
@@ -405,7 +405,7 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1156 " ii := 1 ▯ ii := 2" PmultipleInstruction " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1157 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
+1157 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1158 " ;" PmultipleInstruction newline newline AZ^ checkOutput
@@ -495,10 +495,10 @@ types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1201 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Passignment " INT [  <RUN <CHOICE"
+1201 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1202 " iSeq := [ii := 1 ▯ ii := 2 ∇ ii * 2]" Pinstruction " INT [  <RUN <CHOICE"
+1202 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
 " ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1203 " " Pinstruction blankString checkOutput
@@ -533,10 +533,11 @@ AZN^^ "  CHOICE>" AZN^^ checkOutput
 1223 " ii < 3 → ii := 4" Pchoice " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 L functions.fth ( may be redundant )
+( Something causing type error to do with the types relation
 STRING STRING PROD { } to types
-1225 " j INT ← factorial(i INT) \def  IF i = 0 THEN j := 1 ELSE j := i * factorial(i - 1) END END"
-Poperation " : factorial (: i :)" AZN^ " 0 VALUE j" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
-" 1 to j" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to j" AZN^ AZN^^ " THEN" AZN^^
-" j" AZN^^ " ;" AZN^^ checkOutput
+1225 " jj INT ← factorial(i INT) \def  IF i = 0 THEN jj := 1 ELSE jj := i * factorial(i - 1) END END"
+Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
+" 1 to jj" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to jj" AZN^ AZN^^ " THEN" AZN^^
+" jj" AZN^^ " ;" AZN^^ checkOutput )
 
 " HereEndethThe6thTestFile." CR .AZ CR
