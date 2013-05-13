@@ -533,11 +533,10 @@ AZN^^ "  CHOICE>" AZN^^ checkOutput
 1223 " ii < 3 → ii := 4" Pchoice " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 L functions.fth ( may be redundant )
-( Something causing type error to do with the types relation
-STRING STRING PROD { } to types
-1225 " jj INT ← factorial(i INT) \def  IF i = 0 THEN jj := 1 ELSE jj := i * factorial(i - 1) END END"
+STRING STRING PROD { " factorial" " INT # INT" |->$,$ , } to types
+1225 " jj INT ← factorial(i INT) ≙ IF i = 0 THEN jj := 1 ELSE jj := i * factorial(i - 1) END END"
 Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
 " 1 to jj" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to jj" AZN^ AZN^^ " THEN" AZN^^
-" jj" AZN^^ " ;" AZN^^ checkOutput )
+" jj" AZN^^ " ;" AZN^^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
