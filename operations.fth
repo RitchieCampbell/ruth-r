@@ -2214,23 +2214,27 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     " (" blankString NULL
 ;
 
-: ♢_ ( sub exp type op -- S♢E_exp type2 )
+: ∇_ ( sub exp type -- S∇E_exp type2 )
+(
+    Returns the S∇E postfix formed from the substitution and expression entered.
+    The type returned is the expression's type plus "POW"; there is no
+    restriction on types permitted. The only operator acceptable is "∇", so the
+    "diamond" sequence mustn't contain anything but  "♢" & "∇".
+) 
+(: sub exp type :)
+type "  [ <RUN " sub exp "  RUN> ] " AZ^ AZ^ AZ^ AZ^
+int sSpace type "  PROD POW" AZ^ AZ^ AZ^ ;
+
+: ♢_ ( sub exp type -- S♢E_exp type2 )
 (
     Returns the S♢E postfix formed from the substitution and expression entered.
     The type returned is the expression's type plus "POW"; there is no
-    restriction on types permitted. The only operators acceptable are "♢" & "∇",
-    so the "diamond" sequence mustn't contain anything else.
+    restriction on types permitted. The only operator acceptable is "♢", so the
+    "diamond" sequence mustn't contain anything but  "♢" & "∇".
 ) 
-(: sub exp type op :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
-op " ♢" stringEq
-IF      ( diamond found )
-    "  { " to obracket "  } " to cbracket type "  POW" AZ^ to type-out
-ELSE    ( nabla found )
-    "  [ " to obracket "  ] " to cbracket
-    int sSpace type "  PROD POW" AZ^ AZ^ AZ^ to type-out
-THEN 
-type obracket "  <RUN " sub exp "  RUN> " cbracket AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ 
-type-out ;
+(: sub exp type :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
+type "  { <RUN " sub exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ AZ^ 
+type "  POW" AZ^ ;
 
 : :=_ ( s1 s2 s3 s4 -- ss )
 (
@@ -5632,6 +5636,12 @@ THEN
 : P PequivBoolean2 ;
 ' P to Pboolean2
 
+: Pnabla ( s -- s1 s2 )
+(
+    Where s is any infix expression which is not an S♢E expression; those are
+    processed by Pdiamond below. If it splits with the 
+)
+
 : P ( : Pdiamond ) ( s -- s1 s2 )
 (
     Where s is in the format "i := 1 ▯ i := 2 ♢ i + 1" and the output is the
@@ -5657,7 +5667,7 @@ THEN
   If ∇ found, should not start with any sort of brackets. )
 diamond rsplit DUP 
 IF  
-    PUSH PUSH PmultipleInstruction POP Pequiv POP ♢_ 
+    PUSH PUSH PmultipleInstruction POP Pequiv POP DROP ♢_ 
 ELSE
     2DROP Pquantified
 THEN ; ' P to Pdiamond
