@@ -254,20 +254,20 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1083 " ii := 1 ▯ ii := 2" Pchoice " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1084 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Passignment " INT {  <RUN <CHOICE"
+1084 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Passignment " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1085 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Pinstruction " INT {  <RUN <CHOICE"
+1085 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Pinstruction " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1086 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
+1086 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1087 " iSeq :=(ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1087 " iSeq :=(ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1088 " " Pinstruction blankString checkOutput
 1089 " " Pskip blankString checkOutput
 1090 " SKIP" Pinstruction blankString checkOutput
@@ -353,19 +353,19 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1131 " (ii := 1 ▯ ii := 2)" Pinstruction " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 STRING STRING PROD { } to locals
-1132 " (iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2})" PbracketedInstruction " INT {  <RUN <CHOICE"
+1132 " (iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2})" PbracketedInstruction " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1133 " (iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2})" Pinstruction " INT {  <RUN <CHOICE"
+1133 " (iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2})" Pinstruction " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1134 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" PbracketedInstruction " INT [  <RUN <CHOICE"
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1134 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" PbracketedInstruction " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1135 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1135 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline " ] " DROP
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1136 " " PmultipleInstruction blankString checkOutput
 1137 " SKIP" PmultipleInstruction blankString checkOutput
 1138 " ii := 123" PmultipleInstruction " 123 to ii" newline AZ^ checkOutput
@@ -405,9 +405,9 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1156 " ii := 1 ▯ ii := 2" PmultipleInstruction " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1157 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
+1157 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1158 " ;" PmultipleInstruction newline newline AZ^ checkOutput
 1159 " SKIP" PmultipleInstruction blankString checkOutput
 1160 " ii := 123" Passignment " 123 to ii" newline AZ^ checkOutput
@@ -487,20 +487,20 @@ newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 newline "  to bb" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1198 " ii := 1 ▯ ii := 2" Pchoice " <CHOICE" newline " 1 to ii" newline
 "  [] 2 to ii" newline "  CHOICE>" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1199 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Passignment " INT {  <RUN <CHOICE"
+1199 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Passignment " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1200 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Pinstruction " INT {  <RUN <CHOICE"
+1200 " iSet := {ii := 1 ▯ ii := 2 ♢ ii * 2}" Pinstruction " INT { <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> }  to iSet" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 types STRING STRING PROD POW { " iSeq" " INT INT PROD POW" |-> , }  ∪ to types
-1201 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [  <RUN <CHOICE"
+1201 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Passignment " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
-1202 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [  <RUN <CHOICE"
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+1202 " iSeq := (ii := 1 ▯ ii := 2 ∇ ii * 2)" Pinstruction " INT [ <RUN <CHOICE"
 newline " 1 to ii" newline "  [] 2 to ii" newline "  CHOICE>" newline
-" ii 2 * RUN>  ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
+" ii 2 * RUN> ]  to iSeq" newline AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ checkOutput
 1203 " " Pinstruction blankString checkOutput
 1204 " " Pskip blankString checkOutput
 1205 " SKIP" PmultipleInstruction blankString checkOutput

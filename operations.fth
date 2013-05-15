@@ -2231,9 +2231,9 @@ int sSpace type "  PROD POW" AZ^ AZ^ AZ^ ;
     The type returned is the expression's type plus "POW"; there is no
     restriction on types permitted. The only operator acceptable is "♢", so the
     "diamond" sequence mustn't contain anything but  "♢" & "∇".
-) 
+)
 (: sub exp type :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
-type "  { <RUN " sub exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ AZ^ 
+type "  { <RUN " sub exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ 
 type "  POW" AZ^ ;
 
 : :=_ ( s1 s2 s3 s4 -- ss )
@@ -2321,6 +2321,7 @@ STRING INT PROD
     " ↑"  ' ↑_  |->$,I , " ="   ' =_  |->$,I , 
     " =/" ' ≠_  |->$,I , " ≠"   ' ≠_  |->$,I , 
     " :=" ' :=_ |->$,I , " :∈"  ' :∈_ |->$,I ,
+    " ∇"  ' ∇_  |->$,I , " ♢"   ' ♢_  |->$,I ,
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
@@ -4107,17 +4108,13 @@ noWSpace
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracketRemover2 ( Remove {} ) ( Can be refactored )
-    nablaString OVER isSubstringOf?
-    IF  ( Error having ∇ inside {} )
-        ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
-    THEN
-    diamondString OVER isSubstringOf?
+    DUP CLONE-STRING comma rsplit NIP NIP
     IF
-        Pdiamond
+        PUSH {_ POP         ( Put { { null underneath present text )
+        Plist               ( Parse present text )
+        }_                  ( Terminate with } and type )
     ELSE
-    PUSH {_ POP         ( Put { { null underneath present text )
-    Plist               ( Parse present text )
-    }_                  ( Terminate with } and type )
+        Pdiamond
     THEN
 ELSE
     DUP
@@ -5636,12 +5633,6 @@ THEN
 : P PequivBoolean2 ;
 ' P to Pboolean2
 
-: Pnabla ( s -- s1 s2 )
-(
-    Where s is any infix expression which is not an S♢E expression; those are
-    processed by Pdiamond below. If it splits with the 
-)
-
 : P ( : Pdiamond ) ( s -- s1 s2 )
 (
     Where s is in the format "i := 1 ▯ i := 2 ♢ i + 1" and the output is the
@@ -5667,7 +5658,7 @@ THEN
   If ∇ found, should not start with any sort of brackets. )
 diamond rsplit DUP 
 IF  
-    PUSH PUSH PmultipleInstruction POP Pequiv POP DROP ♢_ 
+    PUSH PUSH PmultipleInstruction POP Pequiv operationSwaps POP APPLY EXECUTE 
 ELSE
     2DROP Pquantified
 THEN ; ' P to Pdiamond
