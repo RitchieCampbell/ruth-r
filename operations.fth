@@ -4108,13 +4108,15 @@ noWSpace
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracketRemover2 ( Remove {} ) ( Can be refactored )
-    DUP CLONE-STRING comma rsplit NIP NIP
+    DUP CLONE-STRING comma rsplit NIP 0=
+    SWAP diamond 1 APPLY OVER isSubstringOf?
+    diamond 2 APPLY ROT isSubstringOf? OR AND
     IF
+        Pdiamond
+    ELSE
         PUSH {_ POP         ( Put { { null underneath present text )
         Plist               ( Parse present text )
         }_                  ( Terminate with } and type )
-    ELSE
-        Pdiamond
     THEN
 ELSE
     DUP
