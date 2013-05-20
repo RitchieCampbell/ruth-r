@@ -196,13 +196,13 @@ IF
     " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
 ( Remove this bit later ) noWSpace endString truncate
+( Put this operation's type into the types relation, so it can be called later )
+STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 PmultipleInstruction
 operationEnd -blanks AZ^
 operation-declarations SWAP AZ^
 operationStack SWAP AZ^
 " : " operationName sSpace AZ^ AZ^ SWAP AZ^
-( Put this operation's type into the types relation, so it can be called later )
-STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 ;
 
 (
