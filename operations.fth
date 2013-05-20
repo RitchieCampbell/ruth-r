@@ -124,7 +124,7 @@ rQuote myAZLength CONSTANT rQuoteLength
 sSpace VALUE operationName
 
 ( this types set only for testing purposes: to be removed later )
-STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
+STRING STRING PROD { ( " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " k" " INT" |-> , " iset" " INT POW" |-> ,
                      " Middlesbrough" " team" |-> , " Sunderland" " team" |-> ,
                      " Leeds" " team" |-> , " b" boolean |-> ,
@@ -139,7 +139,7 @@ STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " upper" " INT POW" |-> ,
                      " arr" " foo ARRAY" |-> ,
                      " arrr" " foo ARRAY ARRAY" |-> ,
-                     " factorial" " INT # INT" |-> ,
+                     " factorial" " INT # INT" |-> , )
                    }
 VALUE types ( Any declared [global] variables with their types )
 STRING STRING PROD { }
