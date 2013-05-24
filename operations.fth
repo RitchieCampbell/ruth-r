@@ -124,7 +124,7 @@ rQuote myAZLength CONSTANT rQuoteLength
 sSpace VALUE operationName
 
 ( this types set only for testing purposes: to be removed later )
-STRING STRING PROD { ( " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
+STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " k" " INT" |-> , " iset" " INT POW" |-> ,
                      " Middlesbrough" " team" |-> , " Sunderland" " team" |-> ,
                      " Leeds" " team" |-> , " b" boolean |-> ,
@@ -139,7 +139,7 @@ STRING STRING PROD { ( " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " upper" " INT POW" |-> ,
                      " arr" " foo ARRAY" |-> ,
                      " arrr" " foo ARRAY ARRAY" |-> ,
-                     " factorial" " INT # INT" |-> , )
+                     " factorial" " INT # INT" |-> ,
                    }
 VALUE types ( Any declared [global] variables with their types )
 STRING STRING PROD { }
@@ -664,9 +664,11 @@ NIP
 ;
 
 : Pint ( s -- s s Checks whether int, then returns s and "INT" )
-     ( Throws error if "s" not in correct format, e.g. 0123 or 123.4 )
-     ( Does not allow numbers beginning with - sign: this must be handled )
-     ( elsewhere. Special cases for 0 and 2147483648. )
+(
+    Throws error if "s" not in correct format, e.g. 0123 or 123.4. Does not
+    allow numbers beginning with - sign: this must be handled elsewhere.
+    Special cases for 0 and 2147483648.
+)
 noWSpace
 DUP DUP
 digits stringbegins?
@@ -680,7 +682,7 @@ THEN
 OVER " 2147483648" stringEq
 IF
     ." A minimum value integer, 2147483648 has been used; this will come out "
-    ." negative." 10 EMIT
+    ." negative." CR
 THEN ;
 
 NULL OP rsplit
