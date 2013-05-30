@@ -64,13 +64,14 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 841 " ¬({false} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 842 " ¬{false} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 843 " ¬{false} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-844 " (¬{true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+844 " {¬(true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 845 " ¬({true} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 846 " ¬{true} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 847 " ¬{true} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
 848 " ¬({1, 2, 3} ⊆ {4, 5, 6})" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
 849 " ¬({1, 2, 3} ⊆ {4, 5, 6})" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
 850 " ¬{1, 2, 3} ⊆ {4, 5, 6}" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
+." Line 850 follows." CR
 851 " ¬greater(  1   ,  2)" PnotBoolean " 1 2 greater ¬" boolean checkOutputAndType
 852 " (¬greater(  1   ,  2))" PbooleanAtom " 1 2 greater ¬" boolean checkOutputAndType
 853 " ¬greater(  1   ,  2)" Pnot " 1 2 greater ¬" boolean checkOutputAndType
@@ -149,8 +150,9 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
 899 " (“(¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
-" (¬(Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^ AZ^
+" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
+." Line 900 follows." CR
 900 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
@@ -202,10 +204,10 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 946 " ¬7.0 = 1 + 2 * 3" Pnot " 7.0 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 948 " ¬1.23 = 1 + 2 * 3" Pnot " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 949 " ¬7.0 = 1 + 2 * 3" PnotBoolean " 7.0 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
-947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
+947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
 948 " ¬b" Pexpression         " b ¬"     boolean checkOutputAndType
 949 " ¬b" Pboolean            " b ¬"     boolean checkOutputAndType
-( 950 " ¬b" Patom " b ¬" boolean checkOutputAndType removed as not an atom )
+950 " ¬b" Patom               " b ¬"     boolean checkOutputAndType
 types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ to types
 951 " ¬flag(1, 2, 3)" Pexpression " 1 2 3 flag ¬" boolean checkOutputAndType
 952 " ¬flag(1, 2, 3)" Pboolean " 1 2 3 flag ¬" boolean checkOutputAndType
@@ -266,39 +268,38 @@ newline AZ^ AZ^ boolean checkOutputAndType
 992 " ∃l1•l1∈iset∧l1>0" PquantifiedBoolean " INT { <COLLECT" newline AZ^
 "     iset CHOICE to l1 l1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
 newline AZ^ AZ^ boolean checkOutputAndType
+(
 993 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pexpression SWAP doubleSpaceRemover noWSpace SWAP
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
-994 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
+994 " { i := 1 ⊓ i := 2 ⊓ i := 3 ♢ i * 2 }" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
-995 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pset SWAP doubleSpaceRemover noWSpace SWAP
+995 " { i := 1 ⊓ i := 2 ⊓ i := 3 ♢ i * 2 }" Pset SWAP doubleSpaceRemover noWSpace SWAP
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
-996 " ({ i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 })" Patom SWAP doubleSpaceRemover noWSpace SWAP
+996 " ({ i := 1 ⊓ i := 2 ⊓ i := 3 ♢ i * 2 })" Patom SWAP doubleSpaceRemover noWSpace SWAP
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
-(
 997 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pexpression SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
 AZ^ " INT INT PROD POW" checkOutputAndType
-998 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
+998 " [ i := 1 ⊓ i := 2 ⊓ i := 3 ∇ i * 2 ]" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
 AZ^ " INT INT PROD POW" checkOutputAndType
-999 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pset SWAP doubleSpaceRemover noWSpace SWAP
+999 " [ i := 1 ⊓ i := 2 ⊓ i := 3 ∇ i * 2 ]" Pset SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
 AZ^ " INT INT PROD POW" checkOutputAndType
-1000 " ([ i := 1 ▯ i := 2 ▯ i := 3 ∇  i * 2 ])" Psequence SWAP doubleSpaceRemover noWSpace SWAP
+1000 " ([ i := 1 ⊓ i := 2 ⊓ i := 3 ∇  i * 2 ])" Psequence SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]" )
 AZ^ " INT INT PROD POW" checkOutputAndType
-)
 
 CR " HereEndethThe5thTestFile" .AZ CR
