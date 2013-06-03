@@ -6267,14 +6267,14 @@ THEN ;
 
 : Pargumenttype ( s -- s1 )
 (
-    Very similar to Pvariabletype except that the version of Ppow used checks the
+    Very similar to PvariableType except that the version of Ppow used checks the
     type has been declared (except INT FLOAT STRING), rather than adding to the
     list to be declared.
 )
 Pprodforarguments
 check-single-tree ;
 
-: Pvariabletype ( s -- s1 )
+: PvariableType ( s -- s1 )
 (
     Takes a variable type eg INT or ℙ(INT × STRING) and returns its postfix
     types, ie INT or INT STRING PROD POW. Passes the String to Pprod (and Ppow)
@@ -6292,7 +6292,7 @@ check-single-tree ;
     ."  passed." ABORT
 ;
 
-: Parraytypeforvariables ( s -- s1, and side-effect )
+: ParrayTypeForVariables ( s -- s1, and side-effect )
 (
     INT[3] → 3 VALUE-ARRAY to typeValue, and INT ARRAY to s1.
     Similar to below, but uses Ppow which declares type and adds it to types,
@@ -6316,7 +6316,7 @@ IF
     "  ARRAY" AZ^
 ELSE    ( No []: remaining top value on stack is nonsense value )
     0value to typeValue ( Write 0 VALUE foo )
-    Pvariabletype
+    PvariableType
 THEN
 ;
 
@@ -6371,7 +6371,7 @@ types DOM IN
 IF
     ." Variable " OVER .AZ ."  already declared as variable or constant." ABORT
 THEN
-Parraytypeforvariables
+ParrayTypeForVariables
 OVER SWAP noWSpace STRING STRING PROD { ↦ , } types ∪ to types
 typeValue SWAP newline AZ^ AZ^
 ;

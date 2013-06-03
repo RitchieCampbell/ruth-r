@@ -16,38 +16,40 @@ IF
     .AZ ."  passed." ABORT
 THEN ;
 
-: Psinglereturnvalue ( s -- )
+: PsingleReturnValue ( s -- )
 (
     Where s is in the form "i INT". Adds "i " onto operationEnd, "i ↦ INT" to
     the "locals" relation, "0 VALUE i" to operationDeclarations and "INT" to
     operationType. After several passes operationEnd might be "i s " and
     operationType "INT STRING".
 )
-wSpaceSplit noWSpace Parraytypeforvariables noWSpace
+wSpaceSplit noWSpace ParrayTypeForVariables noWSpace
 ( "i" "INT" or "set" "INT POW" or "iArray" "INT ARRAY" )
 OVER locals DOM IN
 IF
     ." Local variable " SWAP .AZ ."  declared twice: here return value." ABORT
 THEN
 SWAP test-form-for-identifier ( "INT" "i" )
+SWAP operationType sSpace AZ^ OVER AZ^ to operationType SWAP
+( ↑ Add space + 2nd value to operationType. )
 operationEnd sSpace AZ^ OVER AZ^ to operationEnd ( ""→"i " or "s"→"s i " )
 typeValue OVER AZ^ newline AZ^ operationDeclarations AZ^ to operationDeclarations
 OVER operationBody sSpace AZ^ SWAP AZ^ to operationBody
 SWAP STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
-: Preturnvalues ( s -- )
+: PreturnValues ( s -- )
 (
     Where s is like "i INT, s STRING" and operationDeclarations
     "0 VALUE i 0 VALUE s" or similar, operationEnd "s i ;" and operationType
     = output type part "INT STRING". Note opposite order.
-    The catenation is done by Psinglereturnvalue.
+    The catenation is done by PsingleReturnValue.
 )
 comma rsplit
 IF ( "i INT" "s STRING": "," removed )
-    SWAP Psinglereturnvalue RECURSE
+    SWAP PsingleReturnValue RECURSE
 ELSE    ( "i INT" null: null removed )
-    DROP Psinglereturnvalue
+    DROP PsingleReturnValue
 THEN
 ;
 
@@ -57,7 +59,7 @@ THEN
     the "locals" relation. Adds "i" to operationStack and "INT" to
     operationInputs.
 )
-wSpaceSplit noWSpace Parraytypeforvariables noWSpace
+wSpaceSplit noWSpace ParrayTypeForVariables noWSpace
 ( "i" "INT" or "set" "INT POW" or "iArr" "INT ARRAY" )
 OVER locals DOM IN
 IF
@@ -104,7 +106,7 @@ IF
     ." Local variable " SWAP .AZ ."  already declared as local variable or " CR
     ." parameter." ABORT
 THEN        ( "i" "INT" )
-Parraytypeforvariables
+ParrayTypeForVariables
 OVER SWAP noWSpace STRING STRING PROD { ↦ , } locals ∪ to locals
 typeValue SWAP newline AZ^ AZ^
 operationDeclarations SWAP AZ^ to operationDeclarations
@@ -129,17 +131,17 @@ ELSE    ( No comma, so single variable in list )
 THEN
 ;
 
-: Poperationheader ( s -- )
+: PoperationHeader ( s -- )
 (
     Where s is in the form "i INT, s STRING ← foo (f FLOAT, b BOO)" and splits
-    on the ← passing "i INT, s STRING" to Preturnvalues and "f FLOAT, b BOO" to
+    on the ← passing "i INT, s STRING" to PreturnValues and "f FLOAT, b BOO" to
     Pparameters. Passes foo to operationName.
     Adds operationInputs # to operationType and completes operationStack with
     (: :)
 )
 returnSeq rsplit
 IF ( "i INT, s STRING ← foo (f FLOAT, b BOO)" if not = no return values )
-    SWAP Preturnvalues      ( Return values to global variable )
+    SWAP PreturnValues      ( Return values to global variable )
 ELSE
     DROP                    ( No return values, so lose that bit )
 THEN                        ( Awkward way to split on brackets )
@@ -157,7 +159,7 @@ operationInputs -blanks "  #" operationType AZ^ AZ^ to operationInputs
 
 : Poperation
 (
-    split on ≙ left to Poperationheader, right to Plocalvariablelist and
+    split on ≙ left to PoperationHeader, right to Plocalvariablelist and
     PmultipleInstruction, then add ": " operationName operationStack
     operationDeclarations stack contents and operationEnd, leave whole
     operation on stack for future catenation.
@@ -182,7 +184,7 @@ defSeq rsplit 0=
 IF
     ." Operation without ≙ " ABORT
 THEN
-SWAP Poperationheader
+SWAP PoperationHeader
 -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
 IF
     endString rsplit-for-keywords 0=
@@ -197,6 +199,7 @@ IF
 THEN
 ( Remove this bit later ) noWSpace endString truncate
 ( Put this operation's type into the types relation, so it can be called later )
+." Adding " operationName .AZ ."  " operationInputs .AZ ."  ↦  to types" CR ( test )
 STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 PmultipleInstruction
 operationEnd -blanks AZ^
