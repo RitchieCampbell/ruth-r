@@ -24,10 +24,13 @@ THEN
 STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |->$,$ , }
     types ∪ to types
 804 " (¬true)" PbooleanAtom " TRUE ¬" boolean checkOutputAndType ( Moved from 812 to make number easier )
-805 " (¬greater(  1   ,  2))" Patom " 1 2 greater ¬" boolean checkOutputAndType
-806 " (¬greater(  1   ,  2))" PbooleanAtom " 1 2 greater ¬" boolean checkOutputAndType
+805 " (¬greater(  1   ,  2))" Patom " 1 2 greater ¬" boolean
+checkOutputAndType
+806 " (¬greater(  1   ,  2))" PbooleanAtom " 1 2 greater ¬" boolean
+checkOutputAndType
 807 " ¬greater(  1   ,  2)" Pboolean " 1 2 greater ¬" boolean checkOutputAndType
-808 " ¬greater(  1   ,  2)" Pexpression " 1 2 greater ¬" boolean checkOutputAndType
+808 " ¬greater(  1   ,  2)" Pexpression " 1 2 greater ¬" boolean
+checkOutputAndType
 809 " (¬TRUE)" PbooleanAtom " TRUE ¬" boolean checkOutputAndType
 810 " (¬TRUE)" Patom " TRUE ¬" boolean checkOutputAndType
 811 " ¬TRUE" Pboolean " TRUE ¬" boolean checkOutputAndType
@@ -43,37 +46,73 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 821 " (¬false)" Patom " FALSE ¬" boolean checkOutputAndType
 822 " ¬false" Pboolean " FALSE ¬" boolean checkOutputAndType
 823 " ¬false" Pexpression " FALSE ¬" boolean checkOutputAndType
-824 " ¬({false} ⊂ {false, true})" Pnot boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-825 " ¬({false} ⊂ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-826 " ¬({false} ⊂ {false, true})" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-827 " ¬({false} ⊂ {false, true})" Pexpression boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-828 " ¬({true} ⊂ {false, true})" Pexpression  boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-829 " (¬({true} ⊂ {false, true}))" PbooleanAtom boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
-830 " (¬({true} ⊂ {false, true}))" Patom boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
+824 " ¬({false} ⊂ {false, true})" Pnot boolean sSpace AZ^ " { FALSE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
+825 " ¬({false} ⊂ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^
+boolean checkOutputAndType
+826 " ¬({false} ⊂ {false, true})" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
+827 " ¬({false} ⊂ {false, true})" Pexpression boolean sSpace AZ^ " { FALSE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^
+boolean checkOutputAndType
+828 " ¬({true} ⊂ {false, true})" Pexpression  boolean sSpace AZ^ " { TRUE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^
+boolean checkOutputAndType
+829 " (¬({true} ⊂ {false, true}))" PbooleanAtom boolean sSpace AZ^ " { TRUE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^
+boolean checkOutputAndType
+830 " (¬({true} ⊂ {false, true}))" Patom boolean sSpace AZ^ " { TRUE , }" AZ^ 
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊂ ¬" AZ^ boolean checkOutputAndType
 831 " ¬“Campbell” = “Ruth”" Pexpression SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬" AZ^ AZ^ boolean checkOutputAndType ( Moved to ease numbering )
-832 " ¬({1, 2, 3} ⊂ {4, 5, 6})" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
-833 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
-834 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
-835 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pexpression int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
-836 " ¬({1, 2, 3} ⊂ 1 .. 6)" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
-837 " ¬({1, 2, 3} ⊂ 1 .. 6)" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
-838 " ¬{1, 2, 3} ⊂ 1 .. 6" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
-839 " ¬{1, 2, 3} ⊂ 1 .. 6" Pexpression int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ "  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
-840 " ¬({false} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-841 " ¬({false} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-842 " ¬{false} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-843 " ¬{false} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { FALSE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-844 " {¬(true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-845 " ¬({true} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-846 " ¬{true} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-847 " ¬{true} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { TRUE , }" AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
-848 " ¬({1, 2, 3} ⊆ {4, 5, 6})" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
-849 " ¬({1, 2, 3} ⊆ {4, 5, 6})" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
-850 " ¬{1, 2, 3} ⊆ {4, 5, 6}" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
-." Line 850 follows." CR
-851 " ¬greater(  1   ,  2)" PnotBoolean " 1 2 greater ¬" boolean checkOutputAndType
-852 " (¬greater(  1   ,  2))" PbooleanAtom " 1 2 greater ¬" boolean checkOutputAndType
+" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬" AZ^ AZ^ boolean
+checkOutputAndType ( Moved to ease numbering )
+832 " ¬({1, 2, 3} ⊂ {4, 5, 6})" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }"
+AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
+833 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
+834 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
+835 " ¬({1, 2, 3} ⊂ {4, 5, 6})" Pexpression int sSpace AZ^ " { 1 , 2 , 3 , }"
+AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊂ ¬" AZ^ boolean checkOutputAndType
+836 " ¬({1, 2, 3} ⊂ 1 .. 6)" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+"  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
+837 " ¬({1, 2, 3} ⊂ 1 .. 6)" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+"  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
+838 " ¬{1, 2, 3} ⊂ 1 .. 6" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+"  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
+839 " ¬{1, 2, 3} ⊂ 1 .. 6" Pexpression int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+"  1 6 .. ⊂ ¬" AZ^ boolean checkOutputAndType
+840 " ¬({false} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { FALSE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+841 " ¬({false} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { FALSE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^
+boolean checkOutputAndType
+842 " ¬{false} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { FALSE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+843 " ¬{false} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { FALSE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^
+boolean checkOutputAndType
+844 " (¬{true} ⊆ {false, true})" Pnot boolean sSpace AZ^ " { TRUE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+845 " ¬({true} ⊆ {false, true})" PnotBoolean boolean sSpace AZ^ " { TRUE , }"
+AZ^ sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^
+boolean checkOutputAndType
+846 " ¬{true} ⊆ {false, true}" Pboolean boolean sSpace AZ^ " { TRUE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+847 " ¬{true} ⊆ {false, true}" Pexpression boolean sSpace AZ^ " { TRUE , }" AZ^
+sSpace AZ^ boolean AZ^ "  { FALSE , TRUE , } ⊆ ¬" AZ^ boolean checkOutputAndType
+848 " ¬({1, 2, 3} ⊆ {4, 5, 6})" Pnot int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
+849 " ¬({1, 2, 3} ⊆ {4, 5, 6})" PnotBoolean int sSpace AZ^ " { 1 , 2 , 3 , }"
+AZ^ sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
+850 " ¬{1, 2, 3} ⊆ {4, 5, 6}" Pboolean int sSpace AZ^ " { 1 , 2 , 3 , }" AZ^
+sSpace AZ^ int AZ^ "  { 4 , 5 , 6 , } ⊆ ¬" AZ^ boolean checkOutputAndType
+( ." Line 850 follows." CR )
+851 " ¬greater(  1   ,  2)" PnotBoolean " 1 2 greater ¬"
+boolean checkOutputAndType
+852 " (¬greater(  1   ,  2))" PbooleanAtom " 1 2 greater ¬"
+boolean checkOutputAndType
 853 " ¬greater(  1   ,  2)" Pnot " 1 2 greater ¬" boolean checkOutputAndType
 854 " (¬TRUE)" PnotBoolean " TRUE ¬" boolean checkOutputAndType
 855 " (¬TRUE)" Pnot " TRUE ¬" boolean checkOutputAndType
@@ -97,11 +136,12 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 873 " ¬(1 = 2)" PnotBoolean    " 1 2 = ¬" boolean checkOutputAndType
 874 " (¬1 = 2)" PbooleanAtom     " 1 2 = ¬" boolean checkOutputAndType
 875 " ¬(1 = 2)" Pboolean        " 1 2 = ¬" boolean checkOutputAndType
-876 " (¬“Campbell” = “Ruth”)" Patom  SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬" AZ^ AZ^ boolean checkOutputAndType
-877 " ¬“Campbell” ≠ “Ruth” ∈ {(true), false}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT ¬ " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∈" AZ^ boolean checkOutputAndType
+876 " (¬“Campbell” = “Ruth”)" Patom  SWAP doubleSpaceRemover SWAP " Campbell"
+addQuotes1 " Ruth" addQuotes1 " stringEq ¬" AZ^ AZ^ boolean checkOutputAndType
+877 " ¬“Campbell” ≠ “Ruth” ∈ {(true), false}" PeqMemBoolean SWAP
+doubleSpaceRemover SWAP " Campbell" addQuotes1 " Ruth" addQuotes1
+" stringEq NOT ¬ " boolean AZ^ AZ^ AZ^ "  { TRUE , FALSE , } ∈" AZ^
+boolean checkOutputAndType
 878 " ¬1 = 2 ∈ {true, false}" Pexpression SWAP doubleSpaceRemover SWAP
 " 1 2 = " boolean "  { TRUE , FALSE , } ∈ ¬" AZ^ AZ^ boolean checkOutputAndType
 879 " ¬(1 = 2) ∈ {true, false}" Pexpression  SWAP doubleSpaceRemover SWAP
@@ -134,25 +174,24 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 " 1 2 = NOT " boolean "  { TRUE , FALSE , } ∈ ¬" AZ^ AZ^ boolean checkOutputAndType
 893 " ¬1 ≠ 2 ∈ {true, false}" PnotBoolean SWAP doubleSpaceRemover SWAP
 " 1 2 = NOT " boolean "  { TRUE , FALSE , } ∈ ¬" AZ^ AZ^ boolean checkOutputAndType
-894 " ¬(“Campbell” = “Ruth”) ∉ {true, false}" Pexpression SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq " boolean AZ^ AZ^ AZ^
+894 " ¬(“Campbell” = “Ruth”) ∉ {true, false}" Pexpression SWAP
+doubleSpaceRemover SWAP " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq "
+boolean AZ^ AZ^ AZ^ "  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
+895 " ¬“Campbell” ≠ “Ruth” ∉ {true, false}" Pexpression SWAP doubleSpaceRemover
+SWAP " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^
+AZ^ "  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
+896 " ¬(“Campbell” = “Ruth”) ∉ {true, false}" Pboolean SWAP doubleSpaceRemover
+SWAP " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
-895 " ¬“Campbell” ≠ “Ruth” ∉ {true, false}" Pexpression SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
-896 " ¬(“Campbell” = “Ruth”) ∉ {true, false}" Pboolean SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
-897 " ¬“Campbell” ≠ “Ruth” ∉ {true, false}" Pboolean SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
-898 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
-899 " (“(¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover SWAP
-" Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT ¬ " boolean AZ^ AZ^ AZ^
-"  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
-." Line 900 follows." CR
+897 " ¬“Campbell” ≠ “Ruth” ∉ {true, false}" Pboolean SWAP doubleSpaceRemover
+SWAP " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^ AZ^
+AZ^ "  { TRUE , FALSE , } ∉ ¬" AZ^ boolean checkOutputAndType
+898 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover
+SWAP " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^
+AZ^ "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
+899 " (“(¬(Campbell” ≠ “Ruth”) ∉ {true, false}" PeqMem SWAP doubleSpaceRemover
+SWAP " (¬(Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq NOT " boolean AZ^
+AZ^ AZ^ "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
 900 " (¬“Campbell” = “Ruth”) ∉ {true, false}" PeqMemBoolean SWAP doubleSpaceRemover SWAP
 " Campbell" addQuotes1 " Ruth" addQuotes1 " stringEq ¬ " boolean AZ^ AZ^ AZ^
 "  { TRUE , FALSE , } ∉" AZ^ boolean checkOutputAndType
@@ -204,10 +243,10 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 946 " ¬7.0 = 1 + 2 * 3" Pnot " 7.0 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 948 " ¬1.23 = 1 + 2 * 3" Pnot " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 949 " ¬7.0 = 1 + 2 * 3" PnotBoolean " 7.0 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
-947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F=" boolean checkOutputAndType
+947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 948 " ¬b" Pexpression         " b ¬"     boolean checkOutputAndType
 949 " ¬b" Pboolean            " b ¬"     boolean checkOutputAndType
-950 " ¬b" Patom               " b ¬"     boolean checkOutputAndType
+( 950 " ¬b" Patom               " b ¬"     boolean checkOutputAndType deleted as ¬b not an atom. )
 types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ to types
 951 " ¬flag(1, 2, 3)" Pexpression " 1 2 3 flag ¬" boolean checkOutputAndType
 952 " ¬flag(1, 2, 3)" Pboolean " 1 2 3 flag ¬" boolean checkOutputAndType
@@ -244,6 +283,7 @@ types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ 
 983 " ¬flag(1, 2, 3) <=> b" Pequiv " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
 984 " ¬flag(1, 2, 3) <=> b" PequivBoolean " 1 2 3 flag ¬ b ⇔" boolean checkOutputAndType
 STRING STRING PROD { } to locals
+STRING STRING PROD { " iset" " INT POW" |-> , } types ∪ to types 
 985 " ∀i•i∈iset⇒i>0" Pexpression " INT { <COLLECT" newline AZ^
 "     iset CHOICE to i i 0 > NOT --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0="
 newline AZ^ AZ^ boolean checkOutputAndType
