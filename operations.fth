@@ -6386,10 +6386,10 @@ IF
             PUSH Pvariableslist POP PmultipleInstruction AZ^
         THEN
     ELSE
-        Poperations
+        Pmultipleoperations
     THEN
 ELSE
-    Poperations
+    Pmultipleoperations
 THEN
 ;
 
