@@ -205,7 +205,7 @@ STRING STRING PROD { " greater" int sSpace AZ^ int AZ^ "  # " AZ^ boolean AZ^ |-
 947 " ¬1.23 = 1 + 2 * 3" PnotBoolean " 1.23 1 2 3 * + S>F F= ¬" boolean checkOutputAndType
 948 " ¬b" Pexpression         " b ¬"     boolean checkOutputAndType
 949 " ¬b" Pboolean            " b ¬"     boolean checkOutputAndType
-( 950 " ¬b" Patom " b ¬" boolean checkOutputAndType removed as not an atom )
+950 " PRINT" L functions.fth Pinstruction int "  CR" AZN^ int checkOutputAndType
 types STRING STRING PROD { " flag" " INT INT INT # " boolean AZ^ |->$,$ , } ∪ to types
 951 " ¬flag(1, 2, 3)" Pexpression " 1 2 3 flag ¬" boolean checkOutputAndType
 952 " ¬flag(1, 2, 3)" Pboolean " 1 2 3 flag ¬" boolean checkOutputAndType
@@ -290,15 +290,13 @@ AZ^ " INT INT PROD POW" checkOutputAndType
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
 AZ^ " INT INT PROD POW" checkOutputAndType
-999 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pset SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
-(
+999 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Psequence SWAP doubleSpaceRemover noWSpace SWAP
+" INT INT PROD POW [ INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ] , ]"
+AZ^ " INT INT INT PROD POW PROD POW" checkOutputAndType
 1000 " ([ i := 1 ▯ i := 2 ▯ i := 3 ∇  i * 2 ])" Psequence SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
-)
+" INT INT PROD POW [ INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ] , ]"
+AZ^ " INT INT INT PROD POW PROD POW" checkOutputAndType
 
 CR " HereEndethThe5thTestFile" .AZ CR

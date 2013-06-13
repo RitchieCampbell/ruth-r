@@ -6046,7 +6046,7 @@ THEN
 noWSpace DUP
 " PRINT" stringEq
 IF
-    Pcr
+    DROP Pcr
 ELSE
     DUP " PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
     IF
