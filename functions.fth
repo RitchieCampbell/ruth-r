@@ -198,6 +198,7 @@ IF
     " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
 ( Remove this bit later ) noWSpace endString truncate
+." In Poperation: text = " DUP .AZ CR ( test )
 ( Put this operation's type into the types relation, so it can be called later )
 STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 PmultipleInstruction
@@ -211,7 +212,7 @@ operationStack SWAP AZ^
 : Pmultipleoperations ( s -- s1 ) 
 sequence startKeywords2 endKeywords rsplitForBlocks 
 IF 
-    SWAP Poperation SWAP RECURSE AZ^ 
+    SWAP ( noWSpace endString truncate Poperation ) SWAP RECURSE AZ^ 
 ELSE 
     DROP Poperation 
 THEN
