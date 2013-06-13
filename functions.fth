@@ -197,7 +197,7 @@ locals CARD
 IF
     " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
-( Remove this bit later ) noWSpace endString truncate
+( Remove this bit later noWSpace endString truncate )
 ." In Poperation: text = " DUP .AZ CR ( test )
 ( Put this operation's type into the types relation, so it can be called later )
 STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
@@ -208,13 +208,13 @@ operationStack SWAP AZ^
 " : " operationName sSpace AZ^ AZ^ SWAP AZ^
 ;
 
-(
+
 : Pmultipleoperations ( s -- s1 ) 
 sequence startKeywords2 endKeywords rsplitForBlocks 
 IF 
-    SWAP ( noWSpace endString truncate Poperation ) SWAP RECURSE AZ^ 
+    SWAP noWSpace endString truncate Poperation SWAP RECURSE AZ^ 
 ELSE 
-    DROP Poperation 
+    DROP Poperation "  CR " operationName AZ^ "  CR" AZ^ AZN^^
 THEN
 ;
 (
@@ -234,5 +234,4 @@ i .
 
 ;
 ok
-
-) )
+)
