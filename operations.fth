@@ -11,7 +11,7 @@
   The operations, except for unary operators,
   all have the type comment on the next line
 
- s1 s2 s3 s4 l-operand, l-type, r-operand r-type --
+ s1 s2 s3 s4 l-operand, lType, r-operand rType --
  ss1 ss2 resultant operation string, and type string
 )
 
@@ -64,7 +64,7 @@ WHILE
 REPEAT
 1 + 0 SWAP C! ;
 
-: noBlanks ( az -- az2 with leading and trailing spaces removed )
+: noblanks ( az -- az2 with leading and trailing spaces removed )
     -blanks blanks- ;
 
 : myAZLength ( az -- n number of "real" ASCII characters )
@@ -94,7 +94,7 @@ NIP
 " "  CONSTANT blankString ( the empty String )
 " =" CONSTANT equals
 " F=" CONSTANT f-equals
-"  --> " CONSTANT guardString
+"  --> " CONSTANT guard-string
 " .." CONSTANT dots
 " 0 VALUE " CONSTANT 0value
 " , " CONSTANT commaSpace
@@ -104,12 +104,12 @@ NIP
 0value VALUE typeValue
 10 CONSTANT \n ( the line feed character, 0x0a = 10 in decimal )
 "  " \n OVER C! CONSTANT newline
-: AZN^ ( s -- s1=s with added newline ) newline AZ^ ;
-: AZN^^ ( s1 s2 -- s3=catenated with added newline ) newline AZ^ AZ^ ;
+: AZN^ ( s1 -- s1 with newline appended ) newline AZ^ ;
+: AZN^^ ( s1 s2 -- s1-s2 with newline appended ) newline AZ^ AZ^ ;
 "  to " CONSTANT to_     ( Note has additional leading space )
 " <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
-" ⊓" CONSTANT choiceString
+" ▯" CONSTANT choiceString
 "  [] " CONSTANT sqBrackets ( Note leading and trailing spaces )
 lQuote myAZLength CONSTANT lQuoteLength
 rQuote myAZLength CONSTANT rQuoteLength
@@ -119,7 +119,7 @@ rQuote myAZLength CONSTANT rQuoteLength
 " CONSTANTS" CONSTANT constantsString
 " WHILE" CONSTANT while
 " ARRAY" VALUE array
-"  VALUE " VALUE valueString ( Note leading and trailing spaces )
+"  VALUE " VALUE value-string ( Note leading and trailing spaces )
 " RECURSE" CONSTANT recurse
 sSpace VALUE operationName
 
@@ -139,14 +139,14 @@ STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " upper" " INT POW" |-> ,
                      " arr" " foo ARRAY" |-> ,
                      " arrr" " foo ARRAY ARRAY" |-> ,
-                     " factorial" " INT # INT" |-> ,
+  (                  " factorial" " INT # INT" |-> , )
                    }
 VALUE types ( Any declared [global] variables with their types )
 STRING STRING PROD { }
 VALUE locals ( Any local variables, parameters, etc with their types )
-STRING { int , string , float , } VALUE builtInTypes
-STRING { } VALUE declaredUserTypes
-STRING { } VALUE userTypes ( These three to supplement the types relation )
+STRING { int , string , float , } VALUE builtin-types
+STRING { } VALUE declared-user-types
+STRING { } VALUE user-types ( These three to supplement the types relation )
 ( User types not yet implemented, but these relations are for that purpose )
 STRING { } VALUE constants ( Any declared constants can be added in parsing )
 STRING STRING PROD { } VALUE locals ( Similar for local variables )
@@ -194,7 +194,7 @@ STRING { endString , while , " IF" , " THEN" , " ELSE" , " DO" , array ,
 ( A set of words equalling keywords. )
 
 STRING [ "  " , " ," , " (" , " +" , " -" , " *" , " /" , " >" , " =" , " <" ,
-         " ≤" , " ≥" , " =!" , " =/" , " ≠" , ] CONSTANT floatAntecedents
+         " ≤" , " ≥" , " =!" , " =/" , " ≠" , ] CONSTANT float-antecedents
 (
     Those strings which can precede the beginning of a floating-point number,
     including open bracket; a floating-point number can also be preceded by a
@@ -203,7 +203,7 @@ STRING [ "  " , " ," , " (" , " +" , " -" , " *" , " /" , " >" , " =" , " <" ,
     has to use a STRING sequence and iterate it.
 )
 INT { CHAR [ , CHAR ] , CHAR { , CHAR } , CHAR ( , CHAR ) , } CONSTANT brackets
-INT { CHAR , , } CONSTANT commaSet
+INT { CHAR , , } CONSTANT comma-set
 INT { CHAR e , CHAR . , } CONSTANT e-dot
 (
     The following sequences contain the operators which can be used by different
@@ -212,7 +212,8 @@ INT { CHAR e , CHAR . , } CONSTANT e-dot
     syntax requires the high precedence operations be declared first.
 )
 STRING [ " +" , " -" , ] CONSTANT plusMinus
-STRING [ " *" , " /" , ] CONSTANT timesDivide
+: % MOD ;
+STRING [ " *" , " /" , " %" , ] CONSTANT timesDivide
 STRING [ " -" , ] CONSTANT uminus
 STRING [ " >" , " <" , " ≤" , " ≥" , ] CONSTANT ineq
 STRING [ " :/" , " :" , " ∈" , " ∉" , " =!" , " =/" , " =" , " ≠" , ]
@@ -241,10 +242,10 @@ STRING [ " :=" , " :∈" , ] CONSTANT assignment
 STRING [ " THEN" , ] CONSTANT thenOps
 STRING [ " ELSE" , ] CONSTANT elseOps
 STRING [ " ;" , ] CONSTANT sequence ( instructions separated by ; )
-STRING [ choiceString , ] CONSTANT choice ( instructions separated by ⊓  )
-STRING [ guardString , " →" , ] CONSTANT guard
+STRING [ choiceString , ] CONSTANT choice ( instructions separated by ▯  )
+STRING [ guard-string , " →" , ] CONSTANT guard
 " ×" CONSTANT times        ( For creating pair types with the × operator )
-STRING [ times , ] CONSTANT timesSq ( !! )
+STRING [ times , ] CONSTANT timesSq
 " ℙ" CONSTANT pow          ( For creating set  types with the ℙ operator )
 STRING [ pow   , ] CONSTANT powSeq
 " ≙" CONSTANT def
@@ -256,10 +257,10 @@ STRING [ " •" , ] CONSTANT bulletSeq
 STRING [ " ⇒" , " ∧" , ] CONSTANT andImplies
 STRING [ " [" , ] CONSTANT arraySeq
 "  " CONSTANT dquote CHAR " dquote C!
-"   "  CHAR " OVER C! CONSTANT quoteSpace
+"   "  CHAR " OVER C! CONSTANT quotespace
 ( How to put a quote character 0x0022=34 into a string, with or without space. )
-" _*"  10 OVER 1+  C! CONSTANT barLine  ( String containing _ and \n character  )
-" ,_*" 10 OVER 2 + C! CONSTANT commaBar ( string containing ,_ and \n character )
+" _*"  10 OVER 1+  C! CONSTANT bar-line  ( String containing _ and \n character  )
+" ,_*" 10 OVER 2 + C! CONSTANT comma-bar ( string containing ,_ and \n character )
 (
     Mappings from a synonym string to the operator string follow:
 )
@@ -268,21 +269,21 @@ STRING STRING PROD { " :/"  " ∉" |-> , " :" " ∈" |-> , " =!" " ≠" |-> ,
     " =/" " ≠" |-> , } CONSTANT eqMemSwaps
 STRING STRING PROD { " ^" " ⁀" |-> , " <-" " ←" |-> , " /|\" " ↑" |-> ,
     " \|/" " ↓" |-> , } CONSTANT rangeRestrictionSwaps
-" *_*" \n OVER 2 + C! CONSTANT starBar
+" *_*" \n OVER 2 + C! CONSTANT star-bar
 ( Placeholder string with *_\n in; the * will be replaced by another character )
 (
     Relation linking } and }_\n, for example. Allows one to find a bracket and
     find a string with bracket, bar and \n. Can be used like this
-    bracketSwaps DUP CHAR [ APPLY "i, j, k" Plist2 AZ^ SWAP CHAR ] APPLY AZ^
+    bracket-swaps DUP CHAR [ APPLY "i, j, k" Plist2 AZ^ SWAP CHAR ] APPLY AZ^
     . . . after Plist2 is written!
 )
-INT STRING PROD { CHAR [ starBar CLONE-STRING 2DUP C! ↦ ,
-    CHAR ] starBar CLONE-STRING 2DUP C! ↦ ,
-    CHAR { starBar CLONE-STRING 2DUP C! ↦ ,
-    CHAR } starBar CLONE-STRING 2DUP C! ↦ , } CONSTANT bracketSwaps
+INT STRING PROD { CHAR [ star-bar CLONE-STRING 2DUP C! ↦ ,
+    CHAR ] star-bar CLONE-STRING 2DUP C! ↦ ,
+    CHAR { star-bar CLONE-STRING 2DUP C! ↦ ,
+    CHAR } star-bar CLONE-STRING 2DUP C! ↦ , } CONSTANT bracket-swaps
     
 INT INT PROD { CHAR [ CHAR ]  ↦ , CHAR ( CHAR )  ↦ , CHAR { CHAR }  ↦ , }
-    CONSTANT bracketChars
+    CONSTANT bracket-chars
     
 ( Used for turning an int number into a String. )
 STRING [ " 0" , " 1" , " 2" , " 3" , " 4" , " 5" , " 6" , " 7" , " 8" , " 9" , ]
@@ -305,7 +306,7 @@ blankString VALUE operationName
    NULL OP foo ... : bar ... foo ... ; : P ... ; ' P to foo
    This would necessitate an additional keyword in the language, maybe DEFERRED
 )
-blankString VALUE operationDeclarations
+blankString VALUE operation-declarations
 
 : iToAZ ( i -- s )        
 (
@@ -556,7 +557,7 @@ SWAP 1- head SWAP IN ;
 Where s is an input string and s1 has pairs of quotes (and a trailing space)
 added, eg abc becomes " abc" . See also addQuotes2, etc
 )
-quoteSpace SWAP OVER AZ^ AZ^
+quotespace SWAP OVER AZ^ AZ^
 ;
 
 : addQuotes2 ( s s1 -- s2 )
@@ -565,8 +566,8 @@ quoteSpace SWAP OVER AZ^ AZ^
     added. See also addQuotes1, etc.
     For example abc and INT becomes " abc" " INT" .
 )
-quoteSpace ROT ROT ( quoteSpace now 3rd on stack )
-quoteSpace DUP ROT ( now 2nd string top on stack )
+quotespace ROT ROT ( quotespace now 3rd on stack )
+quotespace DUP ROT ( now 2nd string top on stack )
 OVER               ( now 4 sets of quotes in appropriate locations )
 AZ^ AZ^ AZ^ AZ^ AZ^ ( catenate 5 times )
 ;
@@ -1032,20 +1033,7 @@ startString string
 : check-type-int ( s1 s2 -- )
 (
     Where s1 is the operator/array index and s2 the type, which ought to be int.
-    If not, error messagepublic class Foo
-{
-   private Foo f;
-
-   public Foo()
-   {
-      f = new Foo();
-   }
-
-   public static void main(String[] args)
-   {
-      new Foo();
-   }
-}
+    If not, error message
 )
 noWSpace DUP int stringEq
 IF
@@ -1073,20 +1061,20 @@ DROP 2DROP
     s1 is left value eg "123" s3 is right value eg "234" s2 and s4 both "INT".
     Tests correct types, then returns "123 234 .." and "INT POW".
 )
-(: l-value l-type r-value r-type :) dots l-type r-type check-types-both-int
-l-value digits0 stringconsists?
+(: lValue lType rValue rType :) dots lType rType check-types-both-int
+lValue digits0 stringconsists?
 IF
-    r-value digits0 stringconsists?
+    rValue digits0 stringconsists?
     IF
-        l-value azToI r-value azToI >
+        lValue azToI rValue azToI >
         IF  ( Don't allow 234..123 or similar )
             ." Enumerated sets must run from smaller to larger" CR
-            l-value .AZ dots .AZ r-value .AZ ."  passed."
+            lValue .AZ dots .AZ rValue .AZ ."  passed."
             ABORT
         THEN
     THEN
 THEN
-l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
+lValue sSpace rValue sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
 
 : check-types-for-arithmetic
 ( s1 s2 s3 -- Check types appropriate for arithmetic: "INT" or "FLOAT" both )
@@ -1102,113 +1090,111 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
 ;
 
 : addSubtract ( s1 s2 s3 s4 s5 -- ss1 ss2 )
-    ( As with all arithmetic operations, this must be changed to incorporate )
-    ( floating-point numbers as well as INTs )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     IF
-        r-type int stringEq
+        rType int stringEq
         IF
-            r-value StoF AZ^ to r-value
+            rValue StoF AZ^ to rValue
         ELSE
-            l-type int stringEq
+            lType int stringEq
             IF
-                l-value StoF AZ^ to l-value
+                lValue StoF AZ^ to lValue
             THEN
         THEN
         " F" operator AZ^ to operator
-        float to l-type
+        float to lType
     THEN
-    l-value sSpace AZ^ r-value AZ^ sSpace AZ^ operator AZ^ l-type
+    lValue sSpace AZ^ rValue AZ^ sSpace AZ^ operator AZ^ lType
 ;
 
 : +_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     ( This can incorporate floating-point numbers as well as INTs )
     "  +" VALUE op ( note additional space, also in F+ and S>F )
-    op l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     ( Either or both is float )
     IF
-        l-type int stringEq
+        lType int stringEq
         IF  ( Add S>F as appopriate )
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
         "  F+" to op
-        float to l-type
+        float to lType
     THEN
-    l-value sSpace AZ^ r-value AZ^ op AZ^ l-type
+    lValue sSpace AZ^ rValue AZ^ op AZ^ lType
 ;
 
 : -_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     "  -" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType noWSpace float stringEq rType noWSpace float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
-        float to l-type
+        float to lType
         "  F-" to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ op AZ^ l-type
+    lValue sSpace AZ^ rValue AZ^ op AZ^ lType
 ;
 
 : *_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     "  *" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType noWSpace float stringEq rType noWSpace float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
-        float to l-type
+        float to lType
         "  F*" to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ op AZ^ l-type
+    lValue sSpace AZ^ rValue AZ^ op AZ^ lType
 ;
 
 : /_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     ( As with all arithmetic operations, this must be changed to incorporate )
     ( floating-point numbers as well as INTs )
     "  /" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type noWSpace float stringEq r-type noWSpace float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType noWSpace float stringEq rType noWSpace float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
-        float to l-type
+        float to lType
         "  F/" to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ op AZ^ l-type
+    lValue sSpace AZ^ rValue AZ^ op AZ^ lType
 ;
 
 : multiplyDivide ( s1 s2 s3 s4 s5 -- ss1 ss2 )
@@ -1217,8 +1203,8 @@ l-value sSpace r-value sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
  must be checked, and s5 the operator. Returns a postfix substring and type, eg
  IN: "i" "INT" "j" "INT" "*": OUT: "i j *" "INT". )
     ( Since this operation is indistinguihable from addSubtract, use that! )
-(    operator l-type r-type check-types-for-arithmetic             )
-(    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ r-type )
+(    operator lType rType check-types-for-arithmetic             )
+(    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ rType )
 addSubtract
 ;
 
@@ -1261,9 +1247,9 @@ addSubtract
     Executes the tagged tree and type testing for the equivalence operator. For
     example, "x" "boolean" "y" "boolean" --> "x y ⇔" "boolean".
 )
-(: l-value l-type r-value r-type :)
-" ⇔" l-type r-type check-types-for-booleans
-l-value sSpace AZ^ r-value AZ^ "  ⇔" AZ^ l-type ;
+(: lValue lType rValue rType :)
+" ⇔" lType rType check-types-for-booleans
+lValue sSpace AZ^ rValue AZ^ "  ⇔" AZ^ lType ;
 : <=>_ ⇔_ ; ( As above operation, so that <=> can be used as a synomym for ⇔ )
 
 : ⇒_ ( s1 s2 s3 s4 -- ss1 boolean )
@@ -1271,21 +1257,21 @@ l-value sSpace AZ^ r-value AZ^ "  ⇔" AZ^ l-type ;
     Executes the tagged tree and type testing for the implies operator. For
     example, "x" "boolean" "y" "boolean" --> "x y ⇒" "boolean".
 )
-(: l-value l-type r-value r-type :)
-" ⇒" l-type r-type check-types-for-booleans   
-l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
+(: lValue lType rValue rType :)
+" ⇒" lType rType check-types-for-booleans   
+lValue sSpace AZ^ rValue AZ^ "  ⇒" AZ^ rType ;
 : =>_ ⇒_ ; ( As above operation, so that => can be used as a synomym for ⇒ )
 
 : ∧_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " ∧" l-type r-type check-types-for-booleans
-    l-value sSpace AZ^ r-value AZ^ "  ∧" AZ^ r-type
+    (: lValue lType rValue rType :)
+    " ∧" lType rType check-types-for-booleans
+    lValue sSpace AZ^ rValue AZ^ "  ∧" AZ^ rType
 ;
 
 : ∨_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " ∨" l-type r-type check-types-for-booleans
-    l-value sSpace AZ^ r-value AZ^ "  ∨" AZ^ r-type
+    (: lValue lType rValue rType :)
+    " ∨" lType rType check-types-for-booleans
+    lValue sSpace AZ^ rValue AZ^ "  ∨" AZ^ rType
 ;
 
 : andOr_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
@@ -1295,9 +1281,9 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
     and returns a postfix representation of this expression, with its type.
     eg "b" "BOO" "bb" "BOO" "∧" --> "b bb ∧" "BOO"
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-types-for-booleans
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ l-type
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-types-for-booleans
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ lType
 ;
 
 : check-type-for-not ( s1 -- Check appropriate type for unary not ¬ )
@@ -1333,24 +1319,24 @@ l-value sSpace AZ^ r-value AZ^ "  ⇒" AZ^ r-type ;
     Calls a type-testing function, check-types-for-set-membership.
     Calls the operation to add quotes if the left operand is a String.
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-types-for-set-membership
-(   l-value l-type addQuotesIfString1 to l-value )
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-types-for-set-membership
+(   lValue lType addQuotesIfString1 to lValue )
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
 ;
 
 : ∈_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
-    " ∈" l-type r-type check-types-for-set-membership
-(   l-value l-type addQuotesIfString1 to l-value )
-    l-value sSpace AZ^ r-value AZ^ "  ∈" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ∈" lType rType check-types-for-set-membership
+(   lValue lType addQuotesIfString1 to lValue )
+    lValue sSpace AZ^ rValue AZ^ "  ∈" AZ^ boolean
 ;
 
 : ∉_ ( s1 s2 s3 s4 -- ss1 "BOO2 )
-    (: l-value l-type r-value r-type :)
-    " ∉" l-type r-type check-types-for-set-membership
-(   l-value l-type addQuotesIfString1 to l-value )
-    l-value sSpace AZ^ r-value AZ^ "  ∉" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ∉" lType rType check-types-for-set-membership
+(   lValue lType addQuotesIfString1 to lValue )
+    lValue sSpace AZ^ rValue AZ^ "  ∉" AZ^ boolean
 ;
 
 : test-two-types-same ( s1 s2 s3 -- Check two types identical )
@@ -1393,37 +1379,37 @@ create all the other words required from F< and F0=. )
     Note that there PAIR= will throw a segmentation error if certain types are
     compared, eg I,I with $,$.
 )
-(: l-value l-type r-value r-type :)
+(: lValue lType rValue rType :)
 equals VALUE op
-l-type noWSpace to l-type r-type noWSpace to r-type
-l-type int stringEq r-type float stringEq AND
+lType noWSpace to lType rType noWSpace to rType
+lType int stringEq rType float stringEq AND
 IF
-    l-value StoF AZ^ to l-value float to l-type
+    lValue StoF AZ^ to lValue float to lType
     f-equals to op
 ELSE
-    l-type float stringEq r-type int stringEq AND
+    lType float stringEq rType int stringEq AND
     IF
-        r-value StoF AZ^ to r-value float to r-type
+        rValue StoF AZ^ to rValue float to rType
         f-equals to op
     ELSE    ( Lines adding quotes appear to create " " text " " )
-(        l-value l-type addQuotesIfString1 to l-value )
-(        r-value r-type addQuotesIfString1 to r-value )
-        l-type r-type stringEq NOT
+(        lValue lType addQuotesIfString1 to lValue )
+(        rValue rType addQuotesIfString1 to rValue )
+        lType rType stringEq NOT
         IF
         ELSE
-            l-type string stringEq
+            lType string stringEq
             IF
                 " stringEq" to op
             ELSE
-                l-type float stringEq
+                lType float stringEq
                 IF
                     f-equals to op
                 ELSE
-                "  PROD" l-type suffix?
+                "  PROD" lType suffix?
                     IF
                         " PAIR=" to op
                     ELSE
-                        "  POW" l-type suffix?
+                        "  POW" lType suffix?
                         IF
                             "  SET=" to op
                         THEN
@@ -1433,7 +1419,7 @@ ELSE
         THEN
     THEN
 THEN
-l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean ;
+lValue sSpace AZ^ rValue AZ^ sSpace AZ^ op AZ^ boolean ;
 
 : ≠_ ( s1 s2 s3 s4 -- ss1 "BOO" ) ( Whether the operands s1 and s3 are unequal )
     =_ SWAP "  NOT" AZ^ SWAP ( Because of multiplicity of types, use =_ NOT )
@@ -1445,102 +1431,102 @@ l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean ;
     as suitable for arithmetic), and s5 the operator eg > <.
     ss1 is the output in postfix format which is always a boolean value.
 )
-(: l-value l-type r-value r-type operator :)
-operator l-type r-type check-types-for-arithmetic
-l-type " FLOAT" stringEq r-type " FLOAT" stringEq OR
+(: lValue lType rValue rType operator :)
+operator lType rType check-types-for-arithmetic
+lType " FLOAT" stringEq rType " FLOAT" stringEq OR
 IF
     " F" operator AZ^ to operator
-    l-type " INT" stringEq
+    lType " INT" stringEq
     IF
-        l-value StoF AZ^ to l-value
+        lValue StoF AZ^ to lValue
     ELSE
-        r-type " INT" stringEq
+        rType " INT" stringEq
         IF
-            r-value StoF AZ^ to r-value
+            rValue StoF AZ^ to rValue
         THEN
     THEN
 THEN        
-l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
+lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
 ;
 
 : <_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     " <" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
         " F" op AZ^ to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean
+    lValue sSpace AZ^ rValue AZ^ sSpace AZ^ op AZ^ boolean
 ;
 
 : ≤_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     " ≤" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     IF ( See <_: this looks like a candidate for refactoring. )
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
         " F" op AZ^ to op        
     THEN
-    l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean
+    lValue sSpace AZ^ rValue AZ^ sSpace AZ^ op AZ^ boolean
 ;
 
 : >_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     " >" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
         " F" op AZ^ to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean
+    lValue sSpace AZ^ rValue AZ^ sSpace AZ^ op AZ^ boolean
 ;
 
 : ≥_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
      " ≥" VALUE op
-    op l-type r-type check-types-for-arithmetic
-    l-type float stringEq r-type float stringEq OR
+    op lType rType check-types-for-arithmetic
+    lType float stringEq rType float stringEq OR
     IF
-        l-type int stringEq
+        lType int stringEq
         IF
-            l-value StoF AZ^ to l-value
+            lValue StoF AZ^ to lValue
         ELSE
-            r-type int stringEq
+            rType int stringEq
             IF
-                r-value StoF AZ^ to r-value
+                rValue StoF AZ^ to rValue
             THEN
         THEN
         " F" op AZ^ to op
     THEN
-    l-value sSpace AZ^ r-value AZ^ sSpace AZ^ op AZ^ boolean
+    lValue sSpace AZ^ rValue AZ^ sSpace AZ^ op AZ^ boolean
 ;
 
 : check-single-tree ( s1 -- s1 Error message if not single parse tree )
@@ -1626,33 +1612,33 @@ DROP 2DROP ( empty three values from stack )
     operator. Returns the expression in postfix format and "BOO" since this
     always returns a boolean value
 )
-    (: l-value l-type r-value r-type operator :)
-    operator r-type l-type check-same-kind-set
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
+    (: lValue lType rValue rType operator :)
+    operator rType lType check-same-kind-set
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ boolean
 ;
 
 : ⊂_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
-    " ⊂" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ⊂" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ⊂" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ⊂" AZ^ boolean
 ;
 
 : ⊄_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
-    " ⊄" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ⊄" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ⊄" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ⊄" AZ^ boolean
 ;
 
 : ⊆_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
-    " ⊆" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ⊆" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ⊆" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ⊆" AZ^ boolean
 ;
 
 : ⊈_ ( s1 s2 s3 s4 -- ss1 "BOO" )
-    (: l-value l-type r-value r-type :)
-    " ⊈" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ⊈" AZ^ boolean
+    (: lValue lType rValue rType :)
+    " ⊈" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ⊈" AZ^ boolean
 ;
 
 : -->_ ( s1 s2 s3 -- s4 )
@@ -1661,8 +1647,8 @@ DROP 2DROP ( empty three values from stack )
     instruction. Tests s2 for marking as Boolean type.
     "i 3 <" "boolean" "i 1 + to i" returns "i 3 < --> i 1 + to i", for example.
 )
-ROT ROT guardString SWAP boolean check-types-for-booleans
-guardString ROT newline AZ^ AZ^ AZ^
+ROT ROT guard-string SWAP boolean check-types-for-booleans
+guard-string ROT newline AZ^ AZ^ AZ^
 ;
 ( Synonym for above ) : →_ -->_ ;
 
@@ -1769,54 +1755,54 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
 ( No need to aggregate this operation since there is only one operator with )
 ( that particular precedence. )
 : ↦_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
+    (: lValue lType rValue rType :)
     "  |->" VALUE op
-    l-type noWSpace to l-type r-type noWSpace to r-type
-    " ↦" l-type r-type check-types-not-null
-    l-type float stringEq r-type float stringEq OR
+    lType noWSpace to lType rType noWSpace to rType
+    " ↦" lType rType check-types-not-null
+    lType float stringEq rType float stringEq OR
     IF
        ." Cannot accept FLOAT as a type for pairs in the present implementation"
        ABORT
     THEN
-    l-type int stringEq
+    lType int stringEq
     IF
         op " I," AZ^ to op
     ELSE
-        l-type string stringEq
+        lType string stringEq
         IF
             op " $," AZ^ to op
         ELSE
-            "  PROD" l-type suffix?
+            "  PROD" lType suffix?
             IF
                 op " P," AZ^ to op
             ELSE
-            (   "  POW" l-type suffix?
+            (   "  POW" lType suffix?
                 IF  )
                     op " S," AZ^ to op
             (    THEN    )
             THEN
         THEN
     THEN
-    r-type int stringEq
+    rType int stringEq
     IF
         op " I" AZ^ to op
     ELSE
-        r-type string stringEq
+        rType string stringEq
         IF
             op " $" AZ^ to op
         ELSE
-            "  PROD" r-type suffix?
+            "  PROD" rType suffix?
             IF
                 op " P" AZ^ to op
             ELSE
-            (   "  POW" r-type suffix?
+            (   "  POW" rType suffix?
                 IF  )
                     op " S" AZ^ to op
             (    THEN    )
             THEN
         THEN
     THEN
-    l-value sSpace AZ^ r-value AZ^ op AZ^ l-type sSpace AZ^ r-type AZ^
+    lValue sSpace AZ^ rValue AZ^ op AZ^ lType sSpace AZ^ rType AZ^
             "  PROD" AZ^
 ;
 
@@ -1827,27 +1813,27 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
     format, and its type eg "x" "FOO POW" "y" "FOO POW" "∪" becomes
     "x y ∪" "FOO POW"
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-same-kind-set
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ l-type
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-same-kind-set
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ lType
 ;
 
 : \_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " \" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  \" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " \" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  \" AZ^ lType
 ;
 
 : ∪_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " ∪" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ∪" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " ∪" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ∪" AZ^ lType
 ;
 
 : ∩_ ( s2 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " ∩" l-type r-type check-same-kind-set
-    l-value sSpace AZ^ r-value AZ^ "  ∩" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " ∩" lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  ∩" AZ^ lType
 ;
 
 : check-same-kind-relation ( s1 s2 s3 -- Check s2+s2 same kind of relation )
@@ -1874,9 +1860,9 @@ DROP 2DROP
     DUP DOM ROT <<| ∪ ;
 
 : ⊕_ ( s1 s2 s3 s4 -- ss1 ss2 )
-    (: l-value l-type r-value r-type :)
-    " ⊕" l-type r-type check-same-kind-relation
-    l-value sSpace AZ^ r-value AZ^ "  ⊕" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " ⊕" lType rType check-same-kind-relation
+    lValue sSpace AZ^ rValue AZ^ "  ⊕" AZ^ lType
 ;
 
 : check-types-domain-restriction
@@ -1911,21 +1897,21 @@ DROP 2DROP
     type of set as ss2, eg
     "x" "foo POW" "y" "foo bar PROD POW" "◁" becomes "x y ◁" "foo bar PROD POW"
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type CLONE-STRING check-types-domain-restriction
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ r-type
+    (: lValue lType rValue rType operator :)
+    operator lType rType CLONE-STRING check-types-domain-restriction
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ rType
 ;
 
 : ◁_ ( s1 s2 s3 s4 -- ss1 ss2 ) 
-    (: l-value l-type r-value r-type :) 
-    " ◁" l-type r-type CLONE-STRING check-types-domain-restriction 
-    l-value sSpace AZ^ r-value AZ^ "  ◁" AZ^ r-type
+    (: lValue lType rValue rType :) 
+    " ◁" lType rType CLONE-STRING check-types-domain-restriction 
+    lValue sSpace AZ^ rValue AZ^ "  ◁" AZ^ rType
 ;
 
 : ◁-_ ( s1 s2 s3 s4 -- ss1 ss2 Should use \u2a65 really )
-    (: l-value l-type r-value r-type :) 
-    " ◁-" l-type r-type CLONE-STRING check-types-domain-restriction 
-    l-value sSpace AZ^ r-value AZ^ "  ◁-" AZ^ r-type
+    (: lValue lType rValue rType :) 
+    " ◁-" lType rType CLONE-STRING check-types-domain-restriction 
+    lValue sSpace AZ^ rValue AZ^ "  ◁-" AZ^ rType
 ;
 
 : ^_ ( s1 s2 s3 s4 -- ss1 ss2 )
@@ -1936,17 +1922,17 @@ DROP 2DROP
    checks that "INT" is a prefix of the types. Strings can be catenated with the
    same operation, using the AZ^ word in the output
 )
-    (: l-value l-type r-value r-type :)
-    l-type string stringEq r-type string stringEq AND
+    (: lValue lType rValue rType :)
+    lType string stringEq rType string stringEq AND
     IF
-        l-value sSpace AZ^ r-value AZ^ "  AZ^"  AZ^ l-type
+        lValue sSpace AZ^ rValue AZ^ "  AZ^"  AZ^ lType
     ELSE
-        " ^" l-type r-type check-same-kind-relation
-        intSpace l-type -blanks prefix?
+        " ^" lType rType check-same-kind-relation
+        intSpace lType -blanks prefix?
         IF
-            l-value sSpace AZ^ r-value AZ^ "  ^" AZ^ l-type
+            lValue sSpace AZ^ rValue AZ^ "  ^" AZ^ lType
         ELSE
-            ." Type error for ^ operator: should begin with INT: " l-type .AZ
+            ." Type error for ^ operator: should begin with INT: " lType .AZ
             ."  passed" ABORT
         THEN
     THEN
@@ -1986,21 +1972,21 @@ DROP 2DROP
     the postfix expression and resultant type, eg
     "x" "FOO BAR PROD POW" "y" "BAR POW" "▷" becomes "x y ▷" "FOO BAR PROD POW"
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-types-range-restriction
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ l-type
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-types-range-restriction
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ lType
 ;
 
 : ▷_ ( s1 s2 s3 s4 -- ss1 ss2 )
-   (: l-value l-type r-value r-type :) 
-   " ▷" l-type CLONE-STRING r-type CLONE-STRING check-types-range-restriction
-   l-value sSpace AZ^ r-value AZ^ "  ▷" AZ^ l-type
+   (: lValue lType rValue rType :) 
+   " ▷" lType CLONE-STRING rType CLONE-STRING check-types-range-restriction
+   lValue sSpace AZ^ rValue AZ^ "  ▷" AZ^ lType
 ;
 
 : ▷-_ ( s1 s2 s3 s4 -- ss1 ss2 )
-   (: l-value l-type r-value r-type :) 
-   " ▷-" l-type CLONE-STRING r-type CLONE-STRING check-types-range-restriction
-   l-value sSpace AZ^ r-value AZ^ "  ▷-" AZ^ l-type
+   (: lValue lType rValue rType :) 
+   " ▷-" lType CLONE-STRING rType CLONE-STRING check-types-range-restriction
+   lValue sSpace AZ^ rValue AZ^ "  ▷-" AZ^ lType
 ;
 
 : check-types-set-catenation ( s1 s2 s3 -- Whether appropriate types )
@@ -2027,13 +2013,13 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 (
     Types and other details as for ^_ Strings acceptable, using AZ^ instead of ^
 )
-    (: l-value l-type r-value r-type :)
-    l-type string stringEq r-type string stringEq AND
+    (: lValue lType rValue rType :)
+    lType string stringEq rType string stringEq AND
     IF
-        l-value sSpace AZ^ r-value AZ^ "  AZ^" AZ^ l-type
+        lValue sSpace AZ^ rValue AZ^ "  AZ^" AZ^ lType
     ELSE
-    " ⁀" l-type r-type check-types-set-catenation
-    l-value sSpace AZ^ r-value AZ^ "  ⁀" AZ^ l-type
+    " ⁀" lType rType check-types-set-catenation
+    lValue sSpace AZ^ rValue AZ^ "  ⁀" AZ^ lType
     THEN
 ;
 
@@ -2049,9 +2035,9 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
 ;
 
 : ←_ ( s1 s2 s3 s4 -- ss1 ss2 ) ( Use alt-gr-Y for ← )
-    (: l-value l-type r-value r-type :)
-    " ←" l-type r-type check-types-set-append
-    l-value sSpace AZ^ r-value AZ^ "  ←" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " ←" lType rType check-types-set-append
+    lValue sSpace AZ^ rValue AZ^ "  ←" AZ^ lType
 ;
 
 : check-types-set-truncation ( s1 s2 s3 -- Check appropriate types )
@@ -2080,23 +2066,23 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     set. For example "x" "INT FOO PROD POW" "i" "INT" "↓" returns "x i ↓" and
     "INT FOO PROD POW".
 )
-    (: l-value l-type r-value r-type operator :)
-    operator l-type r-type check-types-set-truncation
-    l-value sSpace r-value sSpace operator AZ^ AZ^ AZ^ AZ^ l-type
+    (: lValue lType rValue rType operator :)
+    operator lType rType check-types-set-truncation
+    lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ lType
 ;
 
 : ↑_ ( s1 s2 s3 s4 -- ss1 ss2 ) ( alt-gr-sft-U = ↑ )
 ( ↑ for truncation, lose the end of the sequence )
-    (: l-value l-type r-value r-type :)
-    " ↑" l-type r-type check-types-set-truncation
-    l-value sSpace AZ^ r-value AZ^ "  ↑" AZ^ l-type
+    (: lValue lType rValue rType :)
+    " ↑" lType rType check-types-set-truncation
+    lValue sSpace AZ^ rValue AZ^ "  ↑" AZ^ lType
 ;
  
 : ↓_ ( s1 s2 s3 s4 -- ss1 ss2 ) ( alt-gr-U = ↓ )
 ( ↓ for decapitation, lose the beginning of the sequence )
-     (: l-value l-type r-value r-type :)
-    " ↓" l-type r-type check-types-set-truncation
-    l-value sSpace AZ^ r-value AZ^ "  ↓" AZ^ l-type
+     (: lValue lType rValue rType :)
+    " ↓" lType rType check-types-set-truncation
+    lValue sSpace AZ^ rValue AZ^ "  ↓" AZ^ lType
 ;
 
 : test-same-bracket ( s1="[" or similar s2=ditto -- error if different )
@@ -2147,28 +2133,28 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
  round eg ( . . . ) because this is an argument list, which is output without
  commas in postfix, and many be heterogeneous.
 )
-    (: bracket l-value l-type r-value r-type :)
+    (: bracket lValue lType rValue rType :)
     bracket " (" stringEq
     IF
-        l-type
+        lType
         IF
         (
             Not null type: ie information already on stack; no need to catenate
             otherwise.
         )
-            l-type sSpace r-type AZ^ AZ^ to r-type
-            l-value sSpace r-value AZ^ AZ^ to r-value
+            lType sSpace rType AZ^ AZ^ to rType
+            lValue sSpace rValue AZ^ AZ^ to rValue
         THEN
     ELSE
-        l-type
+        lType
         ( Again not null, so there is information on stack. )
         IF
-            " ," l-type r-type check-same-types
+            " ," lType rType check-same-types
         THEN
         ( Have to catenate regardless )
-        l-value sSpace r-value "  ," AZ^ AZ^ AZ^ to r-value
+        lValue sSpace rValue "  ," AZ^ AZ^ AZ^ to rValue
     THEN
-    bracket r-value r-type
+    bracket rValue rType
 ;
 
 : empty-set-error
@@ -2191,14 +2177,14 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     IF
         " {}" " set" empty-set-error
     THEN
-(: bracket l-value l-type r-value r-type :)
+(: bracket lValue lType rValue rType :)
     bracket " {" test-same-bracket ( feed bracket type, check correct to match } )
-    l-type
+    lType
     IF
-        " }" l-type r-type test-two-types-same
+        " }" lType rType test-two-types-same
     THEN
-    r-type sSpace AZ^ l-value AZ^ sSpace AZ^ r-value AZ^ "  , }" AZ^
-    r-type "  POW" AZ^
+    rType sSpace AZ^ lValue AZ^ sSpace AZ^ rValue AZ^ "  , }" AZ^
+    rType "  POW" AZ^
 ;
 
 : ]_ ( s1 s2 s3 s4 s5 -- ss1 ss2 )
@@ -2210,14 +2196,14 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
         " [" " [ 1 , 2 , 3" " INT" " 4" " INT" →
         " INT [ 1 , 2 , 3 , 4 , ]" " INT PROD POW"
     )
-    (: bracket l-value l-type r-value r-type :)
+    (: bracket lValue lType rValue rType :)
     bracket " [" test-same-bracket ( feed bracket type, check correct to match ] )
-    l-type
+    lType
     IF
-        " ]" l-type r-type test-two-types-same
+        " ]" lType rType test-two-types-same
     THEN
-    r-type sSpace AZ^ l-value AZ^ sSpace AZ^ r-value AZ^ "  , ]" AZ^
-    " INT " r-type AZ^ "  PROD POW" AZ^
+    rType sSpace AZ^ lValue AZ^ sSpace AZ^ rValue AZ^ "  , ]" AZ^
+    " INT " rType AZ^ "  PROD POW" AZ^
 ;
 
 : (_ ( (
@@ -2228,23 +2214,27 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     " (" blankString NULL
 ;
 
-: ♢_ ( sub exp type op -- S♢E_exp type2 )
+: ∇_ ( sub exp type -- S∇E_exp type2 )
+(
+    Returns the S∇E postfix formed from the substitution and expression entered.
+    The type returned is the expression's type plus "POW"; there is no
+    restriction on types permitted. The only operator acceptable is "∇", so the
+    "diamond" sequence mustn't contain anything but  "♢" & "∇".
+) 
+(: sub exp type :)
+type "  [ <RUN " sub exp "  RUN> ] " AZ^ AZ^ AZ^ AZ^
+int sSpace type "  PROD POW" AZ^ AZ^ AZ^ ;
+
+: ♢_ ( sub exp type -- S♢E_exp type2 )
 (
     Returns the S♢E postfix formed from the substitution and expression entered.
     The type returned is the expression's type plus "POW"; there is no
-    restriction on types permitted. The only operators acceptable are "♢" & "∇",
-    so the "diamond" sequence mustn't contain anything else.
-) 
-(: sub exp type op :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
-op " ♢" stringEq
-IF      ( diamond found )
-    "  { " to obracket "  } " to cbracket type "  POW" AZ^ to type-out
-ELSE    ( nabla found )
-    "  [ " to obracket "  ] " to cbracket
-    int sSpace type "  PROD POW" AZ^ AZ^ AZ^ to type-out
-THEN 
-type obracket "  <RUN " sub exp "  RUN> " cbracket AZ^ AZ^ AZ^ AZ^ AZ^ AZ^ 
-type-out ;
+    restriction on types permitted. The only operator acceptable is "♢", so the
+    "diamond" sequence mustn't contain anything but  "♢" & "∇".
+)
+(: sub exp type :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
+type "  { <RUN " sub exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ 
+type "  POW" AZ^ ;
 
 : :=_ ( s1 s2 s3 s4 -- ss )
 (
@@ -2252,25 +2242,25 @@ type-out ;
     two types are the same, and returns a single string in the format
     "exp to foo". Note there is no result type required.
 )
-(: l-value l-type r-value r-type :)
-l-value constants IN
+(: lValue lType rValue rType :)
+lValue constants IN
 IF
-    ." Cannot assign to " l-value .AZ ." : declared as constant." ABORT
-THEN    ( If l-type ends ARRAY and r-type is ARRAY, assume is empty array )
-"  ARRAY" l-type noWSpace suffix? array r-type stringEq AND NOT
+    ." Cannot assign to " lValue .AZ ." : declared as constant." ABORT
+THEN    ( If lType ends ARRAY and rType is ARRAY, assume is empty array )
+"  ARRAY" lType noWSpace suffix? array rType stringEq AND NOT
 IF
-    " := (assignment)" l-type r-type test-two-types-same
+    " := (assignment)" lType rType test-two-types-same
 THEN
-r-value to_ l-value newline AZ^ AZ^ AZ^ 1LEAVE ( Why do I need 1LEAVE?? )
+rValue to_ lValue newline AZ^ AZ^ AZ^ 1LEAVE ( Why do I need 1LEAVE?? )
 ;
 
-: :∈_ ( s1 s2 s3 s4 -- s5 ) (: l-value l-type r-value r-type :)
+: :∈_ ( s1 s2 s3 s4 -- s5 ) (: lValue lType rValue rType :)
 (
-    Similar to :=_ above, but the r-value is a set from which an element is
+    Similar to :=_ above, but the rValue is a set from which an element is
     non-deterministically chosen. "x" "foo" "S" "foo POW" → "S CHOICE to x"
 )
-" :∈" VALUE op op l-type r-type check-types-for-set-membership
-r-value "  CHOICE to " l-value AZ^ AZ^
+" :∈" VALUE op op lType rType check-types-for-set-membership
+rValue "  CHOICE to " lValue AZ^ AZ^
 ;
 
 : ×_ ( s1 s2 -- s3 ) 
@@ -2325,11 +2315,13 @@ THEN
 )
 STRING INT PROD
 {
-    " ⁀"  ' ⁀_ |->$,I  , " ^"   ' ^_ |->$,I ,
-    " ▷-" '  ▷-_ |->$,I , " ▷"   ' ▷_ |->$,I ,
-    " ←"  '  ←_ |->$,I  , " ↓"   ' ↓_ |->$,I ,
-    " ↑"  '  ↑_ |->$,I  , " ="   ' =_ |->$,I , 
-    " =/" '  ≠_ |->$,I  , " ≠"   ' ≠_ |->$,I , 
+    " ⁀"  ' ⁀_  |->$,I , " ^"   ' ^_  |->$,I ,
+    " ▷-" ' ▷-_ |->$,I , " ▷"   ' ▷_  |->$,I ,
+    " ←"  ' ←_  |->$,I , " ↓"   ' ↓_  |->$,I ,
+    " ↑"  ' ↑_  |->$,I , " ="   ' =_  |->$,I , 
+    " =/" ' ≠_  |->$,I , " ≠"   ' ≠_  |->$,I , 
+    " :=" ' :=_ |->$,I , " :∈"  ' :∈_ |->$,I ,
+    " ∇"  ' ∇_  |->$,I , " ♢"   ' ♢_  |->$,I ,
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
@@ -2437,13 +2429,15 @@ THEN
     This operation should be used by the Pfunction and Pfunction2 operations,
     and preceded by the (_ and ,_ operations.
 ) match brackets ) )
-    (: bracket l-value l-type r-value r-type f-name :)
+    (: bracket lValue lType rValue rType f-name :)
     bracket " (" test-same-bracket ( feed bracket, check correct to match () )
     ( No need to check whether same types in this instance )
-    l-value sSpace r-value AZ^ AZ^ noWSpace sSpace f-name AZ^ AZ^
-    l-type 0= IF sSpace to l-type THEN
-    f-name l-type sSpace r-type AZ^ AZ^ get-return-type-function
+    lValue sSpace rValue AZ^ AZ^ noWSpace sSpace f-name AZ^ AZ^
+    lType 0= IF sSpace to lType THEN
+    f-name lType sSpace rType AZ^ AZ^ get-return-type-function
 ;
+
+: CR_ ( - -- s = "CR" ) "  CR" AZN^ ;
 
 : PRINT_ ( s type -- s1 being the original formula with the instruction to print
                         appended. Type must be one of the basic types. )
@@ -2478,7 +2472,7 @@ ELSE
             THEN
         THEN
     THEN
-THEN newline AZ^ ;
+THEN AZN^ ;
 (
     Above can be refactored something like this:
     STRING STRING PROD { int "  . " ↦ , boolean "  booleanPrint " ↦ ,
@@ -2740,7 +2734,7 @@ IF
     DROP Pexpression2 ( On left string )
 ELSE
     PUSH ( Retain right for later use )
-    RECURSE commaBar AZ^ ( Parse, and add ,_ )
+    RECURSE comma-bar AZ^ ( Parse, and add ,_ )
     POP Pexpression2 AZ^ ( Retrieve right, parse and catenate )
 THEN ;
 
@@ -2754,7 +2748,7 @@ THEN ;
     The right substring is parsed as a list with the Plist2 
 )
 ( Start by putting bracket on stack )
-" (" barLine AZ^ SWAP ( stack = "(_" "foo(x, y, z)" ) )
+" (" bar-line AZ^ SWAP ( stack = "(_" "foo(x, y, z)" ) )
 ( Split by matching brackets )
 noWSpace DUP endaz DUP ROT ROT ( ( stack = "(_" ")" "foo(x, y, z)" ")" )
 [CHAR] ( [CHAR] ) openBracketFinder
@@ -2768,7 +2762,7 @@ PargumentList2 AZ^
 ( Need to add " foo" with "" to end of text. )
 POP addQuotes1 AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" "foo" ) )
-" )" barLine AZ^ AZ^
+" )" bar-line AZ^ AZ^
 ( stack = (_ " x" " xfoo" ,_ " y" " ytype" ,_ " z" " typez" "foo" )_ )
 ;
 
@@ -2787,29 +2781,29 @@ string ( STRING )
 : array[_ ( i -- i "" 0 ) ( Where i is 0 for an empty array, 1 for a full array )
 blankString 0 ;
 
-: array,_ ( i l-value l-type/null r-value r-type -- i+1 l-value,r-value type )
+: array,_ ( i lValue lType/null rValue rType -- i+1 lValue,rValue type )
 (
     Changes 1 "" 0 "1" "INT" to 2 ", 1" "INT" testing whether the types are the
     same or the left type is null.
 )
-(: count l-value l-type r-value r-type :)
-l-type IF " Array membership" l-type r-type test-two-types-same THEN
+(: count lValue lType rValue rType :)
+lType IF " Array membership" lType rType test-two-types-same THEN
 count 1+
-l-value commaSpace r-value sSpace AZ^ AZ^ AZ^ r-type
+lValue commaSpace rValue sSpace AZ^ AZ^ AZ^ rType
 ;
 
-: array]_ ( i value l-type r-value r-type -- array-text type-array )
+: array]_ ( i value lType rValue rType -- array-text type-array )
 (
     Where i is the number of members, and value a list of elements starting with
-    comma and l-type the type of the members, eg 3 ", 1 , 2 " "INT" "3" "INT"
+    comma and lType the type of the members, eg 3 ", 1 , 2 " "INT" "3" "INT"
     Returns "HERE 3 , 1 , 2 , 3 , " and "INT ARRAY"
     Tests whether the types passed, if not null, are the same.
 )
-(: count l-value l-type r-value r-type :)
-l-type IF " Array membership" l-type r-type test-two-types-same THEN
-" HERE " count iToAZ AZ^ sSpace AZ^ l-value AZ^ commaSpace AZ^
-r-value AZ^ sSpace AZ^ commaSpace AZ^
-r-type sSpace array AZ^ AZ^
+(: count lValue lType rValue rType :)
+lType IF " Array membership" lType rType test-two-types-same THEN
+" HERE " count iToAZ AZ^ sSpace AZ^ lValue AZ^ commaSpace AZ^
+rValue AZ^ sSpace AZ^ commaSpace AZ^
+rType sSpace array AZ^ AZ^
 ;
 
 ( NULL OP Patom )
@@ -2847,6 +2841,7 @@ ELSE
 THEN ;
 
 NULL OP Pdiamond ( used in Patom, defined 3000 lines below! )
+NULL OP Psequence NULL OP Psequence2 NULL OP Pset
 
 : Patom ( s -- s1 s2 )
 (
@@ -2894,35 +2889,11 @@ ELSE
                     ELSE    ( Ripe for refactoring with [] function: duplicate code should be in Psequence or Pset )
                         DUP head [CHAR] [ =
                         IF
-                            [CHAR] [ [CHAR] ] bracketRemover
-                            " ♢" OVER isSubstringOf?
-                            IF   ( Can't nest S♢E inside [] or S∇E )
-                                ." Error: Expression " CR .AZ
-                                ."  contains ♢ inside [...]"
-                                ABORT
-                            THEN
-                            " ∇" OVER isSubstringOf?
-                            IF   ( Preferential choice with ∇ in )
-                                Pdiamond
-                            ELSE ( Ordinary sequence )
-                                PUSH [_ POP Plist ]_
-                            THEN
-                        ELSE    ( refactor as above with Pset, moving NULL OP Pset earlier )
+                            Psequence
+                        ELSE
                             DUP head [CHAR] { =
                             IF
-                                [CHAR] { [CHAR] } bracketRemover
-                                " ∇" OVER isSubstringOf?
-                                IF   ( Can't nest S∇E inside S♢E )
-                                    ." Error: Expression " CR .AZ
-                                    ."  contains ∇ inside {...}"
-                                    ABORT
-                                THEN
-                                " ♢" OVER isSubstringOf?
-                                IF   ( An S ♢ E expression )
-                                    Pdiamond
-                                ELSE ( An ordinary set )
-                                    PUSH {_ POP Plist }_
-                                THEN
+                                Pset
                             ELSE
                                 lQuote OVER prefix?
                                 IF
@@ -2989,9 +2960,9 @@ ELSE
                 )
                     DUP head [CHAR] [ = OVER head [CHAR] { = OR
                     IF ( Either [foobar] or {foobar} )
-                        DUP CLONE-STRING 0 OVER 1+ C! barLine AZ^
+                        DUP CLONE-STRING 0 OVER 1+ C! bar-line AZ^
                         ( Copy and keep 1st character only, catenate _ )
-                        SWAP DUP endaz barLine AZ^
+                        SWAP DUP endaz bar-line AZ^
                         ( Duplicate and find last character and catenate _ )
                         PUSH ( Keep 2nd value, hiding top value for later )
                         1+ 0 OVER endaz C! Plist2
@@ -3046,7 +3017,7 @@ THEN
 "  << " SWAP "  >> of " AZ^ AZ^ ROT AZ^ SWAP ( <<i>>-of-arrString outputType )
 ;
 
-: split-for-arrays ( s1 -- s2 s3 )
+: splitForArrays ( s1 -- s2 s3 )
 (
     Where s1 is an array-type expression eg "arr[1]" and the output is the
     first part and the index. Can accept multiple indices. For example,
@@ -3066,9 +3037,9 @@ DUP endaz [CHAR] [ [CHAR] ] openBracketFinder 0 OVER C! 1+ " ]" truncate
     its type "foo". Uses the array_ operation recursively like this
     "arr" "foo ARRAY ARRAY ARRAY" "1" array_ "2" array_ "3" array_ →
     "<< 3 >> of << 2 >> of << 1 >> of arr" "foo".
-    Splits on [ with the split-for-arrays operation.
+    Splits on [ with the splitForArrays operation.
 )
-( arr[1] ) split-for-arrays    ( arr    1 )
+( arr[1] ) splitForArrays    ( arr    1 )
 OVER [CHAR] [ stringcontainschar? ( Recurse to the left if arr2[1] on left )
 IF
     PUSH RECURSE POP array_
@@ -3157,7 +3128,7 @@ ELSE
 THEN
 ;
 
-: rsplit-for-uminus ( s seq -- s1 s2 s3 )
+: rSplitForUminus ( s seq -- s1 s2 s3 )
 (
     Where s is an input string, eg "-123" "-123.45" "-123.45e67" "123.45e-67" or
     "-123.45e-67" or similar, which is split on the strings in the seq, eg
@@ -3189,7 +3160,7 @@ THEN
 op
 ;
 
-: rsplit-for-keywords ( s  s1 -- s2 s3 s1 )
+: rSplitForKeywords ( s  s1 -- s2 s3 s1 )
 (
     Where s is a string of the form "i < 3 THEN i := i + 1" and s1 a keyword eg
     "THEN" sought. Finds the keyword, preceded and followed by whitespace, but
@@ -3227,7 +3198,7 @@ POP IF DROP NULL THEN
 ( If TRUE on US, failed to find keyword, so leave NULL as error marker )
 ;
 
-: rsplit-for-keywords2
+: rSplitForKeywords2
 (
     Similar to rsplitForBlocks, but splits around a single keyword, eg ELSE,
     which must be a separate word from the rest of the code (unlike operators,
@@ -3236,7 +3207,7 @@ POP IF DROP NULL THEN
     finds the sought token. For example
     "IF j > 4 THEN i := 99 ELSE i := 1 END ELSE i := 0" is the THEN part of an
     IF-THEN but can itself split on the second ELSE. Typical usage:
-    <text above> "ELSE" startKeywords endKeywords rsplit-for-keywords2, which
+    <text above> "ELSE" startKeywords endKeywords rSplitForKeywords2, which
     returns "IF j > 4 THEN i := 99 ELSE i := 1 END " " i := 0" "ELSE", spaces
     retained as shown.
 )
@@ -3357,7 +3328,7 @@ WHILE
         current token whitespace followed-by? AND ( . . . followed by wspace )
         IF
             current string >
-           IF
+            IF
                 current 1- head alphanumeric IN NOT
                 IF                      ( . . . and not preceded by alphanum. )
                     end-count 1+ to end-count
@@ -3373,9 +3344,9 @@ WHILE
     IF  ( Skip over all parts in quotes. )
         current stringEndFinder to current
     THEN
-    current C@ [CHAR] ( =
+    current C@ bracket-chars DOM IN
     IF  ( Skip all text in brackets )
-        current [CHAR] ( [CHAR] ) close-bracket-finder to current
+        current DUP C@ bracket-chars OVER APPLY close-bracket-finder to current
     THEN
     0 to count
     BEGIN
@@ -3430,14 +3401,14 @@ op ;
     This version only accepts something already presumed to be an arithmetical
     expression
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP ParithAtom2
 ELSE
     ( No need to check operator type: only one kind available. Recurse right
     subexpression only. )
-    DROP NIP RECURSE " uminus" barLine AZ^ AZ^
+    DROP NIP RECURSE " uminus" bar-line AZ^ AZ^
 THEN
 ;
 
@@ -3451,7 +3422,7 @@ THEN
     " 33 -1 *" and " INT". The sign-change operator is right-associative and
     unary.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP ParithAtom
@@ -3471,12 +3442,12 @@ THEN
     operations, which may throw errors.
     Uses rsplit because sign-change - is a right-associative unary operator.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 0=
 IF
     DROP Patom2
 ELSE
-    NIP RECURSE " uminus" barLine AZ^ AZ^ ( No need to test type of operator )
+    NIP RECURSE " uminus" bar-line AZ^ AZ^ ( No need to test type of operator )
 THEN
 ;
 
@@ -3489,7 +3460,7 @@ THEN
     "3 -1 *" and type eg "INT". The sign-change operator is a right-associative
     unary operator.
 )
-uminus rsplit-for-uminus
+uminus rSplitForUminus
 DUP 0=
 IF
     2DROP Patom
@@ -3538,7 +3509,7 @@ IF
 ELSE
     PUSH PUSH RECURSE    ( recurse on left subexpression )
     POP Puminus2 AZ^     ( right subexpression to Puminus2 )
-    POP AZ^ barLine AZ^ ( add *_ or /_ )
+    POP AZ^ bar-line AZ^ ( add *_ or /_ )
 THEN
 ;
 
@@ -3586,11 +3557,11 @@ IF
 ELSE
     PUSH PUSH Pterm2     ( Left must be arithmetic: to Pterm2 Result ends ??_ )
     POP Puminus2 AZ^     ( Right also arithmetic: to Puminus2 Again ends ??_ )
-    POP barLine AZ^ AZ^ ( Catenate and add _\n  )
+    POP bar-line AZ^ AZ^ ( Catenate and add _\n  )
 THEN
 ;
 
-: lsplit-for-minus-and-float ( s seq set op-string set2 set3 c -- s1 s2 op )
+: lsplitForMinusAndFloat ( s seq set op-string set2 set3 c -- s1 s2 op )
 (
  s is a string in the form "a + b" and seq is a sequence of strings
  eg  ["+", "-"], s1 is the string as far as the operator, s2 after it, and op
@@ -3614,14 +3585,14 @@ THEN
  be regarded as a nonsense value and deleted from the stack.
  Typical usage:
  (text) plusMinus antecedents " -" digits0. letter CHAR e
- lsplit-for-minus-and-float
+ lsplitForMinusAndFloat
 )
 (: string seq set minus float-contents letters e-char :)
 0 0 0 0 VALUE op VALUE count VALUE backtrack VALUE count2
 string noWSpace to string
 string endaz VALUE end
 seq CARD VALUE size
-floatAntecedents CARD VALUE size2
+float-antecedents CARD VALUE size2
 BEGIN
     end string >= op 0= AND
 WHILE
@@ -3682,7 +3653,7 @@ THEN
 string end op
 ;
 
-: P ( to be redefined as Parith ) ( s -- s1 s2 )
+: P ( : Parith ) ( s -- s1 s2 )
 (
     Where s is the original string, eg "a + b" and s1 the string converted to
     postfix notation and s2 the type, returned from parsers farther down the
@@ -3693,7 +3664,7 @@ string end op
     of the expression.
 )
 plusMinus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+lsplitForMinusAndFloat
 DUP 0=
 IF
     2DROP Pterm
@@ -3705,10 +3676,9 @@ ELSE
 THEN
 ;
 
-
 ' P to Parith
 
-: P ( to be redefined as Parith2 ) ( s -- s1 )
+: P ( : Parith2 ) ( s -- s1 )
 (
     Where s is in the form i + j and s1 " i" " INT" " j" " INT" +_ which can be
     fed later and produces error messages at that stage.
@@ -3717,7 +3687,7 @@ THEN
     to Pterm2, and catenates with the operator
 )
 plusMinus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+lsplitForMinusAndFloat
 ( Distinguish subtraction minus from sign-change minus from negative exponent )
 DUP 0=
 IF
@@ -3725,7 +3695,7 @@ IF
 ELSE
     PUSH PUSH RECURSE ( recurse on left subexpression )
     POP Pterm2 AZ^    ( right substring to Pterm2 and catenate )
-    POP AZ^ barLine AZ^ ( add +_ or -_ )
+    POP AZ^ bar-line AZ^ ( add +_ or -_ )
 THEN
 ;
 
@@ -3744,7 +3714,7 @@ THEN
     expression.
 )
 plusMinus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+lsplitForMinusAndFloat
 ( Distinguishes subtraction minus from sign-change minus and negative exponent )
 DUP 0=
 IF
@@ -3753,7 +3723,7 @@ ELSE
     PUSH PUSH Parith2   ( Left is arithmetical )
     POP Pterm2          ( Right has to be a "term" )
     POP                 ( Operator )
-    barLine ( now 4 values on stack to catenate ) AZ^ AZ^ AZ^
+    bar-line ( now 4 values on stack to catenate ) AZ^ AZ^ AZ^
 THEN
 ;
 
@@ -3772,7 +3742,7 @@ THEN
     expression passed to it.
 )
 plusMinus antecedents " -" digits0. letter [CHAR] e
-lsplit-for-minus-and-float
+lsplitForMinusAndFloat
 ( Distinguishes subtraction minus from sign-change minus and negative exponent )
 DUP 0=
 IF
@@ -3801,8 +3771,6 @@ ELSE
     DROP ParithExp
 THEN
 ;
-
-NULL OP Pset
 
 : PenumeratedSet ( s -- s1 s2 )
 (
@@ -3967,16 +3935,13 @@ ELSE ( If we have got here it should be in the format {i, j, k} )
     Should be refactored to pull out duplicated code here, in Patom2 and in
     Psequence2
 )
-    DUP CLONE-STRING 0 OVER 1+ C! barLine AZ^ ( Keep 1st letter --> {_ )
-    SWAP DUP endaz barLine AZ^ ( Keep last letter --> }_ )
+    DUP CLONE-STRING 0 OVER 1+ C! bar-line AZ^ ( Keep 1st letter --> {_ )
+    SWAP DUP endaz bar-line AZ^ ( Keep last letter --> }_ )
     PUSH ( Hide }_ on user stack to retrieve later. )
     1+ 0 OVER endaz C! Plist2 ( Parse all but {} as a list )
     POP AZ^ AZ^ ( Retrieve }_ and catenate twice )
 THEN
 ;
-
-NULL OP Psequence
-NULL OP Psequence2
 
 : PrangeRestrictedSeq ( s -- s2 t2 )
 (
@@ -4060,8 +4025,8 @@ ELSE ( Must begin with [ and end with ] or () )
             ." Text in incorrect format for sequence: should be [i, j, k]: " .AZ
             CR ." received." ABORT
         ELSE ( To be refactored just as in Patom2 and Pset2 )
-            DUP CLONE-STRING 0 OVER 1+ C! barLine AZ^ ( 1st character + _ = [_\n )
-            SWAP DUP endaz barLine AZ^ ( last letter + _ = ]_\n )
+            DUP CLONE-STRING 0 OVER 1+ C! bar-line AZ^ ( 1st character + _ = [_\n )
+            SWAP DUP endaz bar-line AZ^ ( last letter + _ = ]_\n )
             PUSH ( Hide ]_ on user stack for future reference )
             1+ 0 OVER endaz C! Plist2 ( take [ and ] off, parse remainder as list )
             POP AZ^ AZ^ ( Retrieve ]_\n and catenate the three Strings. )
@@ -4090,18 +4055,9 @@ REPEAT
 DUP head [CHAR] [ =
 IF
     [CHAR] [ [CHAR] ] bracketRemover2 ( Remove []: should be refactored )
-    diamondString OVER isSubstringOf?
-    IF ( S♢E nested inside [] = error )
-        ." Error: expression " CR .AZ ."  contains ♢ inside [...]" ABORT
-    THEN
-    nablaString OVER isSubstringOf?
-    IF
-        Pdiamond
-    ELSE
-        PUSH [_ POP      ( Put [ [ null below present text )
-        Plist            ( Parse remaining text as list )
-        ]_ 
-    THEN
+    PUSH [_ POP      ( Put [ [ null below present text )
+    Plist            ( Parse remaining text as list )
+    ]_ 
 ELSE
     DUP letter stringbegins?
     IF
@@ -4152,17 +4108,15 @@ noWSpace
 DUP head [CHAR] { =
 IF
     [CHAR] { [CHAR] } bracketRemover2 ( Remove {} ) ( Can be refactored )
-    nablaString OVER isSubstringOf?
-    IF  ( Error having ∇ inside {} )
-        ." Error: expression " CR .AZ ."  contains ∇ inside {...}" ABORT
-    THEN
-    diamondString OVER isSubstringOf?
+    DUP CLONE-STRING comma rsplit NIP 0=
+    SWAP diamond 1 APPLY OVER isSubstringOf?
+    diamond 2 APPLY ROT isSubstringOf? OR AND
     IF
         Pdiamond
     ELSE
-    PUSH {_ POP         ( Put { { null underneath present text )
-    Plist               ( Parse present text )
-    }_                  ( Terminate with } and type )
+        PUSH {_ POP         ( Put { { null underneath present text )
+        Plist               ( Parse present text )
+        }_                  ( Terminate with } and type )
     THEN
 ELSE
     DUP
@@ -4322,7 +4276,7 @@ ELSE
             THEN
         THEN
     THEN
-    barLine AZ^ AZ^ AZ^ ( Add _\n which makes 4 value, so catenate thrice. )
+    bar-line AZ^ AZ^ AZ^ ( Add _\n which makes 4 value, so catenate thrice. )
 THEN
 ;
 
@@ -4381,7 +4335,7 @@ ELSE
             THEN
         THEN
     THEN
-    barLine ( Now 4 values on stack to catenate ) AZ^ AZ^ AZ^
+    bar-line ( Now 4 values on stack to catenate ) AZ^ AZ^ AZ^
 THEN
 ;
 
@@ -4445,7 +4399,7 @@ DUP
 IF  ( operator found, so both subexpressions are sets )
     PUSH PUSH PrangeRestrictedSet2 sSpace AZ^ ( Parse left only, add space )
     POP RECURSE AZ^ sSpace AZ^                ( Parse right and add space  )
-    POP barLine AZ^ AZ^                      ( Add operator and _ )
+    POP bar-line AZ^ AZ^                      ( Add operator and _ )
 ELSE
     2DROP PrangeRestrictedExp2
 THEN
@@ -4535,7 +4489,7 @@ domRestriction rsplit
 DUP
 IF
     PUSH PUSH PrangeRestrictedSet2 sSpace
-        POP RECURSE AZ^ AZ^ POP AZ^ barLine AZ^
+        POP RECURSE AZ^ AZ^ POP AZ^ bar-line AZ^
 ELSE
     2DROP PrangeRestrictedSet2
 THEN
@@ -4563,7 +4517,7 @@ DUP
 IF      ( operator found )
     PUSH PUSH RECURSE   ( on left subexpression )
     sSpace POP PdomainRestrictedSet2 AZ^ AZ^ ( right subexpression, catenated. )
-    sSpace AZ^ POP AZ^ barLine AZ^ ( catenate operator and _ )
+    sSpace AZ^ POP AZ^ bar-line AZ^ ( catenate operator and _ )
 ELSE    ( no operator )
     2DROP PdomainRestrictedSet2
 THEN
@@ -4630,7 +4584,7 @@ ELSE
     sSpace AZ^ POP PdomainRestrictedSet2 AZ^        ( Right substring )
     ( Both subexpressions now parsed )
     sSpace AZ^ POP                                  ( operator )
-    AZ^ barLine AZ^                                ( Catenate with _ )
+    AZ^ bar-line AZ^                                ( Catenate with _ )
 THEN
 ;
 
@@ -4710,7 +4664,7 @@ ELSE
     PUSH RECURSE       ( Left subexpression )
     sSpace AZ^
     POP PjoinedSetExp2 ( Right subexpression )
-    AZ^ maplet 1 APPLY barLine AZ^ AZ^
+    AZ^ maplet 1 APPLY bar-line AZ^ AZ^
 THEN
 ;
 
@@ -4759,7 +4713,7 @@ ELSE
     sSpace AZ^
     POP PjoinedSet2 AZ^   ( retrieve right operand, also to joinedset )
     sSpace AZ^
-    POP barLine AZ^ AZ^
+    POP bar-line AZ^ AZ^
 THEN
 ;
 
@@ -4809,7 +4763,7 @@ ELSE
     PUSH PUSH PjoinedSet2 sSpace AZ^ POP PjoinedSet2 sSpace AZ^ AZ^
                        ( 2nd and 3rd values passed to set parser )
     POP AZ^            ( Find operator )
-    barLine AZ^
+    bar-line AZ^
 THEN
 ;
 
@@ -4869,7 +4823,7 @@ ELSE
 ( Both values on the stack are arithmetical, otherwise there is a syntax error )
     PUSH PUSH Parith2 sSpace AZ^
     POP Parith2 AZ^ sSpace AZ^ ( Call the arithmetic parsers on both operands )
-    POP barLine AZ^ AZ^
+    POP bar-line AZ^ AZ^
 THEN
 ;
 
@@ -4928,7 +4882,7 @@ IF
 ELSE
     PUSH PUSH Parith2 sSpace AZ^
     POP Parith2 AZ^ sSpace AZ^
-    POP AZ^ barLine AZ^
+    POP AZ^ bar-line AZ^
 THEN
 ;
 
@@ -5007,10 +4961,10 @@ ELSE
         PUSH PUSH Pexpression2 ( left token any type )
         sSpace AZ^
         POP PjoinedSet2 AZ^    ( right token here = set  )
-        sSpace AZ^ POP AZ^ barLine AZ^
+        sSpace AZ^ POP AZ^ bar-line AZ^
     ELSE            ( = or ≠ found: must be equality left, inequality right. )
         PUSH PUSH RECURSE sSpace AZ^ POP Pineq2 AZ^
-        sSpace AZ^ POP AZ^ barLine AZ^
+        sSpace AZ^ POP AZ^ bar-line AZ^
     THEN
 THEN
 ;
@@ -5081,11 +5035,11 @@ ELSE
         sSpace AZ^
         POP PjoinedSet2  ( right token = set )
         sSpace AZ^ AZ^
-        POP barLine AZ^ AZ^
+        POP bar-line AZ^ AZ^
     ELSE                ( equality/non-equality )
         PUSH PUSH Ppair2 sSpace AZ^
         POP Ppair2 AZ^ sSpace AZ^
-        POP AZ^ barLine AZ^
+        POP AZ^ bar-line AZ^
     THEN
 THEN
 ;
@@ -5128,7 +5082,7 @@ IF
 ELSE
     SWAP 
     RECURSE  
-    sSpace AZ^ SWAP AZ^ barLine AZ^ NIP
+    sSpace AZ^ SWAP AZ^ bar-line AZ^ NIP
 THEN
 ;
 : Pnot ( s -- s1 "BOO" )
@@ -5171,7 +5125,7 @@ IF
 ELSE
     SWAP
     PnotBoolean2  
-    sSpace AZ^ SWAP AZ^ barLine AZ^ NIP
+    sSpace AZ^ SWAP AZ^ bar-line AZ^ NIP
 THEN
 ;
 
@@ -5227,7 +5181,7 @@ ELSE
     AZ^ sSpace AZ^
     POP               ( Retrieve operator )
     swapSynonymsForAndOr
-    AZ^ barLine AZ^
+    AZ^ bar-line AZ^
 THEN
 ;
 
@@ -5253,7 +5207,7 @@ ELSE
     AZ^ sSpace AZ^
     POP               ( Retrieve operator )
     swapSynonymsForAndOr
-    AZ^ barLine AZ^
+    AZ^ bar-line AZ^
 THEN
 ;
 
@@ -5320,7 +5274,7 @@ IF ( discard right and operator values, pass left on as possible and/or )
     2DROP PandOr2
 ELSE ( left is and/or boolean, recurse on right, catenate with operator )
     PUSH PUSH PandOrBoolean2 sSpace AZ^ POP RECURSE AZ^ sSpace AZ^
-    POP AZ^ barLine AZ^
+    POP AZ^ bar-line AZ^
 THEN
 ;
 
@@ -5368,7 +5322,7 @@ IF      ( No operator: discard right and try left as an and/or )
     2DROP PandOrBoolean2
 ELSE    ( Operator found: try left as an and/or and recurse on the right )
     PUSH PUSH PandOrBoolean2 sSpace AZ^ POP RECURSE AZ^ sSpace AZ^
-    POP AZ^ barLine AZ^
+    POP AZ^ bar-line AZ^
 THEN
 ;
 
@@ -5439,7 +5393,7 @@ IF ( If no operator, lose "right" substring and left is an implies expression )
     2DROP Pimplies2
 ELSE ( If operator found, assume right is an "implies" and recurse on the left )
     PUSH PUSH RECURSE sSpace AZ^
-    POP PimpliesBoolean2 AZ^ sSpace AZ^ POP AZ^ barLine AZ^
+    POP PimpliesBoolean2 AZ^ sSpace AZ^ POP AZ^ bar-line AZ^
 THEN ;
 
 : PequivBoolean2 ( s1 -- s2 )
@@ -5462,7 +5416,7 @@ IF ( If no operator, lose "right" substring and left is an implies expression )
     2DROP PimpliesBoolean2
 ELSE ( If operator found, assume right is an "implies" and recurse on the left )
     PUSH PUSH RECURSE sSpace AZ^
-    POP PimpliesBoolean2 AZ^ sSpace AZ^ POP AZ^ barLine AZ^
+    POP PimpliesBoolean2 AZ^ sSpace AZ^ POP AZ^ bar-line AZ^
 THEN ;
 
 NULL OP PmultipleInstruction
@@ -5683,27 +5637,30 @@ THEN
 
 : P ( : Pdiamond ) ( s -- s1 s2 )
 (
-    Where s is in the format "i := 1 ⊓ i := 2 ♢ i + 1" and the output is the
+    Where s is in the format "i := 1 ▯ i := 2 ♢ i + 1" and the output is the
     postfix form "INT {  <RUN <CHOICE 1 to i [] 2 to i CHOICE> i 1 + RUN> }" and
     the type "INT POW". Uses the ♢_ operation, which returns the type of the
     expression plus POW as its type, and the S and E parts of the input string
     with type, {}, and RUN tags added.
     Splits a string on the ♢ operator, into an expression parsed with Pequiv on
-    the right, and a substitution/son the left.
+    the right, not quantifications, and substitutions on the left.
     Note the ♢ operator is not associative and can only be used once in an
     expression, so it can be split on with the rsplit operation. It has a lower
     precedence than the := to its left and returns a bunch, but RVM_FORTH does
     not support bunches, so it must be converted to a set by being enclosed in
     {} braces in the original code. This whole expression therefore returns a
     set, which can be assigned, etc. The equivalent for preferential choice uses
-    the ∇ operator and must be enclosed in square brackets [] in the code, to
-    denote it returns a sequence rather than a bunch. Both these versions are
-    handled by the ♢_ operation.
+    the ∇ operator and must be enclosed in round brackets in the code, to
+    maintain precedences of := operators. Both these versions are handled by the
+    ♢_ operation.
     This operation should only be called from inside Patom or similar.
 )
+( Change: if starts with { use clone string, strip {} check for ♢, if so split,
+  if nothing found is ordinary set. Maybe better called from inside Pset.
+  If ∇ found, should not start with any sort of brackets. )
 diamond rsplit DUP 
 IF  
-    PUSH PUSH PmultipleInstruction POP Pequiv POP ♢_ 
+    PUSH PUSH PmultipleInstruction POP Pequiv operationSwaps POP APPLY EXECUTE 
 ELSE
     2DROP Pquantified
 THEN ; ' P to Pdiamond
@@ -5713,7 +5670,7 @@ THEN ; ' P to Pdiamond
 ( Where s is an expression string, and this calls the other parsers and )
 ( operator functions to return s1 which is the string in postfix for FORTH and )
 ( s2 which is the type string. )
-Pquantified
+Pdiamond
 ;
 
 ' P to Pexpression
@@ -5771,7 +5728,7 @@ THEN
 )
 comma lsplit
 IF ( top value not 0, ie there is actually an operator found )
-    PUSH RECURSE commaBar AZ^ ( Recurse on left value and add ,_ )
+    PUSH RECURSE comma-bar AZ^ ( Recurse on left value and add ,_ )
     ( Right value retrieved, parsed as expression, "" added and catenated )
     POP Pexpression2 AZ^
 ELSE ( top value = 0, ie there is no operator found )
@@ -5815,7 +5772,7 @@ IF
 ELSE  
     PUSH                ( Left argument is identifier )
     Pid addQuotes2 sSpace AZ^
-    POP Pexpression2 AZ^ " :=" AZ^ barLine AZ^ ( Right argument is expression )
+    POP Pexpression2 AZ^ " :=" AZ^ bar-line AZ^ ( Right argument is expression )
 THEN
 ;
 
@@ -5860,22 +5817,22 @@ NULL OP Pguard NULL OP Pguard2
 (
     Where s is in the format "i := 1 + 2 * 3" or similar and s1 its postfix
     representation, ie "1 2 3 * + to i". Splits the string input on the :=
-    to form three parts. Calls Pid on the left operand and Pexpression on the
-    right, then uses :=_ to test that the types are correct, and convert the two
-    parts into a single expression.
+    to form three parts. Calls Pleftvalue on the left operand and Pexpressionlist
+    on the right, then uses :=_ to test that the types are correct, and convert
+    the two parts into a single expression. Supports multiple assignments.
 )
 assignment rsplit
-0=
+DUP 0=
 IF ( No operator found: must be expression; change to Pfunction later )
-    DROP Pexpression whitespace stringconsists? NOT
+    2DROP Pexpression whitespace stringconsists? NOT
     IF  ( If "return type" not empty, will incorrectly leave value on stack. )
         ." Passed expression/function returning a value to an instruction:" CR
         ." Only null return permitted here." ABORT
     THEN
 ELSE
-    PUSH Pleftvalue ( Left operand is an identifier/identifiers )
+    PUSH PUSH Pleftvalue ( Left operand is an identifier/identifiers )
     POP Pexpressionlist ( Right operand is an expression/expressions )
-    :=_
+    operationSwaps POP APPLY EXECUTE
 THEN ;
 
 : Ploop ( s -- s1 )
@@ -5936,19 +5893,19 @@ THEN
 
 : Pchoice ( s -- s1 )
 (
-    Takes a String and splits it on the ⊓ choice operator ([] not used: may be
-    needed for arrays), which is right-associative, with rsplitForBlocks. If
+    Takes a String and splits it on the ▯ choice operator; [] not used: may be
+    needed for arrays, which is right-associative, with rsplitForBlocks. If
     the operator is found, the left string is parsed as a guard and the parser
     recursively parses the right string. If no operator is found, the right
-    substring is nonsense amnd discarded and the whole string is regarded as a
+    substring is nonsense and discarded and the whole string is regarded as a
     guard.
     If it is necessary to reassemble the postfix string, calls the []_ word.
-    Example: "i := i + 1 ⊓ i := i + 2" gives this postfix:
+    Example: "i := i + 1 ▯ i := i + 2" gives this postfix:
     "<CHOICE i 1 + to i [] i 2 + to i CHOICE>"
 )
 choice startKeywords endKeywords rsplitForBlocks
-IF ( ⊓ operator found )
-    PUSH Pguard ( Left = guard )
+IF ( ▯ operator found )
+    PUSH RECURSE ( Left = choice or guard )
     POP RECURSE []_ ( Right parsed and added with []_ operation )
 ELSE
     DROP Pguard ( No operator: right = nonsense [deleted], left = guard )
@@ -5956,9 +5913,9 @@ THEN ;
 
 : Pchoice2 ( s -- s1 )
 (
-    As above, but uses the []_ operation. Splits string on ⊓ choice operator,
+    As above, but uses the []_ operation. Splits string on ▯ choice operator,
     parsing left as if guard and recursing on right (if found). For example,
-    "i := i + 1 ⊓  i := i + 2" becomes "i 1 + to i" "i 2 + to i" []_ with quotes
+    "i := i + 1 ▯  i := i + 2" becomes "i 1 + to i" "i 2 + to i" []_ with quotes
     (and new lines). The []_ operation can be called, which converts it to the 
     full FORTH postfix.
 )
@@ -5966,7 +5923,7 @@ choice startKeywords endKeywords rsplitForBlocks
 DUP IF  ( L = guard, R = ?choice to parse recursively )
     PUSH PUSH Pguard2 newline AZ^
     POP RECURSE newline AZ^ AZ^
-    POP barLine AZ^ AZ^
+    POP bar-line AZ^ AZ^
 ELSE ( L = guard, R = nonsense, to lose )
     DROP Pguard2
 THEN
@@ -5983,7 +5940,7 @@ OVER endaz endString myAZLength - alphanumeric IN NOT OR NOT
 IF ." WHILE without END error." ABORT THEN
 endString truncate STRING [ " DO" , ] startKeywords endKeywords rsplitForBlocks
 IF ( found DO )
-    PUSH Pboolean2 POP PmultipleInstruction2 AZ^ while barLine AZ^ AZ^
+    PUSH Pboolean2 POP PmultipleInstruction2 AZ^ while bar-line AZ^ AZ^
 ELSE ( not found DO )
     ." WHILE without DO error." ABORT
 THEN ;
@@ -5996,7 +5953,7 @@ IF
     endString truncate
     thenOps startKeywords endKeywords rsplitForBlocks
     IF
-        PUSH Pboolean2 POP Pthen2 AZ^ " IF-THEN" barLine AZ^ AZ^
+        PUSH Pboolean2 POP Pthen2 AZ^ " IF-THEN" bar-line AZ^ AZ^
     ELSE
         ." IF without THEN error." ABORT
     THEN
@@ -6006,9 +5963,14 @@ THEN ; )
 : Pprint ( s -- s1 )
 (
     Takes an instruction starting in PRINT and uses the PRINT_ word to convert
-    it to postfix, depending on its type
+    it to postfix, depending on its type. If no expression, calls CR_ instead.
 )
-" PRINT " decapitate Pexpression PRINT_ ;
+" PRINT " decapitate noWSpace DUP myAZLength
+IF
+    Pexpression PRINT_
+ELSE
+    CR_
+THEN ;
 
 : Pprint2 ( s -- s1 )
 (
@@ -6077,7 +6039,7 @@ THEN
    respective parsers, otherwise assumed to be an assignment.
    Instructions in round brackets () to have their brackets stripped; they may
    be multiple instructions.
-)
+) ( Can be refactored with wspaceSplit and a relation to function pointers. )
 noWSpace DUP
 " PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
 IF
@@ -6134,7 +6096,7 @@ guard startKeywords endKeywords rsplitForBlocks
 DUP IF
     PUSH PUSH Pboolean2
     newline POP RECURSE AZ^ AZ^
-    newline POP barLine AZ^ AZ^ AZ^
+    newline POP bar-line AZ^ AZ^ AZ^
 ELSE
     DROP Pinstruction2
 THEN
@@ -6154,8 +6116,8 @@ THEN
     Typical usage:
     " WHILE i < 3 DO i := i + 1; PRINT i END; j := j * 2; PRINT j"
     PmultipleInstruction. Splits first on the ; after END, giving this result:
-    "BEGIN i 3 < WHILE i 1 + to i i . REPEAT j 2 * to j j ." with appropriate
-    newlines
+    " BEGIN i 3 < WHILE i 1 + to i i . REPEAT j 2 * to j j ."
+    ...with appropriate newlines
 )
 sequence startKeywords endKeywords rsplitForBlocks
 IF       
@@ -6181,7 +6143,7 @@ THEN ;
 sequence startKeywords endKeywords rsplitForBlocks
 DUP IF
     PUSH PUSH ( Keep left as choice ) Pchoice2 POP RECURSE
-    newline POP barLine AZ^ AZ^ AZ^ AZ^
+    newline POP bar-line AZ^ AZ^ AZ^ AZ^
 ELSE
     2DROP Pchoice2 ( Null operator, right = nonsense: lose 2. Left = choice )
 THEN ;
@@ -6192,10 +6154,10 @@ NULL OP Pprod NULL OP Pprodforarguments
 : Ppowforarguments ( s1 -- s2 )
 (
     Very similar to Ppow below, but when a single token is found, rather than
-    adding it to userTypes, checks whether it is in declaredUserTypes. If not
+    adding it to user-types, checks whether it is in declared-user-types. If not
     error message sent. (User-defined types not yet implemented.)
 )
-noWSpace powSeq rsplit-for-uminus
+noWSpace powSeq rSplitForUminus
 IF
     NIP noWSpace DUP head [CHAR] ( = NOT
     IF
@@ -6205,7 +6167,7 @@ IF
     Pprodforarguments ℙ_
 ELSE
     DROP
-    DUP builtInTypes IN NOT OVER declaredUserTypes IN NOT AND
+    DUP builtin-types IN NOT OVER declared-user-types IN NOT AND
     IF
         ." The type " .AZ ."  has not yet been defined." ABORT
     THEN
@@ -6215,12 +6177,12 @@ THEN
 : Ppow ( s1 -- s2 )
 (
     Splits on the ℙ operator: a type which is a member of ℙ(foo) is a set of foo
-    Uses the rsplit-for-uminus operation; like the sign-change operator, this is
+    Uses the rSplitForUminus operation; like the sign-change operator, this is
     a right-associative unary operator, which must be followed by its type in ()
     The () mean ℙ has a higher precedence than ×, which must be put in the ()
     Anything in () is passed back to the Pprod operation
 )
-noWSpace powSeq rsplit-for-uminus
+noWSpace powSeq rSplitForUminus
 IF
     NIP noWSpace DUP head [CHAR] ( = NOT
     IF
@@ -6230,12 +6192,12 @@ IF
     Pprod ℙ_
 ELSE
     DROP
-    DUP builtInTypes IN NOT
+    DUP builtin-types IN NOT
     IF  (
-            Add a new type to the userTypes set:
+            Add a new type to the user-types set:
             not used until user-defined types become available.
         )
-        DUP STRING { , } userTypes ∪ to userTypes
+        DUP STRING { , } user-types ∪ to user-types
     THEN    ( No operator: now should be single token )
 THEN ;
 
@@ -6267,14 +6229,14 @@ THEN ;
 
 : Pargumenttype ( s -- s1 )
 (
-    Very similar to PvariableType except that the version of Ppow used checks the
+    Very similar to Pvariabletype except that the version of Ppow used checks the
     type has been declared (except INT FLOAT STRING), rather than adding to the
     list to be declared.
 )
 Pprodforarguments
 check-single-tree ;
 
-: PvariableType ( s -- s1 )
+: Pvariabletype ( s -- s1 )
 (
     Takes a variable type eg INT or ℙ(INT × STRING) and returns its postfix
     types, ie INT or INT STRING PROD POW. Passes the String to Pprod (and Ppow)
@@ -6284,7 +6246,7 @@ check-single-tree ;
 Pprod
 check-single-tree ;
 
-: sqBracketsAbort ( s1 s2 -- error )
+: sq-brackets-abort ( s1 s2 -- error )
 (
     for use when a type is "foo []" with something follows the []
 )
@@ -6292,7 +6254,7 @@ check-single-tree ;
     ."  passed." ABORT
 ;
 
-: ParrayTypeForVariables ( s -- s1, and side-effect )
+: Parraytypeforvariables ( s -- s1, and side-effect )
 (
     INT[3] → 3 VALUE-ARRAY to typeValue, and INT ARRAY to s1.
     Similar to below, but uses Ppow which declares type and adds it to types,
@@ -6316,7 +6278,7 @@ IF
     "  ARRAY" AZ^
 ELSE    ( No []: remaining top value on stack is nonsense value )
     0value to typeValue ( Write 0 VALUE foo )
-    PvariableType
+    Pvariabletype
 THEN
 ;
 
@@ -6330,7 +6292,7 @@ arraySeq lsplit
 IF
     noWSpace " ]" truncate DUP myAZLength
     IF  ( Right string ought now to be 0 length )
-        sqBracketsAbort
+        sq-brackets-abort
     THEN
     DROP noWSpace RECURSE array AZ^
 ELSE
@@ -6343,7 +6305,7 @@ THEN
     Very similar to Pvariable, but intended for return values and parameters
     when declaring a function. i INT ← foo ( s STRING, f FLOAT ) ... is an
     example; for foo(i, j, k) you use PargumentList.
-    Rather than adding any unknown types to the userTypes relation, it checks
+    Rather than adding any unknown types to the user-types relation, it checks
     that any types required have already been declared, otherwise returning an
     error
 )
@@ -6371,7 +6333,7 @@ types DOM IN
 IF
     ." Variable " OVER .AZ ."  already declared as variable or constant." ABORT
 THEN
-ParrayTypeForVariables
+Parraytypeforvariables
 OVER SWAP noWSpace STRING STRING PROD { ↦ , } types ∪ to types
 typeValue SWAP newline AZ^ AZ^
 ;
@@ -6409,7 +6371,7 @@ IF
     DUP variables whitespace followed-by?
     IF
         variables decapitate
-        endString rsplit-for-keywords 0= ( END missing = error )
+        endString rSplitForKeywords 0= ( END missing = error )
         IF
             ." VARIABLES without END error" ABORT
         ELSE
@@ -6458,7 +6420,7 @@ IF  ( "iArr" US = "HERE 3 , 1 , 2 , 3 ," )
     ( "iArr" "3 VALUE-ARRAY iArr" ) POP to_ AZ^ sSpace AZ^ ROT AZ^ newline AZ^
     AZ^
 ELSE
-    newline AZ^ POP valueString AZ^ SWAP AZ^
+    newline AZ^ POP value-string AZ^ SWAP AZ^
 THEN
 ;
 
@@ -6494,7 +6456,7 @@ IF
     DUP constantsString whitespace followed-by?
     IF
         constantsString decapitate
-        endString rsplit-for-keywords 0= ( no "END" found = error )
+        endString rSplitForKeywords 0= ( no "END" found = error )
         IF
             ." CONSTANTS without END error." ABORT
         ELSE
