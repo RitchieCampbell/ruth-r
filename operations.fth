@@ -5963,14 +5963,17 @@ THEN ; )
 : Pprint ( s -- s1 )
 (
     Takes an instruction starting in PRINT and uses the PRINT_ word to convert
-    it to postfix, depending on its type. If no expression, calls CR_ instead.
+    it to postfix, depending on its type.
 )
-" PRINT " decapitate noWSpace DUP myAZLength
-IF
-    Pexpression PRINT_
-ELSE
-    CR_
-THEN ;
+" PRINT " decapitate Pexpression PRINT_
+;
+
+: Pcr ( - -- "CR\n" )
+(
+    Called by Pinstruction if a string consisting entirely of "PRINT" is found.
+    Uses the CR_ word to offer the CR instruction and newline as output
+)
+CR_ ;
 
 : Pprint2 ( s -- s1 )
 (
@@ -6041,27 +6044,32 @@ THEN
    be multiple instructions.
 ) ( Can be refactored with wspaceSplit and a relation to function pointers. )
 noWSpace DUP
-" PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
+" PRINT" stringEq
 IF
-    Pprint
+    Pcr
 ELSE
-    DUP while 2DUP SWAP prefix? ROT ROT  whitespace followed-by? AND
+    DUP " PRINT" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
     IF
-        Ploop
+        Pprint
     ELSE
-        DUP " IF" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
+        DUP while 2DUP SWAP prefix? ROT ROT  whitespace followed-by? AND
         IF
-            Pselection
+            Ploop
         ELSE
-            DUP C@ [CHAR] ( =
+            DUP " IF" 2DUP SWAP prefix? ROT ROT whitespace followed-by? AND
             IF
-                PbracketedInstruction
+                Pselection
             ELSE
-                DUP DUP myAZLength 0= SWAP skip stringEq OR
+                DUP C@ [CHAR] ( =
                 IF
-                    Pskip
+                    PbracketedInstruction
                 ELSE
-                    Passignment
+                    DUP DUP myAZLength 0= SWAP skip stringEq OR
+                    IF
+                        Pskip
+                    ELSE
+                        Passignment
+                    THEN
                 THEN
             THEN
         THEN

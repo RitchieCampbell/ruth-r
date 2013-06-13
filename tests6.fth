@@ -533,7 +533,6 @@ AZN^^ "  CHOICE>" AZN^^ checkOutput
 1223 " ii < 3 → ii := 4" Pchoice " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 L functions.fth ( may be redundant )
-( STRING STRING PROD { " factorial" " INT # INT" |->$,$ , } to types )
 1225 " jj INT ← factorial(i INT) ≙ IF i = 0 THEN jj := 1 ELSE jj := i * factorial(i - 1) END END"
 Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
 " 1 to jj" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to jj" AZN^ AZN^^ " THEN" AZN^^
@@ -541,12 +540,3 @@ Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^ " i 0 =" AZN^^ " IF" 
 
 " HereEndethThe6thTestFile." CR .AZ CR
 
-(
-    On 12th June, I think I got this working again. Done by:
-    1: reverting everything to version 101 in svn
-    2: adding the line to add types in functions (33-34)
-    3: Moving the line 205 which adds to the types relation forward 4 lines
-    4: Removing factorial from types both in operations and in tests6 files.
-    Temporary files stored in dropbox folder, so I can update the latest version
-    by hand later, and use this text as the message when committing on svn.
-)

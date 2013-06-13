@@ -282,19 +282,19 @@ AZ^ " INT POW" checkOutputAndType
 " INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
 AZ^ " INT POW" checkOutputAndType
+997 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pexpression SWAP doubleSpaceRemover noWSpace SWAP
+" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
+AZ^ " INT INT PROD POW" checkOutputAndType
+998 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
+" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
+AZ^ " INT INT PROD POW" checkOutputAndType
+999 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pset SWAP doubleSpaceRemover noWSpace SWAP
+" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
+newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
+AZ^ " INT INT PROD POW" checkOutputAndType
 (
-997 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pexpression SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
-998 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
-999 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Pset SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
 1000 " ([ i := 1 ▯ i := 2 ▯ i := 3 ∇  i * 2 ])" Psequence SWAP doubleSpaceRemover noWSpace SWAP
 " INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
 newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
