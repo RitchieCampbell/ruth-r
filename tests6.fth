@@ -534,9 +534,9 @@ AZN^^ "  CHOICE>" AZN^^ checkOutput
 1224 " ii < 3 → ii := 4" PmultipleInstruction " ii 3 < --> 4 to ii" AZN^ AZN^ checkOutput
 L functions.fth ( may be redundant )
 1225 " jj INT ← factorial(i INT) ≙ IF i = 0 THEN jj := 1 ELSE jj := i * factorial(i - 1) END END"
-Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^ " i 0 =" AZN^^ " IF" AZN^^
-" 1 to jj" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to jj" AZN^ AZN^^ " THEN" AZN^^
-" jj" AZN^^ " ;" AZN^^ checkOutput
+noWSpace endString truncate Poperation " : factorial (: i :)" AZN^ " 0 VALUE jj" AZN^^
+" i 0 =" AZN^^ " IF" AZN^^ " 1 to jj" AZN^ AZN^^ " ELSE" AZN^^ " i i 1 - RECURSE * to jj"
+AZN^ AZN^^ " THEN" AZN^^ " jj" AZN^^ " ;" AZN^^ checkOutput
 
 " HereEndethThe6thTestFile." CR .AZ CR
 

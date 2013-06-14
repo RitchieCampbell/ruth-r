@@ -6383,13 +6383,13 @@ IF
         IF
             ." VARIABLES without END error" ABORT
         ELSE
-            PUSH Pvariableslist POP PmultipleInstruction AZ^
+            PUSH Pvariableslist POP Poperations AZ^
         THEN
     ELSE
-        Pmultipleoperations
+        Poperations
     THEN
 ELSE
-    Pmultipleoperations
+    Poperations
 THEN
 ;
 

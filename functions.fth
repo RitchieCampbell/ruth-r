@@ -197,7 +197,6 @@ locals CARD
 IF
     " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
 THEN
-." In Poperation: text = " DUP .AZ CR ( test )
 ( Put this operation's type into the types relation, so it can be called later )
 STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 PmultipleInstruction
