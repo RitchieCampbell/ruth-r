@@ -5824,7 +5824,9 @@ NULL OP Pguard NULL OP Pguard2
 assignment rsplit
 DUP 0=
 IF ( No operator found: must be expression; change to Pfunction later )
-    2DROP Pexpression whitespace stringconsists? NOT
+    2DROP Pexpression
+    ." Type inPassignment = " DUP .AZ CR ( test )
+    whitespace stringconsists? NOT
     IF  ( If "return type" not empty, will incorrectly leave value on stack. )
         ." Passed expression/function returning a value to an instruction:" CR
         ." Only null return permitted here." ABORT
@@ -6112,7 +6114,7 @@ THEN
 
 ' P to Pguard2
 
-: P ( : PmultipleInstruction ) ( s -- s1 )
+: P ( SEE Pchoicestruction ) ( s -- s1 )
 (
     Where s is an instruction in the format "i := i + 1; PRINT i", which is
     split on the first ; allowing for keywords like WHILE and IF or (). The text
@@ -6373,24 +6375,8 @@ NULL OP Poperations
     return "0 VALUE i 0 VALUE s 0 VALUE seq" with appropriate newlines, and the
     three types "i ↦ INT, s ↦ STRING, seq ↦ INT STRING PROD POW" are added to
     the "types" relation.
-) ( PmultipleInstruction must be replaced by Pmultipleoperation or similar )
--wspace variables OVER prefix?
-IF
-    DUP variables whitespace followed-by?
-    IF
-        variables decapitate
-        endString rSplitForKeywords 0= ( END missing = error )
-        IF
-            ." VARIABLES without END error" ABORT
-        ELSE
-            PUSH Pvariableslist POP Poperations AZ^
-        THEN
-    ELSE
-        Poperations
-    THEN
-ELSE
-    Poperations
-THEN
+)
+-wspace variables decapitate -wspace Pvariableslist
 ;
 
 (
@@ -6458,26 +6444,7 @@ THEN ;
     "i 123, j 234, s “Campbell”" being a constants list and "foo bar" the rest
     of the program. testing note: Must have something even whitespace after END
 )
--wspace
-constantsString OVER prefix?
-IF
-    DUP constantsString whitespace followed-by?
-    IF
-        constantsString decapitate
-        endString rSplitForKeywords 0= ( no "END" found = error )
-        IF
-            ." CONSTANTS without END error." ABORT
-        ELSE
-            PUSH 
-            Pconstantlist
-            POP Pvariables AZ^
-        THEN
-    ELSE ( The following two instructions are for no "CONSTANTS" found )
-        Pvariables
-    THEN
-ELSE
-    Pvariables
-THEN
+-wspace constantsString decapitate -wspace Pconstantlist
 ;
 
 : P PmultipleInstruction ; ' P to Poperations

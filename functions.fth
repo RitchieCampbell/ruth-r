@@ -215,6 +215,41 @@ ELSE
     DROP Poperation "  CR " operationName AZ^ "  CR" AZ^ AZN^^
 THEN
 ;
+
+: Pprogram ( s -- s2 )
+(
+    Calls Pconstants, Pvariables and Pmultipleoperations in turn as required.
+    Beware: any pre-existing values on the stack should be removed before using
+    this word, otherwise it will attempt to catenate them to the output, with
+    undefined results.
+)
+STRING { } to constants STRING STRING PROD { } to types ( relations emptied )
+-wspace
+constantsString OVER prefix? OVER constantsString whitespace followed-by? AND
+IF
+    endString rSplitForKeywords
+    IF
+        PUSH Pconstants
+    ELSE
+        ." CONSTANTS without END error." ABORT
+    THEN
+THEN  
+POP -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
+IF 
+    endString rSplitForKeywords
+    IF
+        PUSH Pvariables POP
+    ELSE
+        ." VARIABLES without END error." ABORT
+    THEN
+THEN
+Pmultipleoperations 
+BEGIN
+    DEPTH 1 >
+WHILE
+    AZ^
+REPEAT ;
+
 (
 " i INT ← double (j INT) ≙ i := j * 2 END;" " printS(s STRING) ≙ PRINT s END;" newline SWAP AZ^ AZ^ newline AZ^ " printI (i INT) ≙ PRINT i END" newline SWAP OVER AZ^ AZ^ AZ^ Pmultipleoperations ok.
 .AZ : double (: j :)
