@@ -523,7 +523,7 @@ REPEAT DROP ( Character no longer required )
 
 : last-character
 (
-    az c -- az2 being the last point the character was found in that string; if
+    az c -- az2 being the last point the character was found in that string; i
     c not found, returns the beginning of the string.
     ASCII characters only for 2nd argument. If the string ends with that
     character, the end of the string will be returned.
@@ -2325,7 +2325,7 @@ STRING INT PROD
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
-: P ( to be renamed : rsplit )
+: P ( : rsplit )
 (
   s seq -- s1 s2 s3
   Where s is an expression, seq is a sequence of Strings 
@@ -5823,11 +5823,14 @@ NULL OP Pguard NULL OP Pguard2
 )
 assignment rsplit
 DUP 0=
-IF ( No operator found: must be expression; change to Pfunction later )
-    2DROP Pexpression
-    ." Type inPassignment = " DUP .AZ CR ( test )
+IF ( No operator found: must be function. )
+   ( If "return type" not empty, will incorrectly leave value on stack. )
+    2DROP Pfunction STRING [ " #" , ] rsplit 0=
+    IF ( Remove 0 from top of stack if no "#" )
+        DROP
+    THEN
     whitespace stringconsists? NOT
-    IF  ( If "return type" not empty, will incorrectly leave value on stack. )
+    IF
         ." Passed expression/function returning a value to an instruction:" CR
         ." Only null return permitted here." ABORT
     THEN
@@ -6114,7 +6117,7 @@ THEN
 
 ' P to Pguard2
 
-: P ( SEE Pchoicestruction ) ( s -- s1 )
+: P ( : PmultipleInstruction SEE Pchoicestruction ) ( s -- s1 )
 (
     Where s is an instruction in the format "i := i + 1; PRINT i", which is
     split on the first ; allowing for keywords like WHILE and IF or (). The text

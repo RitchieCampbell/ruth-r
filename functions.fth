@@ -127,7 +127,6 @@ IF  ( Found , so L = single variable, R = shorter list )
     SWAP Plocalvariable RECURSE
 ELSE    ( No comma, so single variable in list )
     DROP Plocalvariable
-    locals .SET ."  " locals CARD . CR ( test )
 THEN
 ;
 
@@ -206,10 +205,9 @@ operationStack SWAP AZ^
 " : " operationName sSpace AZ^ AZ^ SWAP AZ^
 ;
 
-
 : Pmultipleoperations ( s -- s1 ) 
 sequence startKeywords2 endKeywords rsplitForBlocks 
-IF 
+IF
     SWAP noWSpace endString truncate Poperation SWAP RECURSE AZ^ 
 ELSE 
     DROP Poperation "  CR " operationName AZ^ "  CR" AZ^ AZN^^
@@ -229,12 +227,12 @@ constantsString OVER prefix? OVER constantsString whitespace followed-by? AND
 IF
     endString rSplitForKeywords
     IF
-        PUSH Pconstants
+        PUSH Pconstants POP
     ELSE
         ." CONSTANTS without END error." ABORT
     THEN
 THEN  
-POP -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
+-wspace variables OVER prefix? OVER variables whitespace followed-by? AND
 IF 
     endString rSplitForKeywords
     IF
