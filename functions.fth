@@ -222,6 +222,13 @@ THEN
     undefined results.
 )
 STRING { } to constants STRING STRING PROD { } to types ( relations emptied )
+(
+    If you ever use library routines, they would need to have their types added
+    back to types: example
+    : divMod ( i j -- iMODj i÷j ) /MOD ; 
+    STRING STRING PROD { " divMod" " INT INT # INT INT" |->$,$ , } types ∪ to
+        types
+)
 -wspace
 constantsString OVER prefix? OVER constantsString whitespace followed-by? AND
 IF

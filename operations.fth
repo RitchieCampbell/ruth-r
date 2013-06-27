@@ -182,8 +182,8 @@ whitespace INT { 0 , CHAR ; , } ∪ CONSTANT whitespace0;
 ( 0009 = HT tab \t, 000A(10) = LF new line \n, 000B(11) = VT 000C(12) = FF,
 000D(13) = CR, 0020(32) = space )
 STRING [ while , " IF" , " (" , ] CONSTANT startKeywords
-STRING [ while , " IF" , " (" , " ≙" , variables , ] CONSTANT startKeywords2
-STRING [ endString , " )" , ] CONSTANT endKeywords
+STRING [ while , " IF" , " ≙" , variables , ] CONSTANT startKeywords2
+STRING [ endString , ] CONSTANT endKeywords
 (
     Preceding 3 sets include brackets and words which can begin or end a block,
     eg WHILE . . . DO . . . END.
@@ -1818,10 +1818,10 @@ newline " ELSE" newline AZ^ AZ^ SWAP AZ^ AZ^ ;
     lValue sSpace rValue sSpace operator AZ^ AZ^ AZ^ AZ^ lType
 ;
 
-: \_ ( s1 s2 s3 s4 -- ss1 ss2 )
+: \_ ( s1 s2 s3 s4 -- ss1 ss2 ) ( Get rid of space after \ when no longer escape )
     (: lValue lType rValue rType :)
-    " \" lType rType check-same-kind-set
-    lValue sSpace AZ^ rValue AZ^ "  \" AZ^ lType
+    " \ " lType rType check-same-kind-set
+    lValue sSpace AZ^ rValue AZ^ "  \ " AZ^ lType
 ;
 
 : ∪_ ( s1 s2 s3 s4 -- ss1 ss2 )
@@ -2222,7 +2222,7 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     "diamond" sequence mustn't contain anything but  "♢" & "∇".
 ) 
 (: sub exp type :)
-type "  [ <RUN " sub exp "  RUN> ] " AZ^ AZ^ AZ^ AZ^
+type "  [ <RUN " sub AZN^ exp "  RUN> ] " AZ^ AZ^ AZ^ AZ^
 int sSpace type "  PROD POW" AZ^ AZ^ AZ^ ;
 
 : ♢_ ( sub exp type -- S♢E_exp type2 )
@@ -2233,7 +2233,7 @@ int sSpace type "  PROD POW" AZ^ AZ^ AZ^ ;
     "diamond" sequence mustn't contain anything but  "♢" & "∇".
 )
 (: sub exp type :) 0 VALUE obracket 0 VALUE cbracket 0 VALUE type-out
-type "  { <RUN " sub exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ 
+type "  { <RUN " sub AZN^ exp "  RUN> } " AZ^ AZ^ AZ^ AZ^ 
 type "  POW" AZ^ ;
 
 : :=_ ( s1 s2 s3 s4 -- ss )
@@ -2249,6 +2249,10 @@ IF
 THEN    ( If lType ends ARRAY and rType is ARRAY, assume is empty array )
 "  ARRAY" lType noWSpace suffix? array rType stringEq AND NOT
 IF
+    " #" rType -wspace prefix?
+    IF
+        rType -wspace " #" decapitate to rType
+    THEN
     " := (assignment)" lType rType test-two-types-same
 THEN
 rValue to_ lValue newline AZ^ AZ^ AZ^ 1LEAVE ( Why do I need 1LEAVE?? )
@@ -2900,8 +2904,7 @@ ELSE
                                     Pstring
                                 ELSE
                                     DUP ." Passed: " .AZ
-                                    ."  Type not yet used" 10 EMIT ABORT
-                                    ( Other types can be added, eg arrays )
+                                    ."  Type not yet used" CR ABORT
                                 THEN
                             THEN
                         THEN
@@ -3364,7 +3367,6 @@ WHILE
             current token myAZLength + to current
             ( Move on length of the keyword )
         THEN
-        
     REPEAT
     end-count 0=
     IF
@@ -6117,7 +6119,7 @@ THEN
 
 ' P to Pguard2
 
-: P ( : PmultipleInstruction SEE Pchoicestruction ) ( s -- s1 )
+: P ( : PmultipleInstruction SEE PchoiceInstruction ) ( s -- s1 )
 (
     Where s is an instruction in the format "i := i + 1; PRINT i", which is
     split on the first ; allowing for keywords like WHILE and IF or (). The text
