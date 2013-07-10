@@ -106,7 +106,7 @@ NIP
 "  " \n OVER C! CONSTANT newline
 : AZN^ ( s1 -- s1 with newline appended ) newline AZ^ ;
 : AZN^^ ( s1 s2 -- s1-s2 with newline appended ) newline AZ^ AZ^ ;
-"  to " CONSTANT to_     ( Note has additional leading space )
+"   to " 10 OVER 1+ C! CONSTANT to_     ( Note has additional leading space )
 " <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
 "  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
 " ▯" CONSTANT choiceString
@@ -2393,30 +2393,58 @@ op  ( 3rd result on stack )
 ;
 ' P to rsplit
 
-: get-return-type-function ( s1 s2 -- s3 )
+: get-return-type-function ( s1 s2 -- s3 s4 )
 (
     Where s1 is the function name and s2 the list of input types received. Calls
     the type from the "types" relation, which is in the form "foo baa # buz".
     The input type is before the # and the output type(s) after the #; it is
     permissible to have no output type, but an input type must be given.
     Uses a split operator to separate the string, check the left part is equal
-    to the input string, and returns the right part, which may be blank.
+    to the input string, and returns the right part, which may be blank, as s4.
     Note the types must be separated by single spaces.
+    Enhanced to take sets as functions as input, so if mySeq is in types as
+    INT foo PROD POW will return s4 = foo from "mySeq" "123". In which case s3
+    is " SWAP APPLY" to be catenated to the function name, otherwise an empty
+    string.
 )
 (: f-name in-types :)
 f-name noWSpace to f-name in-types noWSpace to in-types
-types f-name APPLY CLONE-STRING hash rsplit VALUE left VALUE right VALUE op
-left noWSpace in-types stringEq NOT
+blankString VALUE appendix 0 VALUE typeString
+f-name locals DOM IN
 IF
-    ." Incorrect input types for function " f-name .AZ ." ." CR left noWSpace
-    .AZ ."  required and " in-types .AZ ."  received." ABORT
-THEN
-op
-IF
-    right noWSpace
+    locals f-name APPLY CLONE-STRING to typeString
 ELSE
-    blankString
+    f-name types DOM IN
+    IF
+        types f-name APPLY CLONE-STRING to typeString
+    ELSE
+        ." Un-declared variable: not permitted: " f-name .AZ ."  passed." ABORT
+    THEN
 THEN
+typeString CLONE-STRING hash rsplit VALUE left VALUE right VALUE op
+op 0=
+IF
+    blankString to right
+    left noWSpace in-types stringEq NOT
+    IF
+        in-types left prefix? NOT left in-types whitespace followed-by? NOT
+        "  PROD POW" left suffix? NOT OR OR
+        IF
+            ." Type mismatch for function input: type received = " in-types .AZ
+            CR ." Should be “" in-types .AZ ."  something PROD POW”." CR
+            ." Type for " f-name .AZ ."  is “" typeString .AZ ." ”." ABORT
+        THEN
+        typeString in-types decapitate "  PROD POW" truncate -blanks to right
+        "  SWAP APPLY" to appendix
+    THEN
+ELSE
+    left in-types stringEq NOT
+    IF
+        ." Incorrect input types for function " f-name .AZ ." ." CR left .AZ
+        ."  required and " in-types .AZ ."  received." ABORT
+    THEN
+THEN
+appendix right
 ;
 
 : )_ ( s1 s2 s3 s4 s5 s6 -- ss1 ss2 )
@@ -2431,14 +2459,14 @@ THEN
     ie "boz". The types must be separated by single spaces, or they will be
     mismatched.
     This operation should be used by the Pfunction and Pfunction2 operations,
-    and preceded by the (_ and ,_ operations.
+    and must be preceded by the (_ and ,_ operations.
 ) match brackets ) )
-    (: bracket lValue lType rValue rType f-name :)
-    bracket " (" test-same-bracket ( feed bracket, check correct to match () )
-    ( No need to check whether same types in this instance )
-    lValue sSpace rValue AZ^ AZ^ noWSpace sSpace f-name AZ^ AZ^
-    lType 0= IF sSpace to lType THEN
-    f-name lType sSpace rType AZ^ AZ^ get-return-type-function
+(: bracket lValue lType rValue rType f-name :)
+bracket " (" test-same-bracket ( feed bracket, check correct to match () )
+( No need to check whether same types in this instance )
+lValue sSpace rValue AZ^ AZ^ noWSpace sSpace f-name AZ^ AZ^
+lType 0= IF sSpace to lType THEN
+f-name lType sSpace rType AZ^ AZ^ get-return-type-function PUSH AZ^ POP
 ;
 
 : CR_ ( - -- s = "CR" ) "  CR" AZN^ ;
