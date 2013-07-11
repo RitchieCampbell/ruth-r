@@ -2422,10 +2422,11 @@ ELSE
     THEN
 THEN
 typeString CLONE-STRING hash rsplit VALUE left VALUE right VALUE op
+left noWSpace to left
 op 0=
 IF
     blankString to right
-    left noWSpace in-types stringEq NOT
+    left in-types stringEq NOT
     IF
         in-types left prefix? NOT left in-types whitespace followed-by? NOT
         "  PROD POW" left suffix? NOT OR OR
@@ -2444,7 +2445,7 @@ ELSE
         ."  required and " in-types .AZ ."  received." ABORT
     THEN
 THEN
-appendix right
+appendix right noWSpace
 ;
 
 : )_ ( s1 s2 s3 s4 s5 s6 -- ss1 ss2 )
