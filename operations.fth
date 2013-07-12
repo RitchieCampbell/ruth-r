@@ -106,9 +106,9 @@ NIP
 "  " \n OVER C! CONSTANT newline
 : AZN^ ( s1 -- s1 with newline appended ) newline AZ^ ;
 : AZN^^ ( s1 s2 -- s1-s2 with newline appended ) newline AZ^ AZ^ ;
-"   to " 10 OVER 1+ C! CONSTANT to_     ( Note has additional leading space )
-" <CHOICE" newline AZ^ CONSTANT choice< ( Note additional trailing newline )
-"  CHOICE>" newline AZ^ CONSTANT choice> ( Note has leading space and new line )
+"  to " CONSTANT to_     ( Note has additional leading space )
+" <CHOICE" AZN^ CONSTANT choice< ( Note additional trailing newline )
+"  CHOICE>" AZN^ CONSTANT choice> ( Note has leading space and new line )
 " ▯" CONSTANT choiceString
 "  [] " CONSTANT sqBrackets ( Note leading and trailing spaces )
 lQuote myAZLength CONSTANT lQuoteLength
