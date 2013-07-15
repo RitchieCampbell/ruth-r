@@ -238,7 +238,7 @@ STRING [ " e-" , " e" , ] CONSTANT e-minus
 STRING [ " ." , ] CONSTANT dot
 STRING [ " =>" , " ⇒" , ] CONSTANT implies
 STRING [ " <=>" , " ⇔" , ] CONSTANT equivalence
-STRING [ " :=" , " :∈" , ] CONSTANT assignment
+STRING [ " :=" , " :∈" , " ≔" , ] CONSTANT assignment
 STRING [ " THEN" , ] CONSTANT thenOps
 STRING [ " ELSE" , ] CONSTANT elseOps
 STRING [ " ;" , ] CONSTANT sequence ( instructions separated by ; )
@@ -2288,8 +2288,9 @@ sSpace SWAP "  PROD" AZ^ AZ^ AZ^ ;
     no whitespace in the middle
 )
 -wspace
+DUP CLONE-STRING PUSH
 DUP BEGIN DUP head whitespace IN NOT OVER head AND WHILE tail REPEAT
-DUP head 0= IF ." No middle space found in " .AZ ABORT THEN 
+DUP head 0= IF ." No middle space found in " POP .AZ ABORT THEN POP DROP
 0 OVER C! 1+
 ;
 
@@ -2326,6 +2327,7 @@ STRING INT PROD
     " =/" ' ≠_  |->$,I , " ≠"   ' ≠_  |->$,I , 
     " :=" ' :=_ |->$,I , " :∈"  ' :∈_ |->$,I ,
     " ∇"  ' ∇_  |->$,I , " ♢"   ' ♢_  |->$,I ,
+    " ≔"  ' :=_ |->$,I ,
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
