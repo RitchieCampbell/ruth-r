@@ -322,7 +322,7 @@ IF
 ELSE
     DUP 0 <
     IF
-        " -"recurse
+        " -"
     ELSE
         blankString
     THEN
@@ -4700,6 +4700,29 @@ ELSE
     AZ^ maplet 1 APPLY bar-line AZ^ AZ^
 THEN
 ;
+(
+    Suggestion for Pcardinality:
+    Create sequence cardElement or similar:
+    STRING [ " ¢" , " ł" , " ®" , ] CONSTANT cardElement
+    STRING INT PROD { " ¢" ' CARD_  |->$,I , " ł"' LEFT_ |->$,I ,
+                      " ®" ' RIGHT_ |->$,I , } as part of operation swaps
+    : CARD_ (: value type :)
+    STRING STRING STRING PROD PROD { " POW" " " " CARD" |->$,$ |->P,$ ,
+                                " ARRAY" " size of" " " |->$,$ |->P,$ , }
+    VALUE cardSwaps
+    cardSwaps type lastWSpaceSplit APPLY DUP FIRST value AZ^ SWAP SECOND AZ^ int ;
+    : LEFT_ (: value type :) "  PROD" type suffix? NOT IF ...ABORT THEN
+    value "  FIRST" AZ^ type truncated to single tree
+    : RIGHT similar but the other way round
+    In Psubset change Ppair to Pcardinality or PcardElement
+    : Pcardelement
+    cardElement rsplit DUP
+    IF
+        ROT DROP PUSH Pset/Pexpression operationSwaps POP APPLY EXECUTE
+    ELSE
+        DROP NIP Ppair
+    THEN
+)
 
 : Psubset ( s -- s1 s2 )
 (

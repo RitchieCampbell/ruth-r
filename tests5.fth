@@ -267,36 +267,30 @@ newline AZ^ AZ^ boolean checkOutputAndType
 "     iset CHOICE to l1 l1 0 > --> 0" newline AZ^ AZ^ " TILL CARD SATISFIED> } CARD 0 <>"
 newline AZ^ AZ^ boolean checkOutputAndType
 993 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pexpression SWAP doubleSpaceRemover noWSpace SWAP
-" INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
-AZ^ " INT POW" checkOutputAndType
+" INT { <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>" AZN^^ AZN^ " i 2 * RUN> }" AZ^ " INT POW" checkOutputAndType
 994 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
-" INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
-AZ^ " INT POW" checkOutputAndType
+" INT { <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>" AZN^^ AZN^ " i 2 * RUN> }" AZ^ " INT POW" checkOutputAndType
 995 " { i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 }" Pset SWAP doubleSpaceRemover noWSpace SWAP
-" INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
-AZ^ " INT POW" checkOutputAndType
+" INT { <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>" AZN^ AZN^^ " i 2 * RUN> }" AZ^ " INT POW" checkOutputAndType
 996 " ({ i := 1 ▯ i := 2 ▯ i := 3 ♢ i * 2 })" Patom SWAP doubleSpaceRemover noWSpace SWAP
-" INT { <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> }"
-AZ^ " INT POW" checkOutputAndType
+" INT { <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>" AZN^ AZN^^ " i 2 * RUN> }" AZ^ " INT POW" checkOutputAndType
 997 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pexpression SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
+" INT [ <RUN <CHOICE" AZN^ " 1 to i"  AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>"  AZN^ AZN^^ " i 2 * RUN> ]" AZ^ " INT INT PROD POW" checkOutputAndType
 998 "  i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 " Pdiamond SWAP doubleSpaceRemover noWSpace SWAP
-" INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ]"
-AZ^ " INT INT PROD POW" checkOutputAndType
+" INT [ <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^ "  [] 3 to i" AZN^^
+"  CHOICE>" AZN^ AZN^^ " i 2 * RUN> ]" AZ^ " INT INT PROD POW" checkOutputAndType
 999 " [ i := 1 ▯ i := 2 ▯ i := 3 ∇ i * 2 ]" Psequence SWAP doubleSpaceRemover noWSpace SWAP
-" INT INT PROD POW [ INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ] , ]"
-AZ^ " INT INT INT PROD POW PROD POW" checkOutputAndType
+" INT INT PROD POW [ INT [ <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^
+"  [] 3 to i" AZN^^ "  CHOICE>" AZN^ AZN^^ " i 2 * RUN> ] , ]" AZ^
+" INT INT INT PROD POW PROD POW" checkOutputAndType
 1000 " ([ i := 1 ▯ i := 2 ▯ i := 3 ∇  i * 2 ])" Psequence SWAP doubleSpaceRemover noWSpace SWAP
-" INT INT PROD POW [ INT [ <RUN <CHOICE" newline AZ^ " 1 to i" newline AZ^ AZ^ "  [] 2 to i"
-newline AZ^ AZ^ "  [] 3 to i" newline AZ^ AZ^ "  CHOICE>" newline AZ^ AZ^ " i 2 * RUN> ] , ]"
-AZ^ " INT INT INT PROD POW PROD POW" checkOutputAndType
+" INT INT PROD POW [ INT [ <RUN <CHOICE" AZN^ " 1 to i" AZN^^ "  [] 2 to i" AZN^^
+"  [] 3 to i" AZN^^ "  CHOICE>" AZN^ AZN^^ " i 2 * RUN> ] , ]" AZ^
+" INT INT INT PROD POW PROD POW" checkOutputAndType
 
 CR " HereEndethThe5thTestFile" .AZ CR
