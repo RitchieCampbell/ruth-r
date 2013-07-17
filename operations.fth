@@ -2375,10 +2375,26 @@ left ;
 
 : LEFT_ ( s=value s=type -- s=value FIRST s=type truncated )
 (
+    Finds the left half of a pair by adding FIRST and using the
+    truncateToSingleTree operation on the type
 )
 noWSpace "  PROD" OVER suffix?
 IF
     SWAP "  FIRST" AZ^ SWAP truncateToSingleTree
+ELSE
+    ." Only pairs can have ł=left: type passed = " .AZ ABORT
+THEN
+;
+
+: RIGHT_ ( s=value s=type -- s=value SECOND s=type truncated )
+(
+    Finds the left half of a pair by adding FIRST and using the
+    truncateToSingleTree operation on the type and decapitate/truncate later
+)
+noWSpace "  PROD" OVER suffix?
+IF
+    SWAP "  SECOND" AZ^ SWAP DUP truncateToSingleTree decapitate
+    " PROD" truncate noWSpace
 ELSE
     ." Only pairs can have ł=left: type passed = " .AZ ABORT
 THEN
@@ -2399,7 +2415,7 @@ STRING INT PROD
     " :=" '  :=_  |->$,I , " :∈" '    :∈_ |->$,I ,
     " ∇"  '  ∇_   |->$,I , " ♢"  '    ♢_  |->$,I ,
     " ≔"  '  :=_  |->$,I , " ¢"  ' CARD_  |->$,I ,
-    " ł"  ' LEFT_ |->$,I , ( " ®"  ' RIGHT_ |->$,I , )
+    " ł"  ' LEFT_ |->$,I , " ®"  ' RIGHT_ |->$,I ,
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
