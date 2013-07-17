@@ -1920,20 +1920,26 @@ DROP 2DROP
    types. Returns a postfix expression of the catenation eg " x y ^" and the
    type, eg INT FOO PROD POW. Uses the check-same-kind-relation operation and
    checks that "INT" is a prefix of the types. Strings can be catenated with the
-   same operation, using the AZ^ word in the output
+   same operation, using the AZ^ word in the output.
+   On 16th July 2013 enhanced to take String-cat-INT using iToAZ
 )
     (: lValue lType rValue rType :)
-    lType string stringEq rType string stringEq AND
+    lType string stringEq rType int stringEq AND
     IF
-        lValue sSpace AZ^ rValue AZ^ "  AZ^"  AZ^ lType
+        lValue sSpace rValue "  iToAZ AZ^" AZ^ AZ^ AZ^ lType
     ELSE
-        " ^" lType rType check-same-kind-relation
-        intSpace lType -blanks prefix?
+        lType string stringEq rType string stringEq AND
         IF
-            lValue sSpace AZ^ rValue AZ^ "  ^" AZ^ lType
+            lValue sSpace AZ^ rValue AZ^ "  AZ^"  AZ^ lType
         ELSE
-            ." Type error for ^ operator: should begin with INT: " lType .AZ
-            ."  passed" ABORT
+            " ^" lType rType check-same-kind-relation
+            intSpace lType -blanks prefix?
+            IF
+                lValue sSpace AZ^ rValue AZ^ "  ^" AZ^ lType
+            ELSE
+                ." Type error for ^ operator: should begin with INT: " lType .AZ
+                ."  passed" ABORT
+            THEN
         THEN
     THEN
 ;
@@ -2312,6 +2318,40 @@ IF
     1+          ( Next character otherwise starts with w-space )
 THEN
 ;
+
+: truncateToSingleTree ( s1 -- s2 )
+(
+    Input type = s1, output type = s2.
+    Takes a type like INT FOO PROD POW STRING STRING PROD PROD and truncates it
+    to the last place at which it is a single tree, eg INT FOO PROD POW.
+    No change if the type passed is already a single tree. Intended for finding
+    the left half of a pair, so should be used on trees ending PROD. To find the
+    right half, use this function on cloned version of type, decapitate by s2
+    and truncate by PROD. Counts from R to L because the ↦ operator is regarded
+    as left-associative. Start at 0, add 1 for PROD, 0 for POW, -1 for other
+    tokens, and stop when 0 is reached.
+)
+(: input :)
+input CLONE-STRING noWSpace VALUE string 0 VALUE tokens TRUE VALUE notFinished
+string lastWSpaceSplit VALUE left VALUE right
+BEGIN
+." Right half = " right .AZ CR ." Left half = " left .AZ CR ( test )
+    right left = NOT notFinished AND
+WHILE
+    right " PROD" stringEq
+    IF
+        tokens 1+ to tokens
+    ELSE
+        right " POW" stringEq NOT
+        IF
+            tokens 1- to tokens
+        THEN
+    THEN
+    0 right C!
+    tokens 0 > to notFinished
+    string lastWSpaceSplit to right to left
+REPEAT
+left ;
 
 (
  To be used instead of multiple if-elses to call a particular bar-decorated
