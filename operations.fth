@@ -222,6 +222,7 @@ STRING [ " ¬" , ] CONSTANT not
 STRING [ " &" , " |" , " ∧" , " ∨" , ] CONSTANT andOr
 STRING [ " ," , ] CONSTANT comma
 STRING [ " ⊂" ,  " ⊄" , " ⊆" , " ⊈" , ] CONSTANT subset
+STRING [ " ¢" , " ł" , " ®" , ] CONSTANT cardElement
 STRING [ " ↦" , ] CONSTANT maplet
 STRING [ " \" , "    " 226 OVER C! 136 OVER 1+ C! 150 OVER 2 + C! , " ∪" ,
         " ∩" , " ⊕" , ] CONSTANT unionIntersect : ∖ \ ;
@@ -2099,7 +2100,27 @@ THEN    ( 3 unnecessary values on stack ) DROP 2DROP
     THEN
     2DROP
 ;
- 
+
+: CARD_ ( s1 s2 -- s2 INT )
+(
+    Attaches the appropriate cardinality operator, prefix "size of" for arrays
+    and suffix "CARD" for sets/sequences. Error if inappropriate type passed.
+)
+noWSpace DUP "  POW" SWAP suffix? ( "mySet" "foo POW" -1 )
+IF
+    DROP "  CARD" AZ^
+ELSE
+    DUP "  ARRAY" SWAP suffix? ( "myArray" "foo ARRAY" -1 )
+    IF
+        DROP " size of " SWAP AZ^
+    ELSE
+        ." Incorrect type for cardinality: must be array or set: " .AZ
+        ."  passed." ABORT
+    THEN
+THEN
+int
+;
+
 : {_ ( -- "{" "{" null )
 (
  Returns the opening brace for a set, twice and "null" because the type of the
@@ -2333,9 +2354,8 @@ THEN
 )
 (: input :)
 input CLONE-STRING noWSpace VALUE string 0 VALUE tokens TRUE VALUE notFinished
-string lastWSpaceSplit VALUE left VALUE right
+0 VALUE left 0 VALUE right string lastWSpaceSplit to right to left
 BEGIN
-." Right half = " right .AZ CR ." Left half = " left .AZ CR ( test )
     right left = NOT notFinished AND
 WHILE
     right " PROD" stringEq
@@ -2353,6 +2373,17 @@ WHILE
 REPEAT
 left ;
 
+: LEFT_ ( s=value s=type -- s=value FIRST s=type truncated )
+(
+)
+noWSpace "  PROD" OVER suffix?
+IF
+    SWAP "  FIRST" AZ^ SWAP truncateToSingleTree
+ELSE
+    ." Only pairs can have ł=left: type passed = " .AZ ABORT
+THEN
+;
+
 (
  To be used instead of multiple if-elses to call a particular bar-decorated
  operation, depending on the operator found. The seq-ops set is there so you can
@@ -2360,14 +2391,15 @@ left ;
 )
 STRING INT PROD
 {
-    " ⁀"  ' ⁀_  |->$,I , " ^"   ' ^_  |->$,I ,
-    " ▷-" ' ▷-_ |->$,I , " ▷"   ' ▷_  |->$,I ,
-    " ←"  ' ←_  |->$,I , " ↓"   ' ↓_  |->$,I ,
-    " ↑"  ' ↑_  |->$,I , " ="   ' =_  |->$,I , 
-    " =/" ' ≠_  |->$,I , " ≠"   ' ≠_  |->$,I , 
-    " :=" ' :=_ |->$,I , " :∈"  ' :∈_ |->$,I ,
-    " ∇"  ' ∇_  |->$,I , " ♢"   ' ♢_  |->$,I ,
-    " ≔"  ' :=_ |->$,I ,
+    " ⁀"  '  ⁀_   |->$,I , " ^"  '    ^_  |->$,I ,
+    " ▷-" '  ▷-_  |->$,I , " ▷"  '    ▷_  |->$,I ,
+    " ←"  '  ←_   |->$,I , " ↓"  '    ↓_  |->$,I ,
+    " ↑"  '  ↑_   |->$,I , " ="  '    =_  |->$,I , 
+    " =/" '  ≠_   |->$,I , " ≠"  '    ≠_  |->$,I , 
+    " :=" '  :=_  |->$,I , " :∈" '    :∈_ |->$,I ,
+    " ∇"  '  ∇_   |->$,I , " ♢"  '    ♢_  |->$,I ,
+    " ≔"  '  :=_  |->$,I , " ¢"  ' CARD_  |->$,I ,
+    " ł"  ' LEFT_ |->$,I , ( " ®"  ' RIGHT_ |->$,I , )
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
@@ -4740,29 +4772,20 @@ ELSE
     AZ^ maplet 1 APPLY bar-line AZ^ AZ^
 THEN
 ;
+
+: PcardElement ( s1 -- s2 s3 = ¢iset/łpair/®pair -- "iset CARD" type )
 (
-    Suggestion for Pcardinality:
-    Create sequence cardElement or similar:
-    STRING [ " ¢" , " ł" , " ®" , ] CONSTANT cardElement
-    STRING INT PROD { " ¢" ' CARD_  |->$,I , " ł"' LEFT_ |->$,I ,
-                      " ®" ' RIGHT_ |->$,I , } as part of operation swaps
-    : CARD_ (: value type :)
-    STRING STRING STRING PROD PROD { " POW" " " " CARD" |->$,$ |->P,$ ,
-                                " ARRAY" " size of" " " |->$,$ |->P,$ , }
-    VALUE cardSwaps
-    cardSwaps type lastWSpaceSplit APPLY DUP FIRST value AZ^ SWAP SECOND AZ^ int ;
-    : LEFT_ (: value type :) "  PROD" type suffix? NOT IF ...ABORT THEN
-    value "  FIRST" AZ^ type truncated to single tree
-    : RIGHT similar but the other way round
-    In Psubset change Ppair to Pcardinality or PcardElement
-    : Pcardelement
-    cardElement rsplit DUP
-    IF
-        ROT DROP PUSH Pset/Pexpression operationSwaps POP APPLY EXECUTE
-    ELSE
-        DROP NIP Ppair
-    THEN
+    Parses the ¢ł® operators for cardinality and left/right elements of a pair:
+    all unary prefix operators so uses rsplit, calling CARD_ LEFT_ or RIGHT_ as
+    necessary.
 )
+cardElement rsplit DUP
+IF
+    ROT DROP PUSH Pexpression operationSwaps POP APPLY EXECUTE
+ELSE
+    2DROP Ppair
+THEN
+;
 
 : Psubset ( s -- s1 s2 )
 (
@@ -4779,7 +4802,7 @@ THEN
 subset lsplit
 DUP 0=
 IF
-    2DROP Ppair ( If top value is "null" 2nd value is a "nonsense" result )
+    2DROP PcardElement ( If top value is "null" 2nd value is a "nonsense" result )
 ELSE
     PUSH PUSH PjoinedSet ( left operand to joinedset )
     POP PjoinedSet       ( retrieve right operand, also to joinedset )
