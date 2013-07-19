@@ -439,6 +439,19 @@ IF ." true" ELSE ." false" THEN ;
 )
 ROT ROT myAZLength + head SWAP IN ;
 
+: stringStartsSequenceMember ( s seq -- f )
+(
+    Tests whether any of the Strings in the string sequence seq is a prefix of
+    the String s: useful for the sequence [¢, ł, ®].
+)
+(: string seq :)
+FALSE VALUE found 0 VALUE index  
+BEGIN
+    index seq CARD < found 0= AND 
+WHILE
+    index 1+ to index seq index APPLY string prefix? to found
+REPEAT found ;
+
 : doubleSpaceRemover ( s -- s )
 (
     Same string with all multiple spaces converted to single spaces.
@@ -2964,7 +2977,7 @@ ELSE
 THEN ;
 
 NULL OP Pdiamond ( used in Patom, defined 3000 lines below! )
-NULL OP Psequence NULL OP Psequence2 NULL OP Pset
+NULL OP Psequence NULL OP Psequence2 NULL OP Pset NULL OP PcardElement
 
 : Patom ( s -- s1 s2 )
 (
@@ -2975,55 +2988,60 @@ NULL OP Psequence NULL OP Psequence2 NULL OP Pset
     Does not accept lists; these are parsed by the Plist operation.
 )
 noWSpace
-DUP true stringEq OVER True stringEq OR
+DUP cardElement stringStartsSequenceMember
 IF
-    DROP True boolean
+    PcardElement
 ELSE
-    DUP false stringEq OVER False stringEq OR
+    DUP true stringEq OVER True stringEq OR
     IF
-        DROP False boolean
+        DROP True boolean
     ELSE
-        DUP letter stringbegins?
+        DUP false stringEq OVER False stringEq OR
         IF
-            " ARRAY[" OVER prefix?
-            IF
-                ParrayLiteral
-            ELSE
-                DUP [CHAR] ( stringcontainschar?
-                IF
-                    Pfunction
-                ELSE
-                    Pid
-                THEN 
-            THEN
+            DROP False boolean
         ELSE
-            DUP digits0. stringbegins?
+            DUP letter stringbegins?
             IF
-                Pnumber
-            ELSE
-                DUP head [CHAR] ( =
+                " ARRAY[" OVER prefix?
                 IF
-                    [CHAR] ( [CHAR] ) bracketRemover
-                    Pexpression
+                    ParrayLiteral
                 ELSE
-                    DUP head [CHAR] - =
+                    DUP [CHAR] ( stringcontainschar?
                     IF
-                        Puminus
-                    ELSE    ( Ripe for refactoring with [] function: duplicate code should be in Psequence or Pset )
-                        DUP head [CHAR] [ =
+                        Pfunction
+                    ELSE
+                        Pid
+                    THEN 
+                THEN
+            ELSE
+                DUP digits0. stringbegins?
+                IF
+                    Pnumber
+                ELSE
+                    DUP head [CHAR] ( =
+                    IF
+                        [CHAR] ( [CHAR] ) bracketRemover
+                        Pexpression
+                    ELSE
+                        DUP head [CHAR] - =
                         IF
-                            Psequence
-                        ELSE
-                            DUP head [CHAR] { =
+                            Puminus
+                        ELSE    ( Ripe for refactoring with [] function: duplicate code should be in Psequence or Pset )
+                            DUP head [CHAR] [ =
                             IF
-                                Pset
+                                Psequence
                             ELSE
-                                lQuote OVER prefix?
+                                DUP head [CHAR] { =
                                 IF
-                                    Pstring
+                                    Pset
                                 ELSE
-                                    DUP ." Passed: " .AZ
-                                    ."  Type not yet used" CR ABORT
+                                    lQuote OVER prefix?
+                                    IF
+                                        Pstring
+                                    ELSE
+                                        DUP ." Passed: " .AZ
+                                        ."  Type not yet used" CR ABORT
+                                    THEN
                                 THEN
                             THEN
                         THEN
@@ -3185,26 +3203,31 @@ THEN
     metical values.
 )
 noWSpace
-DUP head [CHAR] ( =
+DUP cardElement stringStartsSequenceMember
 IF
-    [CHAR] ( [CHAR] ) bracketRemover2
-    Parith
+    PcardElement
 ELSE
-    DUP digits0. stringbegins? ( Begins 0123456789, must be a number )
+    DUP head [CHAR] ( =
     IF
-        Pnumber
+        [CHAR] ( [CHAR] ) bracketRemover2
+        Parith
     ELSE
-        DUP letter stringbegins? ( Begins A-Za-z, must be identifier )
+        DUP digits0. stringbegins? ( Begins 0123456789, must be a number )
         IF
-            DUP [CHAR] ( stringcontainschar?
-            IF         ( Must be function call )
-                Pfunction
-            ELSE       ( Must be ordinary identifier )
-                Pid
+            Pnumber
+        ELSE
+            DUP letter stringbegins? ( Begins A-Za-z, must be identifier )
+            IF
+                DUP [CHAR] ( stringcontainschar?
+                IF         ( Must be function call )
+                    Pfunction
+                ELSE       ( Must be ordinary identifier )
+                    Pid
+                THEN
+            ELSE           ( Anything else is an error )
+                ." Text in incorrect format for arithmetic atom: " .AZ ."  passed."
+                ABORT
             THEN
-        ELSE           ( Anything else is an error )
-            ." Text in incorrect format for arithmetic atom: " .AZ ."  passed."
-            ABORT
         THEN
     THEN
 THEN
@@ -4789,7 +4812,7 @@ ELSE
 THEN
 ;
 
-: PcardElement ( s1 -- s2 s3 = ¢iset/łpair/®pair -- "iset CARD" type )
+: P ( PcardElement  s1 -- s2 s3 = ¢iset/łpair/®pair -- "iset CARD" type )
 (
     Parses the ¢ł® operators for cardinality and left/right elements of a pair:
     all unary prefix operators so uses rsplit, calling CARD_ LEFT_ or RIGHT_ as
@@ -4801,7 +4824,7 @@ IF
 ELSE
     2DROP Ppair
 THEN
-;
+; ' P to PcardElement
 
 : Psubset ( s -- s1 s2 )
 (
