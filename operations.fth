@@ -4290,36 +4290,34 @@ ELSE
     IF
         Psequence
     ELSE
-        DUP letter stringbegins?
+        DUP head [CHAR] ( = 
         IF
-            DUP alphanumeric stringconsists?
+            [CHAR] ( [CHAR] ) bracketRemover2 PjoinedSet
+        ELSE
+            dotsSeq rsplit
             IF
-                Pid
+                PUSH Parith POP Parith .._
             ELSE
-                dotsSeq rsplit
+                DROP DUP letter stringbegins?
                 IF
-                    PUSH Parith POP Parith .._
-                ELSE
-( If all letters→Pid. If [ before (→array element. If ( before ]→function. ) ) )
-                    DROP DUP [CHAR] ( ( balance brackets ) first-character
-                        OVER [CHAR] [ first-character 2DUP >
+                    DUP alphanumeric stringconsists?
                     IF
-                        2DROP Parray
+                        Pid
                     ELSE
-                            Pfunction
-                        ELSE
-                            ." Text in wrong format for set: " .AZ
-                            ."  received." ABORT
+( If all letters→Pid. If [ before (→array element. If ( before ]→function. ) ) )
+                        DROP DUP [CHAR] ( ( balance brackets ) first-character
+                            OVER [CHAR] [ first-character 2DUP >
+                        IF
+                            2DROP Parray
+                        ELSE <
+                            IF
+                                Pfunction
+                            ELSE
+                                ." Text in wrong format for set: " .AZ
+                                ."  received." ABORT
+                            THEN
                         THEN
                     THEN
-                THEN
-            ELSE ( Doesn't start with { or letters with or without () )
-                DUP head [CHAR] ( ( remove top 0 before trying head! ) =
-                IF
-                    [CHAR] ( [CHAR] ) bracketRemover2 PjoinedSet
-                ELSE
-                    ." Text in wrong format for set: " .AZ
-                    ."  received." ABORT
                 THEN
             THEN
         THEN
@@ -4329,8 +4327,7 @@ THEN
 IF
     ." Incorrect type received as set: should end POW. Type found = " .AZ ABORT
 THEN
-;
-' P to Pset
+; ' P to Pset
 
 : PrangeRestrictedSet ( s -- s1 type )
 (
