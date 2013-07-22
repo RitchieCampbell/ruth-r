@@ -149,7 +149,6 @@ STRING { } VALUE declared-user-types
 STRING { } VALUE user-types ( These three to supplement the types relation )
 ( User types not yet implemented, but these relations are for that purpose )
 STRING { } VALUE constants ( Any declared constants can be added in parsing )
-STRING STRING PROD { } VALUE locals ( Similar for local variables )
 
 (
     Sets containing letters, etc. The "antecedents" set consists of characters
@@ -3006,11 +3005,22 @@ ELSE
                 IF
                     ParrayLiteral
                 ELSE
-                    DUP [CHAR] ( stringcontainschar?
+( If all letters→Pid. If [ before (→array element. If ( before ]→function. ) ) )
+                    DUP alphanumeric stringconsists?
                     IF
-                        Pfunction
-                    ELSE
                         Pid
+                    ELSE
+                        DUP [CHAR] ( first-character OVER [CHAR] [ first-character 2DUP >
+                        IF
+                            2DROP
+                            Parray
+                        ELSE <
+                            IF
+                                Pfunction
+                            ELSE
+                                ." Text " .AZ ."  not correct format." ABORT
+                            THEN
+                        THEN
                     THEN 
                 THEN
             ELSE
@@ -3216,13 +3226,25 @@ ELSE
         IF
             Pnumber
         ELSE
-            DUP letter stringbegins? ( Begins A-Za-z, must be identifier )
+            DUP letter stringbegins? ( Begins A-Za-z, must start identifier )
             IF
-                DUP [CHAR] ( stringcontainschar?
-                IF         ( Must be function call )
-                    Pfunction
-                ELSE       ( Must be ordinary identifier )
+( If all letters→Pid. If [ before (→array element. If ( before ]→function. ) ) )
+                DUP alphanumeric stringconsists?
+                IF
                     Pid
+                ELSE
+                    DUP [CHAR] ( first-character OVER [CHAR] [ first-character
+                    2DUP >
+                    IF
+                        2DROP Parray
+                    ELSE <
+                        IF
+                            Pfunction
+                        ELSE
+                            ." Text in incorrect format for arithmetic atom: "
+                            .AZ ."  passed." ABORT
+                        THEN
+                    THEN
                 THEN
             ELSE           ( Anything else is an error )
                 ." Text in incorrect format for arithmetic atom: " .AZ ."  passed."
@@ -4274,20 +4296,25 @@ ELSE
             IF
                 Pid
             ELSE
-                DUP [CHAR] ( ( ) stringcontainschar?
+                dotsSeq rsplit
                 IF
-                    Pfunction
+                    PUSH Parith POP Parith .._
                 ELSE
-                    ." Text in wrong format for set: " .AZ
-                    ."  received." ABORT
+( If all letters→Pid. If [ before (→array element. If ( before ]→function. ) ) )
+                    DROP DUP [CHAR] ( ( balance brackets ) first-character
+                        OVER [CHAR] [ first-character 2DUP >
+                    IF
+                        2DROP Parray
+                    ELSE
+                            Pfunction
+                        ELSE
+                            ." Text in wrong format for set: " .AZ
+                            ."  received." ABORT
+                        THEN
+                    THEN
                 THEN
-            THEN
-        ELSE ( Doesn't start with { or letters with or without () )
-            dotsSeq rsplit
-            IF
-                PUSH Parith POP Parith .._
-            ELSE
-                DROP DUP head [CHAR] ( ( remove top 0 before trying head! ) =
+            ELSE ( Doesn't start with { or letters with or without () )
+                DUP head [CHAR] ( ( remove top 0 before trying head! ) =
                 IF
                     [CHAR] ( [CHAR] ) bracketRemover2 PjoinedSet
                 ELSE
