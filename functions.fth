@@ -19,7 +19,7 @@ THEN ;
 : Psinglereturnvalue ( s -- )
 (
     Where s is in the form "i INT". Adds "i " onto operationEnd, "i ↦ INT" to
-    the "locals" relation, "0 VALUE i" to operation-declarations and "INT" to
+    the "locals" relation, "0 VALUE i" to operationDeclarations and "INT" to
     operationBody. After several passes operationEnd might be "i s " and
     operationBody "INT STRING".
 )
@@ -33,14 +33,14 @@ SWAP test-form-for-identifier ( "INT" "i" )
 SWAP operationType sSpace AZ^ OVER AZ^ to operationType SWAP
 ( ↑ Add space + 2nd value to operationType. )
 operationEnd sSpace AZ^ OVER AZ^ to operationEnd ( ""→"i " or "s"→"s i " )
-typeValue OVER AZ^ newline AZ^ operation-declarations AZ^ to operation-declarations
+typeValue OVER AZ^ newline AZ^ operationDeclarations AZ^ to operationDeclarations
 OVER operationBody sSpace AZ^ SWAP AZ^ to operationBody
 SWAP STRING STRING PROD { ↦ , } locals ∪ to locals
 ;
 
 : Preturnvalues ( s -- )
 (
-    Where s is like "i INT, s STRING" and operation-declarations
+    Where s is like "i INT, s STRING" and operationDeclarations
     "0 VALUE i 0 VALUE s" or similar, operationEnd "s i ;" and operationBody
     = output type part "INT STRING". Note opposite order.
     The catenation is done by Psinglereturnvalue.
@@ -95,7 +95,7 @@ THEN
     Similar to Pvariable. Parses a single local variable, where s is a string in
     the form "i INT" and checks that the type is valid and the identifier has
     not already been used as a local, and throws error message in that case.
-    Otherwise adds "0 VALUE i" to operation-declarations and "i ↦ INT" to the
+    Otherwise adds "0 VALUE i" to operationDeclarations and "i ↦ INT" to the
     locals relation.
 )
 wSpaceSplit            ( "i" "INT" )
@@ -109,7 +109,7 @@ THEN        ( "i" "INT" )
 Parraytypeforvariables
 OVER SWAP noWSpace STRING STRING PROD { ↦ , } locals ∪ to locals
 typeValue SWAP newline AZ^ AZ^
-operation-declarations SWAP AZ^ to operation-declarations
+operationDeclarations SWAP AZ^ to operationDeclarations
 ;
 
 : Plocalvariableslist ( s -- )
@@ -119,7 +119,7 @@ operation-declarations SWAP AZ^ to operation-declarations
     start and end have been removed, leaving a comma-separated list, eg
     "i INT, s STRING, set ℙ(STRING ↦ INT), and uses the Plocalvariable parser
     to add "0 VALUE i 0 VALUE s 0 VALUE set" with newlines to
-    operation-declarations and "i ↦ INT, s ↦ STRING, set ↦ STRING INT PROD POW"
+    operationDeclarations and "i ↦ INT, s ↦ STRING, set ↦ STRING INT PROD POW"
     to the locals relation.
 )
 comma rsplit
@@ -160,7 +160,7 @@ operationInputs -blanks "  #" operationBody AZ^ AZ^ to operationInputs
 (
     split on ≙ left to Poperationheader, right to Plocalvariablelist and
     PmultipleInstruction, then add ": " operationName operationStack
-    operation-declarations stack contents and operationEnd, leave whole
+    operationDeclarations stack contents and operationEnd, leave whole
     operation on stack for future catenation.
     Example:
     " i INT, s STRING ← foo(f FLOAT, b BOO) ≙ VARIABLES x INT END
@@ -177,7 +177,7 @@ blankString to operationInputs
 blankString to operationBody
 blankString to operationStack
 blankString to operationName
-blankString to operation-declarations
+blankString to operationDeclarations
 STRING STRING PROD { } to locals ( Empty the "locals" relation )
 defSeq rsplit 0=
 IF
@@ -194,13 +194,13 @@ IF
 THEN
 locals CARD
 IF
-    " (:" operationStack "  :)" newline AZ^ AZ^ AZ^ to operationStack
+    " (:" operationStack "  :)" AZ^ AZN^^ to operationStack
 THEN
 ( Put this operation's type into the types relation, so it can be called later )
 STRING STRING PROD { operationName operationInputs ↦ , } types ∪ to types
 PmultipleInstruction
 operationEnd -blanks AZ^
-operation-declarations SWAP AZ^
+operationDeclarations SWAP AZ^
 operationStack SWAP AZ^
 " : " operationName sSpace AZ^ AZ^ SWAP AZ^
 ;

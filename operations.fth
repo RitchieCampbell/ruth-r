@@ -144,6 +144,7 @@ STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
 VALUE types ( Any declared [global] variables with their types )
 STRING STRING PROD { }
 VALUE locals ( Any local variables, parameters, etc with their types )
+0 VALUE oldLocals ( for use in Pquantified so can use same bound variable twice )
 STRING { int , string , float , } VALUE builtin-types
 STRING { } VALUE declared-user-types
 STRING { } VALUE user-types ( These three to supplement the types relation )
@@ -252,6 +253,7 @@ STRING [ pow   , ] CONSTANT powSeq
 STRING [ def , ] CONSTANT defSeq
 " ←" CONSTANT return
 STRING [ return , ] CONSTANT returnSeq
+STRING [ " ∀" , " ∃" , ] CONSTANT quantSeq
 STRING [ " ♢" ,  " ∇" , ] CONSTANT diamond
 STRING [ " •" , ] CONSTANT bulletSeq
 STRING [ " ⇒" , " ∧" , ] CONSTANT andImplies
@@ -277,6 +279,8 @@ STRING STRING PROD { " ^" " ⁀" |-> , " <-" " ←" |-> , " /|\" " ↑" |-> ,
     bracket-swaps DUP CHAR [ APPLY "i, j, k" Plist2 AZ^ SWAP CHAR ] APPLY AZ^
     . . . after Plist2 is written!
 )
+STRING STRING PROD { " ⇒" " ∀" |->$,$ , " ∧" " ∃" |->$,$ , " &" " ∃" |->$,$ , }
+CONSTANT quantSwaps
 INT STRING PROD { CHAR [ star-bar CLONE-STRING 2DUP C! ↦ ,
     CHAR ] star-bar CLONE-STRING 2DUP C! ↦ ,
     CHAR { star-bar CLONE-STRING 2DUP C! ↦ ,
@@ -306,7 +310,7 @@ blankString VALUE operationName
    NULL OP foo ... : bar ... foo ... ; : P ... ; ' P to foo
    This would necessitate an additional keyword in the language, maybe DEFERRED
 )
-blankString VALUE operation-declarations
+blankString VALUE operationDeclarations
 
 : iToAZ ( i -- s )        
 (
@@ -378,7 +382,7 @@ IF ." true" ELSE ." false" THEN ;
 : truncate ( az1 az2 -- az1T which is az1 truncated by the removal of the 
                              same number of characters as the length of az2.
                              If az2 is same length as az1 or longer, returns
-                             blank string
+                             blank string. Always use CLONE-STRING on az1
            )
     2DUP myAZLength SWAP myAZLength
     OVER > IF
@@ -5508,15 +5512,6 @@ ELSE    ( Operator found: try left as an and/or and recurse on the right )
 THEN
 ;
 
-(
-space for Pquantified and PquantifiedBoolean: will need moving later in this
-file. )
-(
-: PquantifiedBoolean ( s -- s1 boolean Comment as above, but from its context
-one can tell this is a Boolean expression before attempting to evaluate it. )
-
-)
-
 : Pequiv  ( s1 -- s2 boolean ) 
 (
     Where s1 is "a ⇔ b" and output is "a b ⇔" "boolean" or similar. Takes an
@@ -5633,13 +5628,70 @@ THEN
 newline AZ^ boolean
 ;
 
+: Pquant ( s -- s1 boolean )
+(
+    Used by Pquantified and PquantifiedBoolean, qv, to avoid duplicating code.
+)
+(: text :) ( ∀x • x ∈ 1..99 ⇒ x < 0 )
+0 VALUE bv  0 VALUE spot 0 VALUE in 0 VALUE set 0 VALUE setType 0 VALUE op
+0 VALUE predicate 0 VALUE type 0 VALUE quantifier locals VALUE oldLocals
+text noWSpace CLONE-STRING VALUE start FALSE VALUE error
+start andImplies rsplit to op to predicate to start
+( start: ∀x • x ∈ 1..99 op: ⇒ predicate: x < 0 ) 
+op 0= to error
+error NOT
+IF
+    quantSwaps op APPLY to quantifier
+    quantifier start prefix? NOT to error
+    error NOT
+    IF
+        start eqmem rsplit to in to set to start
+        set Pset to setType to set
+        in 0= to error
+        error NOT
+        IF
+            in " ∈" stringEq NOT to error
+            error NOT
+            IF
+                ( start: ∀x • x in: ∈ [[Set]]: 1 99 .. [[Set]]T: INT POW )
+                start bulletSeq rsplit to spot noWSpace to bv noWSpace to start
+                spot 0= to error
+                error NOT
+                IF
+                    bv start quantifier decapitate noWSpace stringEq NOT to error
+                    error NOT
+                    IF
+                        ( start: ∀x spot: • bv: x )
+                        bv locals DOM types DOM ∪ IN NOT
+                        IF
+                            STRING STRING PROD
+                                    { bv setType CLONE-STRING "  POW" truncate
+                                    |->$,$ , } locals ∪ to locals
+                                    locals .SET ( test )
+                            THEN
+                        predicate Pboolean to type to predicate
+                        oldLocals to locals
+                        text quantifier bv set predicate type quantified_
+                    THEN
+                THEN
+            THEN
+        THEN
+    THEN
+THEN
+error
+IF
+    ." Quantifications must be exactly one of these two forms:-" CR
+    ." ∀x • x ∈ 1..99 ⇒ x < 0 or ∃x • x ∈ 1..99 ∧ x < 0." ABORT
+THEN
+;
+
 : Pquantified ( s -- s1 boolean )
 (
     Where s is an expression starting with ∀ or ∃ and containing • later on.
     It must be in the form "∀x • x ∈ S ⇒ Px" or "∃x • x ∈ S ∧ Px" where S is a
     set and Px is a predicate on x. An expression starting with ∀ or ∃ must
     contain • otherwise an error will be thrown.
-    Uses rsplit, and parses x as a new local variable, which is added to the
+    Uses Pquant, and parses x as a new local variable, which is added to the
     locals relation, obtaining its type from the set S. The variable x must be
     the correct form for an identifier and not yet exist as a local variable.
     Adds code shamelessly cribbed from an example by Bill Stoddart for
@@ -5648,74 +5700,12 @@ newline AZ^ boolean
     adding only false values, or true resultant set adding true values after ∃
     represents success.
 )
-( " ∀x • x ∈ iset ⇒ x < 0" )
-noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
+( " ∀x • x ∈ 1..99 ⇒ x < 0" )
+noWSpace DUP quantSeq stringStartsSequenceMember
 IF
-    bulletSeq rsplit 0=
-    IF
-        ." ∀ or ∃ without • error" ABORT
-    THEN
-    andImplies rsplit
-    DUP
-    IF
-        DUP  " ∧" stringEq
-        IF
-            PUSH PUSH PUSH " ∃" OVER prefix? NOT
-                IF 
-                    ." ∧ and ∃ must accompany each other. Text = " DROP .AZ ABORT
-                THEN
-            POP POP POP DROP
-        ELSE
-            " ⇒" stringEq PUSH ROT " ∀" OVER prefix?
-                PUSH ROT ROT POP NOT POP AND
-            IF
-                ." ⇒ and ∀ must accompany each other. Text = " 2DROP DROP .AZ ABORT
-            THEN
-        THEN
-    ELSE
-        ." ∀ or ∃ without ⇒ or ∧ error. Text = " 2DROP 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x < 0" )
-    PUSH eqmem rsplit
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x" "iset" "∈" US="x < 0" )
-    DUP 0= ( test for nullity or you get a seg fault )
-    IF
-        ." Left half of expression after ∀∃ must be in the form x ∈ S"
-        CR ." Text = " 2DROP 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x" "iset" "∈" US="x < 0" )
-    " ∈" stringEq NOT
-    IF
-        ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
-        2DROP 2DROP .AZ ABORT
-    THEN
-    PUSH 2DUP noWSpace SWAP noWSpace suffix? NOT 
-    ROT noWSpace ROT noWSpace OVER OVER truncate noWSpace
-    myAZLength " ∀" myAZLength <>
-    ( " ∀" and " ∃" same length ) PUSH ROT POP OR
-    IF
-        ." Bound variable before and after • different. Text = " 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀" "x" US="x < 0" "iset" )
-    ( Check "x" not already used as local variable. )
-    noWSpace DUP locals DOM IN
-    IF
-        ." Bound variable " .AZ ."  already declared as local variable." CR
-        ." Text = " DROP .AZ ABORT
-    THEN
-    ( stack = "∀ x • x ∈ i ⇒ x < 0" "∀" "x" US= "x < 0" "iset" )
-    POP noWSpace types OVER APPLY DUP "  POW" SWAP suffix? NOT
-    IF
-        ." The type " DROP .AZ
-        ."  in the expression " 2DROP .AZ ."  is not a set." ABORT
-    THEN
-    CLONE-STRING "  POW" truncate
-    ( stack = "∀ x • x ∈ iset ⇒ x < 0" "∀" "x" "iset" "INT" US="x < 0" )
-    SWAP PUSH OVER SWAP STRING STRING PROD { ↦ , } locals ∪ to locals POP POP
-    ( stack = "∀ x • x ∈ iset ⇒ x < 0" "∀" "x" "iset" "x < 0" US=empty )
-    Pboolean quantified_
+    Pquant
 ELSE
-    DROP Pequiv
+    Pequiv
 THEN
 ;
 
@@ -5725,7 +5715,7 @@ THEN
     It must be in the form "∀x • x ∈ S ⇒ Px" or "∃x • x ∈ S ∧ Px" where S is a
     set and Px is a predicate on x. An expression starting with ∀ or ∃ must
     contain • otherwise an error will be thrown.
-    Uses rsplit, and parses x as a new local variable, which is added to the
+    Uses Pquant, and parses x as a new local variable, which is added to the
     locals relation, obtaining its type from the set S. The variable x must be
     the correct form for an identifier and not yet exist as a local variable.
     Adds code shamelessly cribbed from an example by Bill Stoddart for
@@ -5737,74 +5727,12 @@ THEN
     so must be a Boolean, and calls PequivBoolean from its last line rather than
     Pboolean.
 )
-( " ∀x • x ∈ iset ⇒ x < 0" )
-noWSpace DUP SWAP CLONE-STRING SWAP " ∀" OVER prefix? OVER " ∃" SWAP prefix? OR  
+( " ∀x • x ∈ 1..99 ⇒ x < 0" )
+noWSpace DUP quantSeq stringStartsSequenceMember  
 IF
-    bulletSeq rsplit 0=
-    IF
-        ." ∀ or ∃ without • error" ABORT
-    THEN
-    andImplies rsplit
-    DUP
-    IF
-        DUP  " ∧" stringEq
-        IF
-            PUSH PUSH PUSH " ∃" OVER prefix? NOT
-                IF 
-                    ." ∧ and ∃ must accompany each other. Text = " DROP .AZ ABORT
-                THEN
-            POP POP POP DROP
-        ELSE
-            " ⇒" stringEq PUSH ROT " ∀" OVER prefix?
-                PUSH ROT ROT POP NOT POP AND
-            IF
-                ." ⇒ and ∀ must accompany each other. Text = " 2DROP DROP .AZ ABORT
-            THEN
-        THEN
-    ELSE
-        ." ∀ or ∃ without ⇒ or ∧ error. Text = " 2DROP 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x < 0" )
-    PUSH eqmem rsplit
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x" "iset" "∈" US="x < 0" )
-    DUP 0= ( test for nullity or you get a seg fault )
-    IF
-        ." Left half of expression after ∀∃ must be in the form x ∈ S"
-        CR ." Text = " 2DROP 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀x" "x ∈ iset" "x" "iset" "∈" US="x < 0" )
-    " ∈" stringEq NOT
-    IF
-        ." Left half of expression after ∀∃ must be in the form x ∈ S: text = "
-        2DROP 2DROP .AZ ABORT
-    THEN
-    PUSH 2DUP noWSpace SWAP noWSpace suffix? NOT 
-    ROT noWSpace ROT noWSpace OVER OVER truncate noWSpace
-    myAZLength " ∀" myAZLength <>
-    ( " ∀" and " ∃" same length ) PUSH ROT POP OR
-    IF
-        ." Bound variable before and after • different. Text = " 2DROP .AZ ABORT
-    THEN
-    ( stack = " ∀x • x ∈ iset ⇒ x < 0" "∀" "x" US="x < 0" "iset" )
-    ( Check "x" not already used as local variable. )
-    noWSpace DUP locals DOM IN
-    IF
-        ." Bound variable " .AZ ."  already declared as local variable." CR
-        ." Text = " DROP .AZ ABORT
-    THEN
-    ( stack = "∀ x • x ∈ i ⇒ x < 0" "∀" "x" US= "x < 0" "iset" )
-    POP noWSpace types OVER APPLY DUP "  POW" SWAP suffix? NOT
-    IF
-        ." The type " DROP .AZ
-        ."  in the expression " 2DROP .AZ ."  is not a set." ABORT
-    THEN
-    CLONE-STRING "  POW" truncate
-    ( stack = "∀ x • x ∈ iset ⇒ x < 0" "∀" "x" "iset" "INT" US="x < 0" )
-    SWAP PUSH OVER SWAP STRING STRING PROD { ↦ , } locals ∪ to locals POP POP
-    ( stack = "∀ x • x ∈ iset ⇒ x < 0" "∀" "x" "iset" "x < 0" US=empty )
-    Pboolean quantified_
+    Pquant
 ELSE
-    DROP PequivBoolean
+    PequivBoolean
 THEN
 ;
 
@@ -6581,8 +6509,6 @@ NULL OP Poperations
     Returns 123 VALUE i or similar. Also adds i to the constants set and i↦INT
     to the types relation.
 )
-( Best to change from atom to expression, otherwise pairs were not getting
-parsed as constants correctly. Needs change in grammar, too. )
 wSpaceSplit ( "i" "123" )
 noWSpace SWAP noWSpace SWAP ( Refactor )
 OVER constants IN ( already been declared )
@@ -6592,7 +6518,7 @@ THEN
 STRING { OVER , } constants ∪ to constants 
 Pexpression ( "i" "123" "INT" ) SWAP PUSH OVER SWAP
 STRING STRING PROD { |->$,$ , } types ∪ to types
-Pid  array SWAP suffix?
+Pid array SWAP suffix?
 IF  ( "iArr" US = "HERE 3 , 1 , 2 , 3 ," )
     POP DUP CLONE-STRING PUSH wSpaceSplit NIP wSpaceSplit DROP valueArray AZ^
     ( "iArr" "3 VALUE-ARRAY" ) OVER AZ^ newline AZ^
@@ -6621,13 +6547,9 @@ THEN ;
 : Pconstants ( s^"END ..." -- s1 )
 (
     Where s is a string of code which may start with the CONSTANTS keyword,
-    followed by a comma-separated list of constant values, then END then the
-    remainder of the program. If CONSTANTS is found, splits on END, parsing the
-    left part as a constant list and the right part is passed to the variables
-    parser. If CONSTANTS isn't found, passes unchanged code to Pvariables.
-    Example: "CONSTANTS i 123, j 234, s “Campbell” END foo bar" is parsed with
-    "i 123, j 234, s “Campbell”" being a constants list and "foo bar" the rest
-    of the program. testing note: Must have something even whitespace after END
+    followed by a comma-separated list of constant values.
+    Example: "CONSTANTS i 123, j 234, s “Campbell” " is parsed with
+    "i 123, j 234, s “Campbell”" being a constants list.
 )
 -wspace constantsString decapitate -wspace Pconstantlist
 ;

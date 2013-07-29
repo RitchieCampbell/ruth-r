@@ -624,3 +624,21 @@ addQuotes1 AZ^ "  , " AZ^ " Eleanor" addQuotes1 AZ^ "  , ]" AZ^
 " INT STRING PROD POW" checkOutputAndType " ]
 DROP
 CR " HereEndethThe3rdTestFile" .AZ CR
+
+(
+    Suggestion for test for whether an error has been missed:-
+blankString VALUE errors
+: findError ( ? ? ? --- ) 
+( Appends error message to errors String and empties stack ) 
+( DEPTH IF errors " Output obtained at test " AZ^ to errors THEN 
+BEGIN DEPTH 1 > WHILE DROP REPEAT iToAZ errors SWAP AZN^^ to errors ; ok
+1 " i := 123" Pinstruction findError ok
+errors .AZ 
+Output obtained at test 1
+ok
+2 " j := 1 + 2 * 3" Passignment findError errors .AZ 
+Output obtained at test 1
+Output obtained at test 2
+ok
+)
+)
