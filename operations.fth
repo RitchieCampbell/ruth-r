@@ -382,7 +382,7 @@ IF ." true" ELSE ." false" THEN ;
 : truncate ( az1 az2 -- az1T which is az1 truncated by the removal of the 
                              same number of characters as the length of az2.
                              If az2 is same length as az1 or longer, returns
-                             blank string. Always use CLONE-STRING on az1
+                             blank string. Usually must use CLONE-STRING on az1.
            )
     2DUP myAZLength SWAP myAZLength
     OVER > IF
@@ -5662,12 +5662,12 @@ IF
                     error NOT
                     IF
                         ( start: ∀x spot: • bv: x )
-                        bv locals DOM types DOM ∪ IN NOT
+                        bv locals DOM IN to error
+                        error NOT
                         IF
                             STRING STRING PROD
                                     { bv setType CLONE-STRING "  POW" truncate
                                     |->$,$ , } locals ∪ to locals
-                                    locals .SET ( test )
                             THEN
                         predicate Pboolean to type to predicate
                         oldLocals to locals
@@ -5681,7 +5681,8 @@ THEN
 error
 IF
     ." Quantifications must be exactly one of these two forms:-" CR
-    ." ∀x • x ∈ 1..99 ⇒ x < 0 or ∃x • x ∈ 1..99 ∧ x < 0." ABORT
+    ." ∀x • x ∈ 1..99 ⇒ x < 0 or ∃x • x ∈ 1..99 ∧ x < 0." CR
+    ." Bound variable mustn't be same as a local variable or argument." CR ABORT
 THEN
 ;
 
@@ -5740,10 +5741,8 @@ THEN
     The following two operations to be used when the whole expression gives a
     boolean result, eg after IF.
 )
-: P PquantifiedBoolean  ;
-' P to Pboolean
-: P PequivBoolean2 ;
-' P to Pboolean2
+: P ( : Pboolean ) PquantifiedBoolean ; ' P to Pboolean
+: P ( : Pboolean2 ) PequivBoolean2 ; ' P to Pboolean2
 
 : P ( : Pdiamond ) ( s -- s1 s2 )
 (
