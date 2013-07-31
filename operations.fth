@@ -5662,9 +5662,18 @@ IF
                     error NOT
                     IF
                         ( start: ∀x spot: • bv: x )
-                        bv locals DOM IN to error
+                        bv myAZLength 0= bv locals DOM IN OR to error
                         error NOT
                         IF
+                        ( Doesn't add (:...:) or 0 VALUE x otherwise )
+                            " (:" operationStack CLONE-STRING -blanks prefix? NOT
+                            IF
+                                " (:" operationStack "  :)" AZ^ AZN^^ to
+                                        operationStack
+                            THEN
+                            operationDeclarations 0value AZ^ bv AZN^^ to
+                                    operationDeclarations
+                            ( Seems not to matter if 0VALUE x appears twice. )
                             STRING STRING PROD
                                     { bv setType CLONE-STRING "  POW" truncate
                                     |->$,$ , } locals ∪ to locals
