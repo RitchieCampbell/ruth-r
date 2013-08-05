@@ -139,7 +139,7 @@ STRING STRING PROD { " abc1" " foo" |-> , " i" " INT" |-> , " j" " INT" |-> ,
                      " upper" " INT POW" |-> ,
                      " arr" " foo ARRAY" |-> ,
                      " arrr" " foo ARRAY ARRAY" |-> ,
-  (                  " factorial" " INT # INT" |-> , )
+                     " initialise" "  #" |-> ,
                    }
 VALUE types ( Any declared [global] variables with their types )
 STRING STRING PROD { }
@@ -789,9 +789,9 @@ THEN
 
 NULL OP Parray
 
-: Pid
+: Pid ( s -- s s-type )
 (
-    s -- s s Checks whether correct format for identifier and finds whether it
+   Checks whether correct format for identifier and finds whether it
     is already in the "types" relation domain; otherwise throws errors. Returns
     the identifier unchanged followed by the type.
     Example: "abc1" -- "abc1" "foo" where types contains abc1 |-> foo.
@@ -808,7 +808,7 @@ ELSE
     DUP letter stringbegins? OVER alphanumeric stringconsists? AND NOT
     IF
         ." Incorrect format for identifier: must begin with letter and contain"
-        10 EMIT ." only letters and numbers: " .AZ ."  passed." ABORT
+        CR ." only letters and numbers: " .AZ ."  passed." ABORT
     THEN
     DUP types DOM locals DOM ∪ IN NOT
     IF
@@ -819,6 +819,10 @@ ELSE
         locals OVER APPLY
     ELSE
         types OVER APPLY
+    THEN
+    "  #" OVER prefix?
+    IF
+        "  #" decapitate -blanks
     THEN
 THEN
 ;
@@ -5943,11 +5947,7 @@ assignment rsplit
 DUP 0=
 IF ( No operator found: must be function. )
    ( If "return type" not empty, will incorrectly leave value on stack. )
-    2DROP Pfunction STRING [ " #" , ] rsplit 0=
-    IF ( Remove 0 from top of stack if no "#" )
-        DROP
-    THEN
-    whitespace stringconsists? NOT
+    2DROP Pfunction whitespace stringconsists? NOT
     IF
         ." Passed expression/function returning a value to an instruction:" CR
         ." Only null return permitted here." ABORT
@@ -6159,6 +6159,21 @@ ELSE
 THEN
 ;
 
+: PfunctionWithoutArguments ( s -- s )
+(
+    Used when a function name without arguments is used as an instruction. Calls
+    the function name in the types relation, checks that its type is "#" with or
+    without whitespace, ie function with neither input nor output, so it is
+    suitable as an instruction in its own right, otherwise error message.
+    Returns original code unchanged except for adding new line.
+)
+noWSpace types OVER APPLY noWSpace " #" stringEq NOT
+IF
+    ." Instruction " DUP .AZ ."  unsuitable for instruction in its own right."
+    CR ." Should have null return but returns " types SWAP APPLY .AZ ABORT
+THEN
+AZN^ ;
+
 : Pinstruction ( s -- s1 )
 (
    Instructions starting with PRINT, IF, WHILE and SKIP are passed to their
@@ -6191,7 +6206,12 @@ ELSE
                     IF
                         Pskip
                     ELSE
-                        Passignment
+                        DUP letter stringbegins? OVER alphanumeric stringconsists? AND
+                        IF
+                            PfunctionWithoutArguments
+                        ELSE
+                            Passignment
+                        THEN
                     THEN
                 THEN
             THEN
