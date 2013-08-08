@@ -216,31 +216,37 @@ set ℙ(INT) ← getStates ≙ VARIABLES i INT END
         } END ;
         
 set ℙ(INT) ← getMoves ≙
-        VARIABLES i INT, j INT, state INT, oldCard INT, newStates ℙ(INT × INT) END
+        VARIABLES
+            i INT, j INT, state INT, oldState INT, newCard INT,
+            states ℙ(INT × INT)
+        END
         set := {0};
-        newStates := [0];
-        oldCard := 0;
+        states := [0];
+        i := 0;
+        newCard := 1;
         WHILE
-            ¢set > oldCard
+            i < newCard
         DO
-            i := 0;
+            i := i + 1;
             j := 0;
-            oldCard := ¢set;
+            oldState := states(i);
             WHILE
-                i < ¢newStates
+                j < count
             DO
-                i := i + 1;
-                state := newStates(i);
-                decodeStatus(state);
-                WHILE
-                    j < count
-                DO
-                    j := j + 1;
-                    canMoveNext(j) → moveNext(j) ▯ SKIP;
+                j := j + 1;
+                decodeStatus(oldState);
+                IF
+                    canMoveNext(j)
+                THEN
+                    moveNext(j);
                     state := encodeStatus;
-                    state ∉ set → newStates := newStates ← state ▯ SKIP;
-                    set := set ∪ {state};
-                    decodeStatus(state)
+                    IF
+                        ¬state ∈ set
+                    THEN
+                        newCard := newCard + 1;
+                        set := set ∪ {state};
+                        states := states ← state
+                    END
                 END
             END
         END END ;
@@ -282,7 +288,7 @@ printState(state INT) ≙
         PRINT;
         decodeStatus(oldState) END ;
 
-run ≙ VARIABLES sSet ℙ(INT), mSet ℙ(INT) END
+run ≙ VARIABLES state INT, sSet ℙ(INT), mSet ℙ(INT) END
         initialise;
         sSet := getStates;
         PRINT sSet;
@@ -290,5 +296,13 @@ run ≙ VARIABLES sSet ℙ(INT), mSet ℙ(INT) END
         mSet := getMoves;
         PRINT mSet;
         PRINT;
+        PRINT “The two results are equal: ”;
         PRINT sSet = mSet;
         PRINT;
+        WHILE
+            ¢sSet > 0
+        DO
+            state :∈ sSet;
+            printState(state);
+            sSet := sSet \ {state};
+        END
