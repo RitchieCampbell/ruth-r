@@ -2300,6 +2300,8 @@ IF
     IF
         rType -wspace " #" decapitate to rType
     THEN
+lType rType stringEq NOT IF ." Discrepant types in :=_ for input " ( test )
+lValue .AZ ."  = " lType .AZ CR rValue .AZ ."  = " rType .AZ CR ( test ) THEN
     " := (assignment)" lType rType test-two-types-same
 THEN
 rValue to_ lValue newline AZ^ AZ^ AZ^ 1LEAVE ( Why do I need 1LEAVE?? )
@@ -2456,8 +2458,8 @@ STRING INT PROD
 OVER 0 0 0 (: start seq current size count op :)
 seq CARD to size
 BEGIN   
-    current head op 0= AND  
-WHILE
+    current head 0 <> op 0= AND  
+WHILE ( Ripe for refactoring )
     lQuote current prefix?
     IF
         current stringEndFinder to current
@@ -3057,7 +3059,7 @@ ELSE
                                     IF
                                         Pstring
                                     ELSE
-                                        DUP ." Passed: " .AZ
+                                        .S DUP ." Passed: " .AZ
                                         ."  Type not yet used" CR ABORT
                                     THEN
                                 THEN
@@ -4218,7 +4220,7 @@ THEN
     or an identifier abc with Pid, or something starting with letters and
     containing () with Pfunction eg foo(i, j, k) to i j k foo.
     In all cases the type is INT foo PROD POW: throws an error if the type is
-    not in this format.
+    not in this format. Strings accepted by ^_ so string is also acceptabl type.
 )
 noWSpace
 BEGIN
@@ -4253,6 +4255,7 @@ ELSE
     THEN
 THEN
 " INT " OVER prefix? OVER "  PROD POW"  SWAP suffix? AND NOT
+OVER string stringEq NOT AND
 IF
     ." Incorrect type received as sequence: should be INT foo PROD POW format: "
     CR .AZ ."  found" ABORT
@@ -4850,7 +4853,7 @@ THEN
     all unary prefix operators so uses rsplit, calling CARD_ LEFT_ or RIGHT_ as
     necessary.
 )
-cardElement rsplit DUP
+cardElement rSplitForUminus DUP
 IF
     ROT DROP PUSH Pexpression operationSwaps POP APPLY EXECUTE
 ELSE
@@ -5244,7 +5247,7 @@ THEN
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
-not rsplit
+not rSplitForUminus
 DUP 0=
 IF
     2DROP PeqMemBoolean
@@ -5265,7 +5268,7 @@ THEN
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
-not rsplit
+not rSplitForUminus
 DUP 0=
 IF
     2DROP PeqMemBoolean2
@@ -5286,7 +5289,7 @@ THEN
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
-not rsplit
+not rSplitForUminus
 DUP 0=
 IF
     2DROP PeqMem
@@ -5307,7 +5310,7 @@ THEN
     Since the ¬ symbol is available on most British keyboards, it is considered
     there is no need for any synonyms.
 )
-not rsplit
+not rSplitForUminus
 DUP 0=
 IF
     2DROP
@@ -6255,7 +6258,7 @@ THEN
 
 ' P to Pguard2
 
-: P ( : PmultipleInstruction SEE PchoiceInstruction ) ( s -- s1 )
+: P ( : PmultipleInstruction SEE Pchoice ) ( s -- s1 )
 (
     Where s is an instruction in the format "i := i + 1; PRINT i", which is
     split on the first ; allowing for keywords like WHILE and IF or (). The text

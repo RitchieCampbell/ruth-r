@@ -202,7 +202,7 @@ PmultipleInstruction
 operationEnd -blanks AZ^
 operationDeclarations SWAP AZ^
 operationStack SWAP AZ^
-" : " operationName sSpace AZ^ AZ^ SWAP AZ^ doubleLineRemover
+" : " operationName sSpace AZ^ AZ^ SWAP AZ^ doubleLineRemover AZN^
 ;
 
 : Pmultipleoperations ( s -- s1 ) 

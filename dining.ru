@@ -52,7 +52,7 @@ b BOO ← rightNotEatingInvariant(i INT) ≙ b := philosophers[i] = eating ⇒
         philosophers[philosopherToRight(i)] ≠ eating END ;
 b BOO ← thinkingLeftUpInvariant(i INT) ≙ b :=
         philosophers[i] = thinking & forks[forkToLeft(i)] = up ⇒
-        philosophers[philosopherToRight(i)] ≠ thinking  END ;
+        philosophers[philosopherToLeft(i)] ≠ thinking  END ;
 b BOO ← leftThinkingLeftUpInvariant(i INT) ≙ b :=
         philosophers[philosopherToLeft(i)] = thinking &
         forks[forkToLeft(i)] = up ⇒ philosophers[i] = eating END ;
@@ -216,28 +216,79 @@ set ℙ(INT) ← getStates ≙ VARIABLES i INT END
         } END ;
         
 set ℙ(INT) ← getMoves ≙
-        VARIABLES i INT, j INT, state INT, newStates ℙ(INT) END
-        newStates := {0};
-        set := newStates \ newStates;
+        VARIABLES i INT, j INT, state INT, oldCard INT, newStates ℙ(INT × INT) END
+        set := {0};
+        newStates := [0];
+        oldCard := 0;
         WHILE
-            ¢newStates > 0
+            ¢set > oldCard
         DO
-            set := set ∪ newStates;
-            newStates :=
-            {
-                i :∈ set;
-                j :∈ 1..count;
-                decodeStatus(i);
-                canMoveNext(j) →
-                (
-                    moveNext(j);
+            i := 0;
+            j := 0;
+            oldCard := ¢set;
+            WHILE
+                i < ¢newStates
+            DO
+                i := i + 1;
+                state := newStates(i);
+                decodeStatus(state);
+                WHILE
+                    j < count
+                DO
+                    j := j + 1;
+                    canMoveNext(j) → moveNext(j) ▯ SKIP;
                     state := encodeStatus;
-                    state ∉ set → SKIP
-                ) ♢ i
-            }
+                    state ∉ set → newStates := newStates ← state ▯ SKIP;
+                    set := set ∪ {state};
+                    decodeStatus(state)
+                END
+            END
         END END ;
 
-run ≙ VARIABLES iSet ℙ(INT) END
+printState(state INT) ≙
+        VARIABLES i INT, oldState INT, outputF STRING, outputP STRING END
+        oldState := encodeStatus;
+        decodeStatus(state);
+        i := 0;
+        outputF := “”;
+        outputP := “”;
+        WHILE
+            i < count
+        DO
+            i := i + 1;
+            IF
+                forks[i] = up
+            THEN
+                outputF := outputF ^ “↑”
+            ELSE
+                outputF := outputF ^ “↓”
+            END ;
+            IF
+                philosophers[i] = waiting
+            THEN
+                outputP := outputP ^ “W”
+            ELSE
+                IF
+                    philosophers[i] = thinking
+                THEN
+                    outputP := outputP ^ “T”
+                ELSE
+                    outputP := outputP ^ “E”
+                END
+            END
+        END ;
+        PRINT “State ” ^ state ^ “ = ” ^ outputF ^ outputP ^ “ Blocking: ”;
+        PRINT ¬nextMoveAvailable;
+        PRINT;
+        decodeStatus(oldState) END ;
+
+run ≙ VARIABLES sSet ℙ(INT), mSet ℙ(INT) END
         initialise;
-        iSet := getStates;
-        PRINT iSet
+        sSet := getStates;
+        PRINT sSet;
+        PRINT;
+        mSet := getMoves;
+        PRINT mSet;
+        PRINT;
+        PRINT sSet = mSet;
+        PRINT;
