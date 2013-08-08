@@ -299,7 +299,7 @@ run ≙ VARIABLES state INT, sSet ℙ(INT), mSet ℙ(INT) END
         PRINT “The two results are equal: ”;
         PRINT sSet = mSet;
         PRINT;
-        PRINT “For ” ^ count ^ “ around the table there are ” ^ ¢sSet ^ “this many results.”;
+        PRINT “For ” ^ count ^ “ around the table there are ” ^ ¢sSet ^ “ results.”;
         PRINT;
         WHILE
             ¢sSet > 0
