@@ -256,20 +256,38 @@ WHILE
 REPEAT ;
 
 (
-" i INT ← double (j INT) ≙ i := j * 2 END;" " printS(s STRING) ≙ PRINT s END;" newline SWAP AZ^ AZ^ newline AZ^ " printI (i INT) ≙ PRINT i END" newline SWAP OVER AZ^ AZ^ AZ^ Pmultipleoperations ok.
-.AZ : double (: j :)
-0 VALUE i
-j 2 * to i
-
-i
-;
-: printS (: s :)
-s .AZ 
-
-;
-: printI (: i :)
-i . 
-
-;
-ok
+    What follows is copied-and-pasted from the f2s.r file
 )
+: READ-WHOLE ( s -- addr u )
+( open the file named in counted string s )
+( read the entire file into memory at addr, )
+( leaving addr and the no. of bytes read. )
+( buffer will be terminated with 0 byte so that )
+( addr is also an ascii string )
+  COUNT R/O OPEN-FILE
+  ABORT" Unable to open file"
+  DUP ( fileid fileid ) FILE-SIZE
+  ABORT" Unable to get file size"
+  ( fileid size )
+  ( now allocvating space for file buffer, with an extra byte )
+  DUP 1+ ALLOCATE ( fileid size buff err)
+  ABORT" memory allocation failure"
+  3FRAME 
+  ( ARG1 = fileid, ARG2 = size, ARG3 = buff )
+    ARG3@ ARG2@ ARG1@ READ-FILE
+  ( write a zero to the extra byte allocated at end of buffer )
+    0 ARG3@ ARG2@ + C!
+    ABORT" Error reading file"
+    ARG3@ SWAP 
+  2LEAVE ;
+
+: F2AZ ( -- az, parse following file name and leave file contents as az string )
+  BL WORD READ-WHOLE DROP ;
+
+( testing, 
+0 VALUE MYFILE
+
+F2AZ f2s.r to MYFILE  ( CR KEY DROP   MYFILE .AZ )
+F2AZ sendMoreMoney.ru DUP .AZ Pprogram doubleLineRemover CR .AZ
+)
+  
