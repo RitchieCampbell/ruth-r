@@ -2398,9 +2398,9 @@ left ;
 : LEFT_ ( s=value s=type -- s=value FIRST s=type truncated )
 (
     Finds the left half of a pair by adding FIRST and using the
-    truncateToSingleTree operation on the type
+    truncateToSingleTree operation on a clone of the type
 )
-noWSpace "  PROD" OVER suffix?
+CLONE-STRING noWSpace "  PROD" OVER suffix?
 IF
     SWAP "  FIRST" AZ^ SWAP truncateToSingleTree
 ELSE
@@ -2410,10 +2410,10 @@ THEN
 
 : RIGHT_ ( s=value s=type -- s=value SECOND s=type truncated )
 (
-    Finds the left half of a pair by adding FIRST and using the
-    truncateToSingleTree operation on the type and decapitate/truncate later
+    Finds the left half of a pair by adding SECOND and using the
+    truncateToSingleTree operation on cloned type and decapitate/truncate later
 )
-noWSpace "  PROD" OVER suffix?
+CLONE-STRING noWSpace "  PROD" OVER suffix?
 IF
     SWAP "  SECOND" AZ^ SWAP DUP truncateToSingleTree decapitate
     " PROD" truncate noWSpace
@@ -4847,7 +4847,7 @@ ELSE
 THEN
 ;
 
-: P ( PcardElement  s1 -- s2 s3 = ¢iset/łpair/®pair -- "iset CARD" type )
+: P ( : PcardElement  s1 -- s2 s3 = ¢iset/łpair/®pair -- "iset CARD" type )
 (
     Parses the ¢ł® operators for cardinality and left/right elements of a pair:
     all unary prefix operators so uses rsplit, calling CARD_ LEFT_ or RIGHT_ as

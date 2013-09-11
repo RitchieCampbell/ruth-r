@@ -42,20 +42,28 @@ i INT ← philosopherToRight(p INT) ≙ i := (p - 1) % count;
         IF i = 0 THEN i := count END END ;
 
 b BOO ← eatingInvariant(i INT) ≙
-        b := philosophers[i] = eating ⇒
-        forks[forkToLeft(i)] = up & forks[forkToRight(i)] = up END ;
+        b := 
+          philosophers[i] = eating   ⇒
+          forks[forkToLeft(i)] = up & forks[forkToRight(i)] = up END ;
+          
 b BOO ← waitingInvariant(i INT) ≙
-        b := philosophers[i] = waiting ⇒ forks[forkToRight(i)] = up END ;
+        b := 
+          philosophers[i] = waiting   ⇒   forks[forkToRight(i)] = up END ;
+          
 b BOO ← leftThinkingInvariant(i INT) ≙ b := philosophers[i] = eating ⇒
         philosophers[philosopherToLeft(i)] = thinking END ;
+        
 b BOO ← rightNotEatingInvariant(i INT) ≙ b := philosophers[i] = eating ⇒
         philosophers[philosopherToRight(i)] ≠ eating END ;
+        
 b BOO ← thinkingLeftUpInvariant(i INT) ≙ b :=
         philosophers[i] = thinking & forks[forkToLeft(i)] = up ⇒
         philosophers[philosopherToLeft(i)] ≠ thinking  END ;
+        
 b BOO ← leftThinkingLeftUpInvariant(i INT) ≙ b :=
         philosophers[philosopherToLeft(i)] = thinking &
         forks[forkToLeft(i)] = up ⇒ philosophers[i] = eating END ;
+        
 b BOO ← twoUpEatingAssertion(i INT) ≙ b :=
         count > 2 & forks[forkToLeft(i)] = up &
         forks[forkToLeft(i)] = up ⇒ philosophers[i] = eating END ;
@@ -241,7 +249,7 @@ set ℙ(INT) ← getMoves ≙
                     moveNext(j);
                     state := encodeStatus;
                     IF
-                        ¬state ∈ set
+                        ¬(state ∈ set)
                     THEN
                         newCard := newCard + 1;
                         set := set ∪ {state};
