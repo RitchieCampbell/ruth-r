@@ -2632,6 +2632,31 @@ You can reinstate the bit about unknown type; you can institute a way to
 decapitate at the last space and add "PROD"↦".PAIR" and "POW"↦".SET" to that
 relation. )
 )
+(
+: commentStartFinder ( s -- s )
+(
+    Goes from "*/ foo bar" to "/* comment comment */ foo bar"
+    Should work for all variants of lsplit becuase they all use
+    bracketAvoiderForLsplit and is called from there.
+    Needs to have */ found before it is called.
+)
+BEGIN
+    " /*" OVER prefix? NOT
+WHILE
+    1-
+REPEAT ;
+
+: commentEndFinder ( s -- s )
+(
+    Goes from "/* comment comment */ foo bar" to " foo bar"
+    Needs to have /* found before it is called, or will produce incorrect result
+)
+BEGIN
+    " */" OVER prefix? NOT
+WHILE
+    1+
+REPEAT 2 + ;
+)
 
 : bracketAvoiderForLSplit ( s s1 -- s2 )
 (
@@ -2649,14 +2674,19 @@ relation. )
     CHAR ( bracket-pairs DOM IN . -1
     Then use the type of bracket as an argument to get the type of close bracket
     (
-    : bracket-avoider 
+    : bracketAvoiderForRsplit
     lQuote OVER prefix?
     IF
         stringEndFinder
-    ELSE 
-        DUP head bracket-pairs DOM IN
+    ELSE
+        " /*" OVER prefix?
         IF
-            DUP head bracket-pairs OVER APPLY close-bracket-finder
+            commentEndFinder
+        ELSE
+            DUP head bracket-pairs DOM IN
+            IF
+                DUP head bracket-pairs OVER APPLY close-bracket-finder
+            THEN
         THEN
     THEN
     ;
@@ -3317,6 +3347,7 @@ THEN
     precedes it, this operation returns the input unchanged (s1) and 0 for the
     other two values; this means it behaves the same way as rsplit.
 )
+( Add commentEndFinder here )
 (: string seq :) seq CARD VALUE size 0 VALUE count 0 VALUE op
 string -blanks to string
 BEGIN
