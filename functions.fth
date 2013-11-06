@@ -179,6 +179,9 @@ blankString to operationStack
 blankString to operationName
 blankString to operationDeclarations
 STRING STRING PROD { } to locals ( Empty the "locals" relation )
+-wspace
+commentStart OVER prefix? IF
+commentEndFinder THEN
 defSeq rsplit 0=
 IF
     ." Operation without ≙ " ABORT
@@ -225,11 +228,13 @@ STRING { } to constants STRING STRING PROD { } to types ( relations emptied )
 (
     If you ever use library routines, they would need to have their types added
     back to types: example
-    : divMod ( i j -- iMODj i÷j ) /MOD ; 
+    : divMod ( i j -- iMODj i÷j ) /MOD ;
+    ...
     STRING STRING PROD { " divMod" " INT INT # INT INT" |->$,$ , } types ∪ to
         types
 )
 -wspace
+commentStart OVER prefix? IF commentEndFinder -wspace THEN
 constantsString OVER prefix? OVER constantsString whitespace followed-by? AND
 IF
     endString rSplitForKeywords
@@ -239,6 +244,7 @@ IF
         ." CONSTANTS without END error." ABORT
     THEN
 THEN  
+-wspace commentStart OVER prefix? IF commentEndFinder -wspace THEN
 -wspace variables OVER prefix? OVER variables whitespace followed-by? AND
 IF 
     endString rSplitForKeywords
@@ -288,6 +294,6 @@ REPEAT ;
 0 VALUE MYFILE
 
 F2AZ f2s.r to MYFILE  ( CR KEY DROP   MYFILE .AZ )
-F2AZ sendMoreMoney.ru DUP .AZ Pprogram doubleLineRemover CR .AZ
+F2AZ sendMoreMoney.ru DUP .AZ Pprogram CR .AZ
 )
   

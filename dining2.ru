@@ -2,6 +2,7 @@ CONSTANTS thinking 0, waiting 1, eating 2, count 3 END
 VARIABLES philosophers INT[count] END
 
 result INT ← power(argument INT, index INT) ≙
+        VARIABLES root INT END
         IF
             index = 0
         THEN
@@ -9,7 +10,8 @@ result INT ← power(argument INT, index INT) ≙
         ELSE IF
             index % 2 = 0
         THEN
-            result := power(argument, index / 2) * power(argument, index / 2)
+            root := power(argument, index / 2);
+            result := root * root
         ELSE
             result := argument * power(argument, index - 1)
         END END END ;
@@ -74,7 +76,7 @@ b BOO ← eatingInvariant(i INT) ≙
         END ;
 
 b BOO ← waitingInvariant(i INT) ≙
-        b := philosophers[i] = eating ⇒
+        b := philosophers[i] = waiting ⇒
             philosophers[philosopherToRight(i)] ≠ eating END ;
 
 b BOO ← allInvariants(i INT) ≙

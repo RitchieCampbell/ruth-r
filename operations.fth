@@ -87,6 +87,8 @@ NIP
 " INT " CONSTANT intSpace
 " FLOAT" CONSTANT float
 "  S>F" CONSTANT StoF    ( Note has additional leading space )
+" /*" CONSTANT commentStart
+" */" CONSTANT commentEnd
 " STRING" CONSTANT string
 " “" CONSTANT lQuote
 " ”" CONSTANT rQuote
@@ -2441,6 +2443,31 @@ STRING INT PROD
 } CONSTANT operationSwaps
 ( STRING { " ⁀" , " ^" , " ←" , " ↓" , " ↑" , } CONSTANT seq-ops )
 
+: commentStartFinder ( s -- s )
+(
+    Goes from "*/ foo bar" to "/* comment comment */ foo bar"
+    Should work for all variants of lsplit because they all use
+    bracketAvoiderForLsplit and is called from there.
+    Needs to have */ found before it is called.
+)
+BEGIN
+    commentStart OVER prefix? NOT
+WHILE
+    1-
+REPEAT ;
+
+: commentEndFinder ( s -- s )
+(
+    Goes from "/* comment comment */ foo bar" to " foo bar"
+    Needs to have /* found before it is called, or will produce incorrect result
+    At time of writing [17th Sep 2013] not actually used anywhere.
+)
+BEGIN
+    commentEnd OVER prefix? NOT
+WHILE
+    1+
+REPEAT 2 + ;
+
 : P ( : rsplit )
 (
   s seq -- s1 s2 s3
@@ -2632,31 +2659,6 @@ You can reinstate the bit about unknown type; you can institute a way to
 decapitate at the last space and add "PROD"↦".PAIR" and "POW"↦".SET" to that
 relation. )
 )
-(
-: commentStartFinder ( s -- s )
-(
-    Goes from "*/ foo bar" to "/* comment comment */ foo bar"
-    Should work for all variants of lsplit becuase they all use
-    bracketAvoiderForLsplit and is called from there.
-    Needs to have */ found before it is called.
-)
-BEGIN
-    " /*" OVER prefix? NOT
-WHILE
-    1-
-REPEAT ;
-
-: commentEndFinder ( s -- s )
-(
-    Goes from "/* comment comment */ foo bar" to " foo bar"
-    Needs to have /* found before it is called, or will produce incorrect result
-)
-BEGIN
-    " */" OVER prefix? NOT
-WHILE
-    1+
-REPEAT 2 + ;
-)
 
 : bracketAvoiderForLSplit ( s s1 -- s2 )
 (
@@ -2679,14 +2681,9 @@ REPEAT 2 + ;
     IF
         stringEndFinder
     ELSE
-        " /*" OVER prefix?
+        DUP head bracket-pairs DOM IN
         IF
-            commentEndFinder
-        ELSE
-            DUP head bracket-pairs DOM IN
-            IF
-                DUP head bracket-pairs OVER APPLY close-bracket-finder
-            THEN
+            DUP head bracket-pairs OVER APPLY close-bracket-finder
         THEN
     THEN
     ;
@@ -3089,7 +3086,7 @@ ELSE
                                     IF
                                         Pstring
                                     ELSE
-                                        .S DUP ." Passed: " .AZ
+                                        DUP ." Passed: " .AZ
                                         ."  Type not yet used" CR ABORT
                                     THEN
                                 THEN
@@ -3347,7 +3344,6 @@ THEN
     precedes it, this operation returns the input unchanged (s1) and 0 for the
     other two values; this means it behaves the same way as rsplit.
 )
-( Add commentEndFinder here )
 (: string seq :) seq CARD VALUE size 0 VALUE count 0 VALUE op
 string -blanks to string
 BEGIN
@@ -3383,7 +3379,7 @@ TRUE PUSH   ( TRUE means you need to continue the loop )
 OVER        ( "i < 3 THEN i := i + 1" "THEN" "i < 3 THEN i := i + 1" )
 BEGIN 
     DUP head POP DUP PUSH AND ( Non-0 character on string, TRUE on US )
-WHILE 
+WHILE
     lQuote OVER prefix?
     IF      ( Quoted String: go to end of String )
         stringEndFinder
@@ -3409,8 +3405,8 @@ POP IF DROP NULL THEN
 : rSplitForKeywords2
 (
     Similar to rsplitForBlocks, but splits around a single keyword, eg ELSE,
-    which must be a separate word from the rest of the code (unlike operators,
-    which can run against operands like this "i:=99"). Takes a string, already
+    which must be a separate word from the rest of the code, unlike operators,
+    which can run against operands like this "i:=99". Takes a string, already
     stripped of its surrounding keywords, and counts pairs of keywords until it
     finds the sought token. For example
     "IF j > 4 THEN i := 99 ELSE i := 1 END ELSE i := 0" is the THEN part of an
@@ -3529,7 +3525,6 @@ WHILE
     BEGIN
         count start-size < ( Iterate the "start" keywords sequence. )
     WHILE
-    ( Increment end-count if . . . )
         count 1+ to count
         starts count APPLY to token
         token current prefix? ( . . . IF CHOICE WHILE etc at this point . . . )
