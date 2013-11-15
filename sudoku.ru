@@ -260,15 +260,13 @@ possibles ℙ(INT) ← getPossiblesForSquare(row INT, column INT) ≙
 
 /*
  * Set a particular set for a square in allPossibles: row and column 0-based.
- * Includes a guard that square value = 0 ⇔ possible for that square not empty.
+ * Guard removed. Use gridCorrectlyFilled → setPossiblesForAllSquares instead
  */
 setPossiblesForSquare(row INT, column INT, possibles ℙ(INT)) ≙
         VARIABLES seq ℙ(INT × ℙ(INT)) END
         seq := getPossibleRow(row);
         seq := seq ⊕ {getIndex(column) ↦ possibles};
         allPossibles := allPossibles ⊕ {getIndex(row) ↦ seq};
-        getValueForSquare(row, column) = 0 ⇔ ¢getPossiblesForSquare(row, column) > 0 →
-                    SKIP
         END ;
 
 /* Set all elements of allPossibles for all eighty-one squares */
@@ -314,6 +312,32 @@ rowFound INT, columnFound INT, possibles ℙ(INT) ← lowestCardinality ≙
                 possibles := cell
             END;
             index := index + 1
+        END END ;
+
+/* Whether the grid needs completion, i.e. there are still cells valued 0 */
+b BOO ← needsCompletion ≙ VARIABLES i INT END
+        b := false;
+        i := 0;
+        WHILE
+            ¬b ∧ i < NINE * NINE
+        DO
+            b := getValueForSquare(i / NINE, i % NINE) = 0;
+            i := i + 1
+        END END ;
+
+/*
+ * Tests for incorrect completion of the grid: if a cell contains 0, its
+ * corresponding possibles set must have cardinality > 0 and vice versa.
+ */
+b BOO ← gridCorrectlyFilled ≙ VARIABLES i INT END
+        b := true;
+        i := 0;
+        WHILE
+            i < NINE * NINE ∧ b
+        DO
+            b := b ∧ (getValueForSquare(i / NINE, i % NINE) = 0 ⇔
+                      ¢getPossiblesForSquare(i / NINE, i % NINE) > 0);
+            i := i + 1;
         END END ;
 
 /*
