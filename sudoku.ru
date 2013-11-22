@@ -231,15 +231,6 @@ possible ℙ(INT) ← getPossible(row INT, column INT) ≙
             possible := EMPTYSET
         END END ;
 
-/* Set a particular value in square row and column 0-based */
-b BOO ← setValueForSquare(row INT, column INT, value INT) ≙
-        VARIABLES seq ℙ(INT × INT) END
-        b := getValueForSquare(row, column) = 0;
-        seq := getRow(row);
-        seq := seq ⊕ {getIndex(column) ↦ value};
-        grid := grid ⊕ {getIndex(row) ↦ seq}
-        END ;
-
 /*
  * Use the already extant allPossibles seq to find possible solutions for a
  * row: index 0-based
@@ -269,6 +260,16 @@ setPossiblesForSquare(row INT, column INT, possibles ℙ(INT)) ≙
         allPossibles := allPossibles ⊕ {getIndex(row) ↦ seq};
         END ;
 
+/* Set a particular value in square row and column 0-based */
+b BOO ← setValueForSquare(row INT, column INT, value INT) ≙
+        VARIABLES seq ℙ(INT × INT) END
+        b := getValueForSquare(row, column) = 0;
+        seq := getRow(row);
+        seq := seq ⊕ {getIndex(column) ↦ value};
+        setPossiblesForSquare(row, column, EMPTYSET);
+        grid := grid ⊕ {getIndex(row) ↦ seq}
+        END ;
+
 /* Set all elements of allPossibles for all eighty-one squares */
 setPossiblesForAllSquares ≙
         VARIABLES row INT, column INT END
@@ -284,6 +285,39 @@ setPossiblesForAllSquares ≙
                 column := column + 1
             END;
             row := row + 1
+        END
+        END ;
+
+/*
+ * Set all elements of allPossibles for all eighty other squares. Uses a
+ * different technique from preceding procedure. Indices 0-based.
+ */
+setPossiblesFromSquare(row INT, column INT, value INT) ≙
+        VARIABLES toRemove ℙ(INT), found ℙ(INT), i INT, j INT END
+        toRemove := {value};
+        i := 0;
+        WHILE
+            i < NINE
+        DO
+            found := getPossiblesForSquare(row, i);
+            setPossiblesForSquare(row, i, found \ toRemove);
+            found := getPossiblesForSquare(i, column);
+            setPossiblesForSquare(i, column, found \toRemove);
+            i := i + 1
+        END;
+        i := row / THREE * THREE;
+        WHILE
+            i < row / THREE * THREE + THREE
+        DO
+            j := column / THREE * THREE;
+            WHILE
+                j < column / THREE * THREE + THREE
+            DO
+                found := getPossiblesForSquare(i, j);
+                setPossiblesForSquare(i, j, found \ toRemove);
+                j := j + 1
+            END;
+            i := i + 1
         END
         END ;
 
@@ -315,54 +349,39 @@ rowFound INT, columnFound INT, possibles ℙ(INT) ← lowestCardinality ≙
         END END ;
 
 /* Whether the grid needs completion, i.e. there are still cells valued 0 */
-b BOO ← needsCompletion ≙ VARIABLES i INT END
-        b := false;
-        i := 0;
-        WHILE
-            ¬b ∧ i < NINE * NINE
-        DO
-            b := getValueForSquare(i / NINE, i % NINE) = 0;
-            i := i + 1
-        END END ;
+b BOO ← needsCompletion ≙
+        b := ∃ i • i ∈ 0..(NINE * NINE - 1) ∧
+               (getValueForSquare(i / NINE, i % NINE) = 0)
+        END ;
 
 /*
  * Tests for incorrect completion of the grid: if a cell contains 0, its
  * corresponding possibles set must have cardinality > 0 and vice versa.
  */
-b BOO ← gridCorrectlyFilled ≙ VARIABLES i INT END
-        b := true;
-        i := 0;
-        WHILE
-            i < NINE * NINE ∧ b
-        DO
-            b := b ∧ (getValueForSquare(i / NINE, i % NINE) = 0 ⇔
-                      ¢getPossiblesForSquare(i / NINE, i % NINE) > 0);
-            i := i + 1;
-        END END ;
+b BOO ← gridCorrectlyFilled ≙
+        b := ∀ i • i ∈ 0..(NINE * NINE - 1) ⇒
+        ((getValueForSquare(i / NINE, i % NINE) = 0 ⇔
+               ¢getPossiblesForSquare(i / NINE, i % NINE) > 0))
+        END ; 
 
-/*
- * Attempts to find solutions by looking for one-element sets in allPossibles.
- * Using ≤ 1 allows us to return true when the puzzle is completed.
+/* Runs the app
+ * In theory: initialise the grid, remove all values already set from allPossibles,
+ * then: start loop while needsCompletion: find lowest cardinality, set value
+ * with :∈ operator, continue until gridCorrectlyFilled returns false, then
+ * backtrack.
+ * In practice: runs 11 times then seg fault :-(
  */
-completed BOO ← tryBySimpleTechnique ≙
-        VARIABLES row INT, column INT, value INT, possible ℙ(INT) END
-        row, column, possible := lowestCardinality;
-        WHILE
-            ¢possible = 1
-        DO
-            value :∈ possible;
-            IF
-                setValueForSquare(row, column, value)
-            THEN
-                setPossiblesForAllSquares;
-                row, column, possible := lowestCardinality;
-            END;
-        END;
-        completed := (¢possible) ≤ 1 END ;
-
-/* Runs the app */
-run ≙
+run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT) END
         initialise;
         prettyPrint;
-        setPossiblesForAllSquares
+        setPossiblesForAllSquares;
+        WHILE
+            needsCompletion
+        DO
+            row, column, possible := lowestCardinality;
+            value :∈ possible;
+            setValueForSquare(row, column, value) →
+                    setPossiblesFromSquare(row, column, value);
+            gridCorrectlyFilled → prettyPrint
+        END
 
