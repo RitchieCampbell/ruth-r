@@ -98,9 +98,9 @@ NIP
 " F=" CONSTANT f-equals
 "  --> " CONSTANT guard-string
 " .." CONSTANT dots
-" 0 VALUE " CONSTANT 0value
+" 0 VALUE_ " CONSTANT 0value
 " , " CONSTANT commaSpace
-"  VALUE-ARRAY " CONSTANT valueArray
+"  VALUE-ARRAY_ " CONSTANT valueArray
 " ♢" CONSTANT diamondString
 " ∇" CONSTANT nablaString
 0value VALUE typeValue
@@ -121,7 +121,7 @@ rQuote myAZLength CONSTANT rQuoteLength
 " CONSTANTS" CONSTANT constantsString
 " WHILE" CONSTANT while
 " ARRAY" VALUE array
-"  VALUE " VALUE value-string ( Note leading and trailing spaces )
+"  VALUE_ " VALUE value-string ( Note leading and trailing spaces )
 " RECURSE" CONSTANT recurse
 sSpace VALUE operationName
 

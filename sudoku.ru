@@ -369,12 +369,13 @@ b BOO ← gridCorrectlyFilled ≙
  * then: start loop while needsCompletion: find lowest cardinality, set value
  * with :∈ operator, continue until gridCorrectlyFilled returns false, then
  * backtrack.
- * In practice: runs 11 times then seg fault :-(
+ * In practice: runs 11 times then seg fault
  */
-run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT) END
+run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT), output STRING, stage INT END
         initialise;
         prettyPrint;
         setPossiblesForAllSquares;
+        stage := 0;
         WHILE
             needsCompletion
         DO
@@ -382,6 +383,17 @@ run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT) END
             value :∈ possible;
             setValueForSquare(row, column, value) →
                     setPossiblesFromSquare(row, column, value);
-            gridCorrectlyFilled → prettyPrint
-        END
+            gridCorrectlyFilled → stage := stage + 1;
+            IF
+                stage < 10
+            THEN
+                output := “Stage:  ”;
+            ELSE
+                output := “Stage: ”;
+            END;
+            PRINT output ^ stage ^ “ Row: ” ^ (row + 1) ^ “ Column: ”
+                    ^ (column + 1) ^ “ Value: ” ^ value;
+            PRINT
+        END;
+        prettyPrint
 
