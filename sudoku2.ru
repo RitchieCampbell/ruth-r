@@ -39,7 +39,7 @@ initialise ≙
          [0, 1, 7, 0, 0, 0, 4, 0, 0]];
         END ;
 
-/* Prints a line like this ┃ 1 2 3 ┃ 4 5 6 ┃ 7 8 9┃
+/* Prints a line like this ┃ 1 2 3 ┃ 4 5 6 ┃ 7 8 9 ┃
  * Differs from sudoku.ru in displaying space rather than 0 for empty cell */
 prettyPrintLine(seq ℙ(INT × INT)) ≙
         VARIABLES i INT, vertical STRING, output STRING END
@@ -386,7 +386,31 @@ b BOO ← gridCorrectlyFilled ≙
         b := ∀ i • i ∈ 0..(NINE * NINE - 1) ⇒
         ((getValueForSquare(i / NINE, i % NINE) = 0 ⇔
                ¢getPossiblesForSquare(i / NINE, i % NINE) > 0))
-        END ; 
+        END ;
+
+/*
+ * Check that every row every column and every sector can be turned into the set
+ * {1, 2, 3, 4, 5, 6, 7, 8, 9}
+ */
+checkCompletion ≙ VARIABLES i INT, set ℙ(ℙ(INT)) END
+        set := {1..NINE};
+        i := 0;
+        WHILE
+            i < NINE
+        DO
+            set := set ∪ {getRowAsSet(i)};
+            set := set ∪ {getColumnAsSet(i)};
+            set := set ∪ {getSectorAsSet(i / THREE * THREE, i % THREE * THREE)};
+            i := i + 1
+        END;
+        IF
+            set = {1..NINE}
+        THEN
+            PRINT “Success :-)”
+        ELSE
+            PRINT “Pffffft :-(”
+        END;
+        PRINT END ;
 
 /* Runs the app
  * In theory: initialise the grid, remove all values already set from allPossibles,
@@ -395,7 +419,8 @@ b BOO ← gridCorrectlyFilled ≙
  * backtrack.
  * In practice: runs 11 times then seg fault
  */
-run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT), output STRING, stage INT END
+run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT),
+                output STRING, stage INT END
         initialise;
         prettyPrint;
         setPossiblesForAllSquares;
@@ -419,5 +444,6 @@ run ≙   VARIABLES row INT, column INT, value INT, possible ℙ(INT), output ST
                     ^ getIndex(column) ^ “ Value: ” ^ value;
             PRINT
         END;
-        prettyPrint
+        prettyPrint;
+        checkCompletion
 
