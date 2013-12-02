@@ -263,13 +263,12 @@ printState(state INT) ≙
         VARIABLES i INT, oldState INT, outputF STRING, outputP STRING END
         oldState := encodeStatus;
         decodeStatus(state);
-        i := 0;
+        i := count;
         outputF := “”;
         outputP := “”;
         WHILE
-            i < count
+            i > 0
         DO
-            i := i + 1;
             IF
                 forks[i] = up
             THEN
@@ -289,7 +288,8 @@ printState(state INT) ≙
                 ELSE
                     outputP := outputP ^ “E”
                 END
-            END
+            END ;
+            i := i - 1
         END ;
         PRINT “State ” ^ state ^ “ = ” ^ outputF ^ outputP ^ “ Blocking: ”;
         PRINT ¬nextMoveAvailable;

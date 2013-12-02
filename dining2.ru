@@ -109,14 +109,14 @@ s STRING ← statusToString(status INT) ≙ VARIABLES i INT, j INT END
             IF
                 j = thinking
             THEN
-                s := s ^ “T”;
+                s := “T” ^ s;
             ELSE
                 IF
                     j = waiting
                 THEN
-                    s := s ^ “W”;
+                    s := “W” ^ s;
                 ELSE
-                    s := s ^ “E”;
+                    s := “E” ^ s;
                 END
             END
         END END ;
