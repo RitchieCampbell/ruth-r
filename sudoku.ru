@@ -289,8 +289,8 @@ setPossiblesForAllSquares ≙
         END ;
 
 /*
- * Set all elements of allPossibles for all eighty other squares. Uses a
- * different technique from preceding procedure. Indices 0-based.
+ * Set all elements of allPossibles for twenty squares in constraint zone. Uses
+ * a different technique from preceding procedure. Indices 0-based.
  */
 setPossiblesFromSquare(row INT, column INT, value INT) ≙
         VARIABLES toRemove ℙ(INT), found ℙ(INT), i INT, j INT END
@@ -302,7 +302,7 @@ setPossiblesFromSquare(row INT, column INT, value INT) ≙
             found := getPossiblesForSquare(row, i);
             setPossiblesForSquare(row, i, found \ toRemove);
             found := getPossiblesForSquare(i, column);
-            setPossiblesForSquare(i, column, found \toRemove);
+            setPossiblesForSquare(i, column, found \ toRemove);
             i := i + 1
         END;
         i := row / THREE * THREE;
@@ -350,8 +350,8 @@ rowFound INT, columnFound INT, possibles ℙ(INT) ← lowestCardinality ≙
 
 /* Whether the grid needs completion, i.e. there are still cells valued 0 */
 b BOO ← needsCompletion ≙
-        b := ∃ i • i ∈ 0..(NINE * NINE - 1) ∧
-               (getValueForSquare(i / NINE, i % NINE) = 0)
+        b := ∃ i • i ∈ 0..NINE * NINE - 1 ∧
+               getValueForSquare(i / NINE, i % NINE) = 0
         END ;
 
 /*
@@ -359,9 +359,9 @@ b BOO ← needsCompletion ≙
  * corresponding possibles set must have cardinality > 0 and vice versa.
  */
 b BOO ← gridCorrectlyFilled ≙
-        b := ∀ i • i ∈ 0..(NINE * NINE - 1) ⇒
-        ((getValueForSquare(i / NINE, i % NINE) = 0 ⇔
-               ¢getPossiblesForSquare(i / NINE, i % NINE) > 0))
+        b := ∀ i • i ∈ 0..NINE * NINE - 1 ⇒
+        (getValueForSquare(i / NINE, i % NINE) = 0 ⇔
+               ¢getPossiblesForSquare(i / NINE, i % NINE) > 0)
         END ; 
 
 /* Runs the app

@@ -1128,6 +1128,10 @@ lValue sSpace rValue sSpace dots AZ^ AZ^ AZ^ AZ^ int "  POW" AZ^ ;
         THEN
         " F" operator AZ^ to operator
         float to lType
+        operator " F%" stringEq
+        IF
+            ." Remainder operator only suitable for INTs" ABORT
+        THEN
     THEN
     lValue sSpace AZ^ rValue AZ^ sSpace AZ^ operator AZ^ lType
 ;
