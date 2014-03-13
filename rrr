@@ -1,0 +1,6 @@
+#!/bin/bash
+
+RVM_FORTH_PATH="/home/campbell/bin/RVM_FORTH"
+
+
+echo "F2AZ $1 Pprogram CR .AZ BYE" | $RVM_FORTH_PATH HI L operations.fth L functions.fth | sed 's/.* BYE //g' | sed 's/\(CR .* CR\)$/\1\nBYE/g' | $RVM_FORTH_PATH HI L operations.fth L functions.fth
